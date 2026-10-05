@@ -10,9 +10,9 @@
 | Contract | Consumer/provider schema compatibility | Published API/event schema |
 | E2E | Critical user journey across deployables | Deployed or representative environment |
 
-**TEST-01 MUST:** A bug fix includes a regression test that fails for the defect when practical. New behavior has tests of success, meaningful failure, authorization/tenant scope, and boundary behavior. Tests assert observable outcomes, not private method calls.
+**TEST-01 MUST:** Test affected behavior at the cheapest meaningful layer. A practical regression test reproduces a bug; new logic covers meaningful success/failure/boundaries, adding authorization/tenant cases when those risks apply. Cosmetic or documentation changes need proportional review, not irrelevant domain tests. Assert outcomes rather than private calls.
 
-**TEST-02 MUST:** Keep tests isolated, deterministic, and parallel-safe. Each test owns and cleans up its data; use fixed clocks and stable IDs when time/order matter. Mock third parties where necessary, but test the application's own critical persistence and authorization boundaries with real integrations.
+**TEST-02 MUST:** Keep tests isolated and parallel-safe, with unique namespaces and cleanup registered immediately after allocation. Deterministic clocks/IDs stay within each test namespace. Mock external providers as needed and use real integration proof for critical owned persistence/authorization boundaries. See [local and test lifecycle](recipes/local-and-test.md).
 
 **TEST-03 SHOULD:** Keep E2E coverage focused on critical journeys and cross-system risks. Use accessible/user-facing locators, controlled fixtures, and clear step narratives. Do not create a browser test for every component state.
 

@@ -6,9 +6,9 @@
 
 **CFG-02 MUST:** Keep browser configuration explicitly public. Do not rely on a build-time variable for a setting that operators must change at runtime unless redeployment is the intended control. Validate deployed runtime config before mounting the app.
 
-**CFG-03 MUST:** Define each environment by explicit values, not hidden assumptions about `dev`/`prod` names. Document region, tenant, identity provider, external endpoint, and data source differences. Local development should have a safe way to exercise critical integrations.
+**CFG-03 MUST:** Document environment differences explicitly: endpoints, identity, data sources, region and runtime assumptions. Provide synthetic fixtures, safe dependency substitutes and least-privilege local credentials; identify integrations unavailable locally. See [local development and QA](recipes/local-and-test.md).
 
-**CFG-04 SHOULD:** Use feature flags for staged rollout and kill switches, not permanent branching of business logic. Each flag has owner, on/off behavior, observation criteria, and removal date. Test both states for consequential behavior.
+**CFG-04 SHOULD:** Temporary rollout/experiment flags have owner, observations, removal criteria and tested states. Long-lived operational kill switches may remain with a review cadence, tested fallback and access control. Treat authorization/entitlements separately from release flags.
 
 **CFG-05 MUST:** Keep operationally significant config changes reviewed and traceable. New external dependencies need local/test configuration and a failure-mode note. Do not log secret values while reporting config errors.
 

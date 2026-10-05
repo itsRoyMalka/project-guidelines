@@ -1,6 +1,6 @@
 # TypeScript backend service design
 
-**Applies to:** API and worker deployables. Choose the deployable boundary in [architecture](../01-architecture.md); this guide defines the inside of one backend.
+**Applies to:** server-side application operations in fullstack web, API and worker deployables. Choose the deployable boundary in [architecture](../01-architecture.md); this guide defines the inside of one backend.
 
 ## Feature shape
 
@@ -21,13 +21,13 @@ Use the few folders a feature needs; this is a responsibility map, not a demand 
 
 **BE-01 MUST:** One feature owns its invariant and write path. Other features call a named public operation. Do not export write repositories as a cross-feature API.
 
-**BE-02 MUST:** Parse untrusted request data at the edge, authorize the action and resource before work, then execute the use case. The frontend's visibility rules never substitute for backend authorization.
+**BE-02 MUST:** Validate at the edge, authenticate before sensitive work, and authorize the action/resource using trusted scope. A minimal scoped read may be necessary to evaluate resource policy. Avoid revealing inaccessible existence or properties; the selected API disclosure policy decides forbidden versus not-found. Frontend gates never replace backend enforcement.
 
 **BE-03 SHOULD:** Keep domain decisions independent of HTTP, ORM, queue, and vendor SDKs. Inject clocks, clients, and gateways at the composition boundary when they affect behavior or tests. Avoid an interface for every trivial function.
 
-**BE-04 MUST:** Define a stable error taxonomy (validation, unauthenticated, forbidden, absent, conflict, rate-limited, unavailable, unexpected) and map it once at the transport boundary. For the default HTTP API, use [API-03](02-api-contracts.md) Problem Details. Never expose stack traces or raw provider messages to clients.
+**BE-04 MUST:** Define internal error categories and map them once at the transport boundary to [API-03](02-api-contracts.md). Decide hidden-resource behavior explicitly. Return safe documented details; log an unexpected failure with its cause at the responsible boundary, never expose provider messages or stacks. See [contract example](recipes/contracts.md).
 
-**BE-05 MUST:** Treat a transaction as a business operation boundary. Do not commit from shared helpers. When writing state and publishing an event, use a transactional outbox or another proven atomic mechanism.
+**BE-05 MUST:** The business operation owns the transaction. Helpers may participate in its transaction context but do not commit independently. Define composition when operations call each other; avoid external network waits in long transactions. When state and a durable notification must agree, commit state plus publication intent atomically under [EVT-03](04-events-and-workflows.md).
 
 **BE-06 SHOULD:** Keep bootstrap separate from demo/seed data. Validate required config before readiness. Health/readiness, graceful shutdown, and background-worker lifecycle are part of the service composition, not feature business logic.
 

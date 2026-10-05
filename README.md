@@ -1,22 +1,21 @@
 # Project Guidelines
 
-Enterprise application standards for AI agents and engineers. This repository contains **guides and skills only**. It does not scaffold, deploy, or run a project.
+A handbook for engineers and AI agents building enterprise TypeScript web applications and services. Python backend and analytics are optional profiles. This repository contains Markdown guides and skills; executable verification fixtures live outside it.
 
-**Status:** revisions required after the internal review record (not distributed). The current guides are a proposed principles baseline; the review identifies corrections and missing depth before they can serve as the complete golden standard. They are not yet individually approved by the owner.
+**Edition:** revised 2026-10-05 under the owner's authorization to choose and integrate the baseline. internal review record (not distributed) records actual checks and limits. Architecture/style defaults are selected conventions, not claims that one stack is universally best. The internal review record (not distributed) is historical; internal review record (not distributed) tracks its findings.
 
-## Start here
+## Start by task
 
-1. Read [the guide index](guides/README.md) and [how to apply the rules](guides/00-governance.md).
-2. For a new application, read [architecture](guides/01-architecture.md), [stack](guides/02-stack.md), and [repository structure](guides/03-repository.md).
-3. Load the relevant TypeScript frontend, TypeScript backend, Python backend, or data guides. Follow links from a guide only when the task touches that boundary.
-4. For repeatable work, use a matching [skill](skills/README.md). Skills route work through the guides; they do not define a second set of rules.
+- New product: [product brief](guides/07-product-and-decisions.md) → [architecture](guides/01-architecture.md) → [profile](guides/profiles/README.md) → [start-project skill](skills/start-project/SKILL.md).
+- Existing code: [read-project](skills/read-project/SKILL.md), then the [task/subject map](guides/README.md).
+- Feature or fix: [plan](skills/plan-change/SKILL.md), [implement](skills/implement-feature/SKILL.md), [verify](skills/verify-change/SKILL.md), proportionate to the task.
+- Review: [review-change](skills/review-change/SKILL.md). Incident: [diagnose-incident](skills/diagnose-incident/SKILL.md).
+- Use from another project: [consumption contract](USAGE.md). Read [governance](guides/00-governance.md) once before applying rules.
 
-The default product shape is a cohesive repository with a separately deployable TypeScript web app and API. The backend is a modular monolith until a concrete boundary needs an independent service. Python backend and analytics are optional profiles. See [architecture](guides/01-architecture.md) for the decision criteria.
+## Scope
 
-## How to review this baseline
+Core covers product decisions, code architecture, TypeScript, HTTP, persistence, identity, UI, testing, delivery and operations. Load multi-tenancy, durable messaging, files, analytics and Python only when applicable. Realtime/offline sync, AI product evaluation, native mobile, embedded systems, ML training, jurisdiction-specific compliance and detailed cloud-provider setup require an explicit project extension. A selected exception is recorded, not silently ignored.
 
-Read the local guides as the authority; record decisions with their owning rules and avoid duplicate guidance.
+Read the current guides as the authority for this edition. Profiles choose compatible expressions; recipes explain failure-prone implementation decisions; templates capture project evidence. Skills route tasks to those owners. 
 
-## Intended use
-
-These files are readable directly by any agent with access to this repository. The root [AGENTS.md](AGENTS.md) is a short entrypoint when an agent works in this repository. Repository-local skills are not automatically installed into every other project; point an agent here or install a skill through its host's supported mechanism.
+internal review record (not distributed) · internal review record (not distributed) · [Full map](guides/README.md)

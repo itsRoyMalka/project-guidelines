@@ -2,21 +2,21 @@
 
 **Applies to:** HTTP APIs and other externally consumed boundaries. Event contracts are in [events](04-events-and-workflows.md).
 
-**API-01 MUST:** Give every operation one canonical schema source for request and response, with runtime validation at the boundary and generated/published documentation. For the default HTTP stack, define compatible schemas and publish OpenAPI; if an external protobuf/OpenAPI contract already owns the shape, generate types/adapters from it instead of duplicating it.
+**API-01 MUST:** Select one canonical request/response schema owner and derive types/documentation from it. Distinguish request validation, response serialization and contract-test proof. Use compatible schema compilers/type providers in the selected profile; never compile schemas supplied by an untrusted user. External OpenAPI/protobuf ownership means generating adapters, not maintaining a second shape. See [contract pipeline](recipes/contracts.md).
 
 **API-02 SHOULD:** Use resource-oriented HTTP for ordinary CRUD and named operations for domain actions that do not fit CRUD. Keep methods, status codes, and error codes consistent across the API. Do not encode business success as `200` with an error field.
 
-**API-03 MUST:** For a new HTTP API, use [RFC 9457 Problem Details](https://www.rfc-editor.org/rfc/rfc9457.html) for errors that need a body (`application/problem+json`). Give each domain problem a stable `type` URI, appropriate HTTP status, safe title/detail, and a request ID extension or `instance` identifier. Clients branch on `type` or a documented extension, never on English text. An existing API may retain its established error envelope until a compatible migration is planned.
+**API-03 MUST:** For new HTTP errors needing a body, use RFC 9457 application/problem+json with stable type, appropriate status and safe title/detail. This profile adds stable code and requestId; optional field errors identify public input paths. Clients branch on type/code, never English text. Existing APIs keep their compatible envelope until a migration is planned. [Example and verification](recipes/contracts.md).
 
-**API-04 MUST:** Specify pagination, filtering, sorting, and maximum page size for collections. Define stable order and cursor semantics where data changes while paging. Reject unknown or unauthorised filters rather than silently ignoring them.
+**API-04 MUST:** Declare supported filters/sorts, page bounds, stable ordering and a unique tie-breaker. Validate cursor version, scope and query compatibility; opaque cursors are not authorization. New APIs reject unknown/unauthorized filters; preserve an explicitly documented tolerant legacy policy where required for compatibility.
 
-**API-05 MUST:** Preserve compatibility for consumers during rollout. Additive changes are preferred; breaking changes need a version/migration window and contract tests. Deprecation states owner, replacement, and removal criteria.
+**API-05 MUST:** Check schema and behavioral compatibility across active consumers and overlapping releases. Added enum variants, stricter validation or changed defaults can break callers even when fields are only added. A breaking change needs owner, replacement, migration window, removal criteria and consumer proof.
 
-**API-06 MUST:** Make retried writes safe through idempotency keys or an equivalent domain invariant when a client or queue can repeat a request. Document concurrency/conflict behavior, including preconditions where relevant.
+**API-06 MUST:** Define safe repeated writes and concurrent transitions. For idempotency keys, specify trusted scope, payload fingerprint, atomic reservation, concurrent replay behavior, stored outcome and expiry. Reauthorize before returning a replayed result. Protect lost updates with a domain constraint, conditional version write or selected isolation/lock strategy. See [idempotency recipe](recipes/idempotency.md).
 
-**API-07 MUST:** Use explicit wire formats: UTC ISO 8601 for instants, `YYYY-MM-DD` for calendar dates, named units for durations, and documented ID semantics. Do not leak database or vendor objects as public responses.
+**API-07 MUST:** Declare accepted wire formats and bounds: timestamps with explicit offset normalized to UTC, supported precision, date-only YYYY-MM-DD, duration units, ID semantics and exact decimal/large-integer representation. Preserve timezone/recurrence intent separately when required. Use public DTOs rather than database/vendor objects. See [domain values](../recipes/domain-values.md).
 
-**API-08 MUST:** Bound request body size, page size, request rate, and expensive business actions according to the threat and capacity model. State quota and retry behavior for clients; use `429` and `Retry-After` when rate limits apply. Validate response serialization so fields not in the public contract cannot leak accidentally.
+**API-08 MUST:** Bound body/page size, rate and expensive actions according to threat/capacity needs. Use 429 for client quota exhaustion and Retry-After when a meaningful retry time is known; distinguish service overload. Allowlist response fields and test the configured serializer's actual behavior, including rejected output and error responses.
 
 **Example:** `POST /orders/{id}/cancel` can be a named domain operation. A repeated cancellation with the same idempotency key returns the same effective result; a conflicting state returns a stable conflict code.
 

@@ -12,13 +12,13 @@
 
 **STATE-01 MUST:** Do not copy props or query data into component state with an effect merely to derive another value. Derive during render or memoize an expensive pure transformation. Effects synchronize with external systems.
 
-**STATE-02 MUST:** Give cached server resources stable identities that include all scope and filter parameters; in TanStack Query, encode them in query keys. Mutations define revalidation/invalidation or optimistic update/rollback according to the chosen owner. Do not use cached server data as a second business database.
+**STATE-02 MUST:** Cache identities include every scope/filter that changes returned data or visibility. On identity/tenant transitions, cancel obsolete work and clear or partition protected data; SSR caches are request-isolated. Mutations update/revalidate through the selected owner. See [state lifecycle](recipes/state-and-forms.md).
 
 **STATE-03 MUST:** Keep shareable navigation state in the URL and validate it on read. Avoid losing filters on refresh, back/forward navigation, or copied links. Secrets and large drafts do not belong in URLs.
 
-**STATE-04 SHOULD:** Use React Hook Form and a shared schema for nontrivial forms. Validate on both client and server, show field errors near fields, and preserve edits on recoverable server failure. The server is authoritative.
+**STATE-04 SHOULD:** Use React Hook Form with schema validation for complex drafts; native forms are enough when simpler. Reuse compatible wire constraints without equating draft transforms with backend authorization/domain rules. Define initialization, dirty/reset state, field errors, conflict handling and edit preservation on recoverable failure.
 
-**STATE-05 MUST:** Show pending state on the action that initiated a mutation, prevent unintended duplicates, and explain failure with a recovery path. Use optimistic UI only with a defined rollback and conflict story.
+**STATE-05 MUST:** Show pending state at the initiating action and prevent accidental duplicates; backend deduplication still follows API-06. Optimistic changes need rollback and conflict behavior. Define retry/cancel/unknown-outcome recovery and preserve the original idempotency key for retries of the same action.
 
 **STATE-06 SHOULD:** Introduce Zustand/Jotai/Redux only for state that truly crosses feature/component boundaries and is not server or URL state. Select the smallest subscribed slice. Record why context/local state is insufficient.
 

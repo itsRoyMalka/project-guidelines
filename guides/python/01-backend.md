@@ -15,14 +15,14 @@ services/<service>/
   migrations/           # only when this service owns a database
 ```
 
-**PY-01 MUST:** Keep HTTP routers thin. Validate inputs with Pydantic, authorize the action/resource, call a named domain operation, and map stable errors at the edge. Do not place business rules in schemas or database models.
+**PY-01 MUST:** Keep HTTP routers thin: parse boundary models, derive trusted identity, authorize, call a named operation and map errors. Pydantic field validation is appropriate; business workflows and persistence-dependent decisions belong in operations/domain code. Preserve existing coherent layouts.
 
-**PY-02 MUST:** Type public functions and domain interfaces; use mypy on changed code. Prefer explicit values over mutable globals, hidden module state, or broad optional parameters that create ambiguous behavior.
+**PY-02 MUST:** Type public/domain interfaces and check affected packages and dependents with the selected checker. Mypy is the default profile; pyright is valid when established. Track inherited errors; avoid hidden mutable globals and ambiguous parameter modes. Pin a supported interpreter/dependency set.
 
-**PY-03 MUST:** The owning operation controls transactions. Shared libraries do not call `session.commit()`. Migrations are reviewed for backfill, lock, and compatibility behavior.
+**PY-03 MUST:** The owning operation controls transaction and session lifetime, including rollback and close. Use Session per thread or AsyncSession per concurrent task; never share one mutable session across concurrent tasks. Avoid blocking I/O in async handlers. Follow the [Python lifecycle](recipes/lifecycle.md) and review migration/backfill/lock behavior.
 
 **PY-04 SHOULD:** Test domain rules with unit tests and the service's own API/database boundary with integration tests. Mock external providers, not the application's core behavior. Mark live-environment tests separately and report disabled CI coverage honestly.
 
-**PY-05 MUST:** Give every worker an idempotency, retry, dead-letter, tenant-scope, and observability story. Keep shared code behind published package contracts rather than importing another service's implementation tree.
+**PY-05 MUST:** Workers follow the canonical [event rules](../backend/04-events-and-workflows.md) for retries, deduplication and recovery; tenant controls apply to scoped workloads. Define sync/async resource lifecycle. Shared capabilities use explicit package contracts, without importing another deployable's implementation.
 
 **Verification:** Ruff/mypy/pytest, real boundary tests, migration review, and a service-local agent entrypoint.

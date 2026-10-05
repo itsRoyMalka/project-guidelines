@@ -4,15 +4,15 @@
 
 ## Default
 
-**ARCH-01 MUST:** Write a short architecture brief before selecting framework or deployment shape. Name users, core journeys, bounded domains and data owners, tenant/trust boundaries, external dependencies, latency/availability needs, expected scale, and team/release ownership. Record the chosen option and a trigger to revisit it.
+**ARCH-01 MUST:** Before choosing a new architecture, record users, acceptance examples, domains/data owners, trust boundaries, dependencies, load/latency, availability/recovery, data classification/retention, cost and team constraints. State assumptions, selected option and revisit trigger. A small product can use a brief paragraph; see [product planning](07-product-and-decisions.md).
 
-**ARCH-02 SHOULD:** For one product team, start with one backend deployable organized by domain and one frontend deployable organized by feature. They build and deploy separately, even if they share a repository. Keep domain boundaries explicit so extraction remains possible.
+**ARCH-02 SHOULD:** Start with one cohesive product and explicit domain modules. Choose a [single full-stack deployable](profiles/typescript-fullstack.md) for shared ownership and one web runtime, or [separate web/API deployables](profiles/typescript-split.md) for separate clients, hosting, trust, scaling or releases. Neither shape is a quality tier. Add independent services only under ARCH-05.
 
-**ARCH-03 MUST:** One module/service owns each durable data set and all writes to it. Other modules use its public operations. A separately deployed service never imports another service's source or reads its tables directly.
+**ARCH-03 MUST:** Give every durable dataset one write owner and public operations. Runtime consumers use owned contracts, not another service's implementation or private tables. Owner-published read models, CDC and analytical replicas are allowed with a versioned data/access contract. Controlled migrations, backfills and repair tools have explicit owner, scope and recovery proof.
 
 **ARCH-04 SHOULD:** Use synchronous calls when a user needs an immediate answer. Use a queue or durable workflow for slow, retryable, externally triggered, or long-running work. A domain event reports a fact that already occurred; it is not an untracked substitute for a command.
 
-**ARCH-05 MUST:** Add a deployable service only for a named need: independent ownership/release, distinct scaling/runtime, failure isolation, or a trust/compliance boundary. Document contract, data owner, failure handling, and operational cost. Module Federation has the same bar for frontend apps: use it for independently owned runtime-composed apps, not for ordinary feature folders.
+**ARCH-05 MUST:** Add a deployable service for a named need: independent ownership/release, distinct scale/runtime, failure isolation or trust boundary. Document contract, data owner, failure handling and operational cost. Runtime frontend composition needs a similar justification and proven host/remote mixed-version compatibility; Module Federation alone does not make deployment independent.
 
 ## Architecture brief
 

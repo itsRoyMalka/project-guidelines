@@ -2,17 +2,17 @@
 
 **Applies to:** production deployables and critical journeys.
 
-**OPS-01 MUST:** Emit structured logs, traces, and metrics with service/environment, request/correlation ID, and safe tenant context. Redact secrets and personal data. Log an error once at the boundary that can add useful context; preserve its cause.
+**OPS-01 MUST:** Use structured logs/traces with safe correlation and service/environment context. Ordinary metric dimensions remain bounded; request IDs belong in logs/traces or supported exemplars, not labels. Budget tenant dimensions explicitly. Redact secrets/personal data and log errors once where useful context is added. See [operations recipe](recipes/operations.md).
 
-**OPS-02 MUST:** Define health/readiness separately. Readiness reflects dependencies needed to serve the declared workload; graceful shutdown stops accepting work and finishes or safely reschedules in-flight operations.
+**OPS-02 MUST:** Separate startup, liveness and readiness. Liveness checks process health, not every downstream dependency; readiness reflects ability to serve the declared workload. Drain with a deadline, close resources and preserve/reschedule in-flight work under its lease/acknowledgement policy.
 
-**OPS-03 SHOULD:** Define service-level objectives for critical journeys, with a small set of actionable alerts and runbooks. Alert on user impact, queue backlog/dead letters, and failed durable work, not every noisy internal exception.
+**OPS-03 MUST:** For each production critical journey, assign an owner and an explicit SLI/SLO decision appropriate to its impact. Define observation window, alert/runbook and error-budget action. Monitor user failures and durable-work delays; lightweight targets are acceptable when justified. See [operations](recipes/operations.md).
 
-**OPS-04 MUST:** Bound timeouts, concurrency, retries, and payload/page sizes at external boundaries. Retry only safe operations with backoff and jitter; provide a fallback or explicit failure when a dependency is unavailable.
+**OPS-04 MUST:** Bound timeouts, end-to-end deadlines, concurrency and payloads. Identify retry owner and retryable failures; use a limited attempt/time budget with backoff/jitter for safe operations. Classify unknown outcomes separately and provide explicit failure/degradation when dependencies are unavailable.
 
 **OPS-05 MUST:** Measure performance before optimization. Check representative database plans, API latency, frontend loading and interaction, and worker throughput. Set budgets where a regression would harm the product; avoid speculative caching.
 
-**OPS-06 SHOULD:** Make important administrative and data-repair actions auditable and reversible where possible. A runbook names owner, detection signal, safe mitigation, and recovery proof.
+**OPS-06 SHOULD:** Make administrative/data repair actions auditable and reversible where possible. Keep durable security audit distinct from diagnostics. Incident runbooks identify response owner, escalation, evidence, safe mitigation, recovery proof and follow-up. Use [diagnose-incident](../../skills/diagnose-incident/SKILL.md).
 
 **OPS-07 MUST:** For durable data, define recovery point and recovery time objectives, backup schedule/retention, and a restore procedure. Exercise a restore in an isolated environment and verify application-level integrity; the existence of a backup file is not recovery proof.
 

@@ -4,14 +4,14 @@
 
 **ANA-01 MUST:** State source system, grain, owner, update cadence, tenant scope, and data contract for each published model. Organize raw/staging, transformed/core, and consumer-facing marts so transformations have a clear lineage.
 
-**ANA-02 MUST:** Deduplicate events/records with a documented key and ordering rule. Normalize timestamps to UTC and declare date/timezone interpretation. Apply tenant and test-data filtering deliberately; never let an analytical join cross scopes by accident.
+**ANA-02 MUST:** Define source identity and ordering before deduplicating; preserve legitimate repeated events. Normalize instants consistently and declare the business timezone for calendar metrics. Apply tenant/test-data filtering deliberately, including analytical joins.
 
-**ANA-03 MUST:** Make incremental processing and backfills repeatable. Define unique keys, late-arriving data behavior, rebuild window, and reconciliation checks. A backfill cannot silently double count.
+**ANA-03 MUST:** Make incremental processing/backfills repeatable. Define strategy, keys/null handling, late-data window, checkpoints and reconciliation; configured unique keys do not enforce uniqueness. Test replay and duplicate prevention in the selected warehouse. See the [analytics profile](../profiles/analytics.md).
 
-**ANA-04 MUST:** Test uniqueness, non-null business keys, accepted values, relationships, and high-value metric invariants. Add source freshness and row-volume anomaly checks where delay or loss is material.
+**ANA-04 MUST:** Assert the model's declared grain and business invariants: uniqueness, non-null, accepted values and relationships only where semantically required. Permit valid nullable/late dimensions. Check freshness/volume when material and reconcile high-value metrics to source.
 
 **ANA-05 SHOULD:** Use readable SQL with named CTEs, explicit join keys, scoped filters, and performance review on large models. Publish metric definitions and version changed semantics.
 
-**ANA-06 MUST:** Apply privacy and access controls to analytical data, including export and BI tools. Retention and deletion obligations flow into warehouse models.
+**ANA-06 MUST:** Apply access, retention and deletion policy to staging, marts, replicas, exports and BI. Rebuild/replay must honor deletion state instead of reintroducing erased records. Use the [data lifecycle](../backend/06-data-lifecycle.md) and assign ownership of derived-data propagation.
 
 **Verification:** model tests, lineage, sample reconciliation to source, backfill replay, and access review. Further reading: [dbt data tests](https://docs.getdbt.com/docs/build/data-tests), [dbt incremental models](https://docs.getdbt.com/docs/build/incremental-models).

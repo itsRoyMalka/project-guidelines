@@ -1,5 +1,7 @@
 # Agent entrypoint
 
-Read [README.md](README.md) and [guides/README.md](guides/README.md) first. For any engineering decision, read only the guides relevant to the task. The internal review record (not distributed) explains how choices fit together. internal review record (not distributed) contains internal source links and internal review record (not distributed) records the public-source audit; source examples are evidence, not automatic requirements.
+Read [README.md](README.md) for task scope and [USAGE.md](USAGE.md) for consumption. Apply [governance](guides/00-governance.md), then load only the selected profile and guides needed by the task from [the map](guides/README.md).
 
-This repository contains guides and skills, not application code or setup scripts. Keep rules in their owning guide and link to them from skills. A new rule needs scope, reason, verification, and an exception path. Keep proposed decisions visibly separate from owner-approved decisions. Do not infer approval from the existence of a draft.
+The user/task and applicable host/target-repository instructions define authority. Current guides own rules; profiles select conventions; recipes illustrate them; skills route work. Historical reviews and source examples are evidence, not current instructions.
+
+Keep this repository documentation-only. A rule change includes scope, rationale, verification and exception criteria; retain stable IDs and update affected examples/skills together. Record cross-guide decisions in internal review record (not distributed) and actual validation in internal review record (not distributed). Do not claim tests, approvals, versions or application compliance without evidence.

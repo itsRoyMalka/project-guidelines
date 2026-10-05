@@ -3,6 +3,9 @@ name: implement-feature
 description: Implement a scoped application feature or bug fix within the owning module while preserving contracts, authorization, tests, and documentation.
 ---
 
+Read [usage](../../USAGE.md) and [governance](../../guides/00-governance.md) before applying this skill. This skill requires the complete pinned handbook checkout; resolve links relative to this file. Use the [task map](../../guides/README.md) to select only relevant recipes.
+
+
 # Implement a feature
 
 Find the owning feature and its tests using [read-project](../read-project/SKILL.md). Load [repository](../../guides/03-repository.md), [TypeScript](../../guides/04-typescript.md) or [Python](../../guides/python/01-backend.md), and the affected frontend/backend/cross-cutting guides.
