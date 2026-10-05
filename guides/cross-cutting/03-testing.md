@@ -18,7 +18,7 @@
 
 **TEST-04 MUST:** Distinguish mocked UI E2E from deployed integration smoke. Report known blockers and skipped checks honestly. A test path or coverage percentage does not prove behavior quality.
 
-**TEST-05 MUST:** CI runs typecheck, lint, relevant unit/component/integration tests, contract checks, and a targeted E2E smoke set before merge. Broader suites may run separately, but failures have an owner and cannot silently become permanent skips.
+**TEST-05 MUST:** CI runs the checks applicable to the changed units and their dependents: typecheck/lint, relevant unit and integration tests, contract checks, and build. Run E2E for affected critical journeys before merge or as a required promotion gate when the test needs a deployed environment. A library or backend-only change does not acquire a browser test merely to satisfy a list. Broader suites may run separately, but failures have an owner and cannot silently become permanent skips.
 
 **TEST-06 SHOULD:** Use changed-code coverage as a diagnostic, not a substitute for review of assertions and risk. Performance and accessibility checks belong to affected critical flows.
 

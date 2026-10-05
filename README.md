@@ -2,7 +2,7 @@
 
 Enterprise application standards for AI agents and engineers. This repository contains **guides and skills only**. It does not scaffold, deploy, or run a project.
 
-**Status:** v0 working baseline. The decisions here are an integrated recommendation for review; they are not yet individually approved by the owner. Use them when starting a new project or evaluating an existing one, and record any deliberate exception.
+**Status:** complete review candidate. The decisions here are an integrated recommendation supported by the internal review record (not distributed); they are not yet individually approved by the owner. Use them when starting a new project or evaluating an existing one, and record any deliberate exception.
 
 ## Start here
 

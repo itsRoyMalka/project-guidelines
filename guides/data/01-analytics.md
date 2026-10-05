@@ -14,4 +14,4 @@
 
 **ANA-06 MUST:** Apply privacy and access controls to analytical data, including export and BI tools. Retention and deletion obligations flow into warehouse models.
 
-**Verification:** model tests, lineage, sample reconciliation to source, backfill replay, and access review.
+**Verification:** model tests, lineage, sample reconciliation to source, backfill replay, and access review. Further reading: [dbt data tests](https://docs.getdbt.com/docs/build/data-tests), [dbt incremental models](https://docs.getdbt.com/docs/build/incremental-models).

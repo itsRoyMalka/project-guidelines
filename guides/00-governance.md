@@ -11,7 +11,7 @@
 
 ## Rule format
 
-Each new rule needs a stable ID, scope, **MUST** or **SHOULD**, rationale, verification, and an exception trigger. Add a small code/file example only when wording alone leaves ambiguity. Define the complete convention locally; public references are optional further reading.
+Each new rule needs a stable ID and **MUST** or **SHOULD**. Its owning guide states the scope, rationale, verification method, and conditions that justify an exception; add a rule-specific note when those differ. Add a small code/file example only when wording alone leaves ambiguity. Define the complete convention locally; public references are optional further reading.
 
 ## Change control
 

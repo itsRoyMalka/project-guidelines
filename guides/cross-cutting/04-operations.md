@@ -14,4 +14,8 @@
 
 **OPS-06 SHOULD:** Make important administrative and data-repair actions auditable and reversible where possible. A runbook names owner, detection signal, safe mitigation, and recovery proof.
 
-**Verification:** a production request can be traced end to end without revealing sensitive data; alerts and recovery steps are exercised. Further reading: [OpenTelemetry signals](https://opentelemetry.io/docs/concepts/signals/).
+**OPS-07 MUST:** For durable data, define recovery point and recovery time objectives, backup schedule/retention, and a restore procedure. Exercise a restore in an isolated environment and verify application-level integrity; the existence of a backup file is not recovery proof.
+
+**OPS-08 SHOULD:** Define capacity limits and degradation behavior before load forces an emergency. Measure high-cardinality telemetry cost, queue lag, database saturation, and browser performance on representative journeys. A performance budget is meaningful only when measured in a reproducible environment.
+
+**Verification:** a production request can be traced end to end without revealing sensitive data; alerts, recovery steps, and a restore are exercised. Further reading: [OpenTelemetry signals](https://opentelemetry.io/docs/concepts/signals/), [Google SRE SLO guidance](https://sre.google/workbook/implementing-slos/), [NIST contingency planning](https://csrc.nist.gov/pubs/sp/800/34/r1/upd1/final).

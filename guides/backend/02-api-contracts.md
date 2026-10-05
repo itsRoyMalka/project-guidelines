@@ -6,7 +6,7 @@
 
 **API-02 SHOULD:** Use resource-oriented HTTP for ordinary CRUD and named operations for domain actions that do not fit CRUD. Keep methods, status codes, and error codes consistent across the API. Do not encode business success as `200` with an error field.
 
-**API-03 MUST:** Return stable machine-readable error codes and safe human messages. Include correlation/request ID. Clients branch on code or typed kind, never on English text.
+**API-03 MUST:** For a new HTTP API, use [RFC 9457 Problem Details](https://www.rfc-editor.org/rfc/rfc9457.html) for errors that need a body (`application/problem+json`). Give each domain problem a stable `type` URI, appropriate HTTP status, safe title/detail, and a request ID extension or `instance` identifier. Clients branch on `type` or a documented extension, never on English text. An existing API may retain its established error envelope until a compatible migration is planned.
 
 **API-04 MUST:** Specify pagination, filtering, sorting, and maximum page size for collections. Define stable order and cursor semantics where data changes while paging. Reject unknown or unauthorised filters rather than silently ignoring them.
 
@@ -16,6 +16,8 @@
 
 **API-07 MUST:** Use explicit wire formats: UTC ISO 8601 for instants, `YYYY-MM-DD` for calendar dates, named units for durations, and documented ID semantics. Do not leak database or vendor objects as public responses.
 
+**API-08 MUST:** Bound request body size, page size, request rate, and expensive business actions according to the threat and capacity model. State quota and retry behavior for clients; use `429` and `Retry-After` when rate limits apply. Validate response serialization so fields not in the public contract cannot leak accidentally.
+
 **Example:** `POST /orders/{id}/cancel` can be a named domain operation. A repeated cancellation with the same idempotency key returns the same effective result; a conflicting state returns a stable conflict code.
 
-**Verification:** published contract, runtime edge validation, backward-compatibility review, and consumer-facing tests for changed behavior. Further reading: [Fastify schema guidance](https://fastify.dev/docs/latest/Reference/Validation-and-Serialization/).
+**Verification:** published contract, runtime edge validation, backward-compatibility review, abuse limits, and consumer-facing tests for changed behavior. Further reading: [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457.html), [OWASP API risks](https://api-security.owasp.org/editions/2023/en/0x11-t10/), [Fastify schema guidance](https://fastify.dev/docs/latest/Reference/Validation-and-Serialization/).

@@ -4,7 +4,7 @@
 
 | State | Default owner |
 | --- | --- |
-| Remote data and mutation status | Framework data layer or TanStack Query, selected once per resource |
+| Remote data and mutation status | React Router loaders/actions for ordinary route data; TanStack Query where persistent client cache, polling, or complex invalidation is justified. Select one owner per resource. |
 | Shareable search, filters, sort, tab, pagination | URL, parsed and validated |
 | Ephemeral dialog/input disclosure | Local component state |
 | Durable cross-feature client state | Small named store only after need is proven |
@@ -12,7 +12,7 @@
 
 **STATE-01 MUST:** Do not copy props or query data into component state with an effect merely to derive another value. Derive during render or memoize an expensive pure transformation. Effects synchronize with external systems.
 
-**STATE-02 MUST:** Give server resources stable query keys that include all scope and filter parameters. Mutations define invalidation or optimistic update/rollback. Do not use cached server data as a second business database.
+**STATE-02 MUST:** Give cached server resources stable identities that include all scope and filter parameters; in TanStack Query, encode them in query keys. Mutations define revalidation/invalidation or optimistic update/rollback according to the chosen owner. Do not use cached server data as a second business database.
 
 **STATE-03 MUST:** Keep shareable navigation state in the URL and validate it on read. Avoid losing filters on refresh, back/forward navigation, or copied links. Secrets and large drafts do not belong in URLs.
 
@@ -22,4 +22,6 @@
 
 **STATE-06 SHOULD:** Introduce Zustand/Jotai/Redux only for state that truly crosses feature/component boundaries and is not server or URL state. Select the smallest subscribed slice. Record why context/local state is insufficient.
 
-**Verification:** refresh/back-link behavior, mutation failure and retry tests, and a state-ownership review. Further reading: [TanStack Query](https://tanstack.com/query/latest/docs/framework/react/overview).
+**STATE-07 MUST:** When a route loader and TanStack Query both touch the same resource, declare which owns freshness, mutation updates, and error handling. A loader may prefetch/dehydrate a query cache, but must not create an independent second cache with conflicting staleness rules.
+
+**Verification:** refresh/back-link behavior, mutation failure and retry tests, and a state-ownership review. Further reading: [React Router modes](https://reactrouter.com/start/modes), [TanStack Query keys](https://tanstack.com/query/latest/docs/framework/react/guides/query-keys), [React effects](https://react.dev/learn/you-might-not-need-an-effect).

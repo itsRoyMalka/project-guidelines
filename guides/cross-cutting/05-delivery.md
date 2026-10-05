@@ -14,4 +14,8 @@
 
 **DEL-06 MUST:** Never let a green pipeline imply an unrun or blocked gate passed. Document disabled jobs, flaky checks, and production-only limitations with owner and remediation.
 
-**Verification:** CI matrix covers changed dependents, a release is traceable to source/artifact, and rollback is rehearsed for a representative change.
+**DEL-07 SHOULD:** Produce build provenance tying a released artifact to source revision, build identity, inputs, and environment; verify the artifact before promotion. Choose an appropriate [SLSA build level](https://slsa.dev/spec/v1.2/build-track-basics) for product risk and available platform controls rather than claiming a level from a version string or CI badge.
+
+**DEL-08 MUST:** Protect the release path: restrict who can modify CI and deployment configuration, separate production credentials from pull-request jobs, and review dependency/lockfile changes. Record how a security finding is triaged, fixed, and traced to a release.
+
+**Verification:** CI matrix covers changed dependents, a release is traceable to source/artifact, build credentials are isolated, and rollback is rehearsed for a representative change. Further reading: [NIST SSDF](https://csrc.nist.gov/pubs/sp/800/218/final), [SLSA provenance](https://slsa.dev/spec/v1.2/provenance).

@@ -25,7 +25,7 @@ Use the few folders a feature needs; this is a responsibility map, not a demand 
 
 **BE-03 SHOULD:** Keep domain decisions independent of HTTP, ORM, queue, and vendor SDKs. Inject clocks, clients, and gateways at the composition boundary when they affect behavior or tests. Avoid an interface for every trivial function.
 
-**BE-04 MUST:** Define a stable error taxonomy (validation, unauthenticated, forbidden, absent, conflict, rate-limited, unavailable, unexpected) and map it once at the transport boundary. Never expose stack traces or raw provider messages to clients.
+**BE-04 MUST:** Define a stable error taxonomy (validation, unauthenticated, forbidden, absent, conflict, rate-limited, unavailable, unexpected) and map it once at the transport boundary. For the default HTTP API, use [API-03](02-api-contracts.md) Problem Details. Never expose stack traces or raw provider messages to clients.
 
 **BE-05 MUST:** Treat a transaction as a business operation boundary. Do not commit from shared helpers. When writing state and publishing an event, use a transactional outbox or another proven atomic mechanism.
 
