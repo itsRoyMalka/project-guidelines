@@ -18,7 +18,7 @@ Example path: verify signed raw callback → map account to scope → validate p
 
 **INT-06 MUST:** Top-level `integrations/outbound/<capability>/` owns a narrow app port and provider adapters. `integrations/inbound/<provider>/` verifies and translates incoming protocols. Features import app capabilities and events, never vendor SDKs.
 
-**INT-07 MUST:** Async notifications enter a durable inbox, then a feature consumer. Synchronous challenges/decision callbacks invoke an authorized feature action and return the provider response immediately; do not wait for an async consumer.
+**INT-07 MUST:** Async notifications enter a durable inbox, then a feature consumer under the [admission/receipt protocol](recipes/outbox-and-consumers.md). Synchronous challenges/decision callbacks invoke an authorized feature action and return the provider response immediately; do not wait for an async consumer.
 
 | Provider example | Adapter | Feature sees |
 | --- | --- | --- |

@@ -21,3 +21,18 @@ pages/order-details/{page.tsx,params.ts,sections.ts}
 ```
 
 **Check:** guest/denied/allowed direct links, safe return, Back/Forward, refresh, async section and revoked access. **Vary when:** framework-owned routing files preserve the same policy. Sources: [React Router routes](https://reactrouter.com/start/framework/route-module), [OWASP redirects](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html).
+
+### Example: atomic URL update
+
+```ts
+// pages/orders/params.ts — query is already parsed from searchDraftSchema.
+export const OrderParam = { Query: 'q', Page: 'page' } as const;
+export function withOrderSearch(current: URLSearchParams, query: string) {
+  const next = new URLSearchParams(current);
+  next.set(OrderParam.Query, query);
+  next.set(OrderParam.Page, String(1));
+  return next;
+}
+```
+
+The page commits the returned params once through its router adapter: submit pushes history; debounced live edits replace it. Unrelated parameters survive. A separate read codec validates incoming URLs; Back/Forward resets the draft deliberately.

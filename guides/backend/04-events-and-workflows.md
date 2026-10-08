@@ -6,7 +6,7 @@
 
 **EVT-02 MUST:** Design for duplicates and stale/out-of-order work. Deduplicate atomically with owned state changes, acknowledge only after required durable progress, and define replay. Transport guarantees do not establish exactly-once external effects; handle provider-side idempotency or uncertain outcomes explicitly. See [idempotency](recipes/idempotency.md).
 
-**EVT-03 MUST:** When durable state and notification must agree, commit state plus publication intent atomically, then publish asynchronously with retry. An outbox does not atomically commit broker delivery with the database. Publishers and consumers tolerate resend; recovery must not lose unpublished intent.
+**EVT-03 MUST:** When a state change requires an event or job start, write durable intent through the outbox in that same database transaction. Only the relay calls the transport after commit; feature handlers never publish directly. CDC is an alternative only with equivalent verified guarantees; see [outbox and consumer receipts](recipes/outbox-and-consumers.md).
 
 **EVT-04 MUST:** Bound attempts, elapsed retry budget, concurrency and processing time. Classify transient/permanent/unknown outcomes, coordinate retry ownership, renew leases when needed and drain safely. Dead letters have an owner, alert and reviewed replay path; retain original identity on retry. See [worker lifecycle](recipes/idempotency.md).
 
@@ -18,7 +18,7 @@
 
 **EVT-07 MUST:** `defineEvent` declares a meaningful committed fact and validated payload. The envelope includes ID, source, version, occurredAt, correlation and data; omit `v1` from ordinary symbols/files. Share public TS event schemas in a narrow producer-owned contracts package.
 
-**EVT-08 MUST:** Features own `consumer.ts`; app `events/subscriptions.ts` composes consumers. `defineConsumer` validates and deduplicates through the production dispatcher; a separate handler is optional. Transport adapters own acknowledgement, retry and ordering behavior.
+**EVT-08 MUST:** Features own named consumers; app subscriptions register them. The dispatcher authenticates/validates, then commits a unique `(consumerId, eventSource, eventId)` receipt with the consumer's DB changes and new outbox intent. A separate handler is optional; it joins that transaction. Acknowledge after commit.
 
 **EVT-09 MUST:** Configure each destination explicitly. Fanout keeps one event ID and separate outbox delivery state per destination; consumers tolerate duplicates across routes. Never claim universal ordering or exactly-once side effects.
 
@@ -28,10 +28,13 @@ export const OrderCancelled = defineEvent({
   version: 1,
   data: z.object({ orderId: orderIdSchema }),
 });
-export const refundCancelledOrder = defineConsumer({
+export const requestRefund = defineConsumer({
+  name: PaymentConsumer.RequestCancellationRefund,
   event: OrderCancelled,
-  handle: refundCancelledOrderHandler,
+  handle: requestRefundHandler, // joins receipt transaction; records refund intent
 });
 ```
 
 Provider SDKs live in `src/integrations/events/`; Kafka, EventBridge, SQS or another adapter must preserve the declared semantics. [Tests](07-testing.md) observe publication through an app-scoped recorder and exercise consumers through the dispatcher.
+
+Consumer names are durable IDs, never inferred from function names. A receipt means the declared DB effect or durable work intent committed; it does not mean an external payment completed. The [recipe](recipes/outbox-and-consumers.md) defines inbox admission, relays, replay and adapter acknowledgements.

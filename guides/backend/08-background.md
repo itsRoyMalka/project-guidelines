@@ -24,11 +24,17 @@ integrations/background/       # Temporal or another selected adapter
 ```
 
 ```ts
+// background/fulfil-order/workflow.ts — project-owned definition API
 export const fulfilOrder = defineWorkflow({
   name: OrderWorkflow.Fulfil,
   input: fulfilOrderInput,
-  steps: [{ job: reserveStock }, { job: confirmOrder }],
+  steps: [
+    { id: OrderStep.ReserveStock, job: reserveStock },
+    { id: OrderStep.ConfirmOrder, job: confirmOrder },
+  ],
 });
 ```
 
-Temporal is the default when this capability is needed; its persistence, upgrades, security, worker capacity and shutdown need an owner. Commit required start intent with business state. **Check:** fail step two and verify step one is not repeated; resume an old execution after deployment. **Vary when:** a supported alternative adapter satisfies the declared subset. No adapter implementation is certified by this handbook. Source: [Temporal workflow requirements](https://docs.temporal.io/workflow-definition).
+Temporal is the default when this capability is needed; its persistence, upgrades, security, worker capacity and shutdown need an owner. Commit required start intent with business state through the [outbox](recipes/outbox-and-consumers.md#external-effects-and-jobs); the relay uses a stable execution identity. **Check:** fail step two and verify step one is not repeated; resume an old execution after deployment. **Vary when:** a supported alternative adapter satisfies the declared subset. No adapter implementation is certified by this handbook. Source: [Temporal workflow requirements](https://docs.temporal.io/workflow-definition).
+
+In this minimal excerpt both jobs consume the validated root fulfil-order input and require no previous step output. `OrderStep` is the workflow-owned constant map; stable step IDs differ from job type IDs. The adapter normalizes registered job references to serializable identifiers. Output bindings, compensation and version-overlap mechanics need a separately proven definition before adding those behaviors.

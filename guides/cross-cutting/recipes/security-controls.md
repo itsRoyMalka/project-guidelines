@@ -18,3 +18,14 @@ Keep deploy secrets in managed secret storage. Replayable provider credentials r
 A security finding record names affected versions/data, severity, owner, mitigation/fix target, release and verification. Triage actively exploited or exposed credentials immediately under the organization's incident policy. An exception states compensating controls and expiry/review; a scan cannot approve itself. Fix the actual affected path and preserve a regression check where meaningful.
 
 **Verification:** an applicability map links each selected control to a concrete test/config review, with unavailable evidence visible. **Alternative:** use a maintained organization control catalog with these app-specific mappings. Sources: [ASVS](https://github.com/OWASP/ASVS), [password storage](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html), [NIST SSDF](https://csrc.nist.gov/pubs/sp/800/218/final).
+
+### Example: control evidence
+
+```text
+docs/security/threat-model.md
+Boundary: order cancellation API
+Threat: caller submits another customer's order ID
+Control: verified actor + scoped lookup + conditional transition
+Proof: forbidden API request leaves order and outbox unchanged
+Owner: Orders; revisit: identity model or resource sharing changes
+```

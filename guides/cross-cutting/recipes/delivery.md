@@ -23,3 +23,14 @@ Keep reviewed declarative changes, owned remote state with locking/access/backup
 ## Supply-chain response
 
 Assign vulnerability ownership and triage by exploitability, exposure and business impact. Record urgency, remediation or expiring acceptance, affected lockfiles/images and validation. Dependency updates include transitive change review and behavioral compatibility checks. Security scans are signals with triage; absence of findings is not proof of absence of vulnerabilities.
+
+### Example: serialize an environment's deployments
+
+```yaml
+# .github/workflows/deploy-dev.yml — GitHub Actions workflow excerpt
+concurrency:
+  group: deploy-dev
+  cancel-in-progress: false
+```
+
+Use the same protected environment concurrency group for every deployment path that can mutate it. The rest of the pipeline verifies the candidate digest, applies controlled migrations, deploys and captures the running manifest. This setting alone does not lock manual deployments or E2E's deployment lease; those entrypoints must share the platform's actual coordination mechanism.

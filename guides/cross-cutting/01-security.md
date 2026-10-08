@@ -4,7 +4,7 @@
 
 **SEC-01 MUST:** Authenticate using the selected identity profile and derive verified principal/grants. For signed tokens validate integrity, issuer, audience, expiry and other required claims; use trusted introspection/session lookup for opaque credentials. Decoding alone is insufficient. Strip untrusted scope headers, authenticate gateway/service propagation and prevent bypass. Authorize actions/resources on the backend. See [identity profile](recipes/identity.md).
 
-**SEC-02 MUST:** Enforce trusted scope on every protected access path, including relations, caches, exports and delegated workers. Define tenant selection, invitation/offboarding and administrative/global-data paths explicitly. Test another tenant's identifiers and mixed-tenant relations; frontend visibility is not protection.
+**SEC-02 MUST:** Enforce trusted scope on every protected access path, including relations, caches, exports and delegated workers. For multi-tenant products, define tenant selection, invitation/offboarding and administrative/global-data paths; test cross-tenant identifiers and relations. Single-tenant products test their actual account/resource boundaries; frontend visibility is not protection.
 
 **SEC-03 MUST:** Classify data and minimize collection/retention. Put deploy secrets in managed storage; encrypt replayable customer/provider credentials with managed key lifecycle. Passwords use an approved adaptive password hash, never a fast digest alone. Keep real credentials out of source, bundles and logs; synthetic fixtures are allowed. See [security controls](recipes/security-controls.md) and [data lifecycle](../backend/06-data-lifecycle.md).
 
@@ -30,3 +30,13 @@ Control: trusted actor + scoped DAL read
 Proof: forbidden cross-account API test
 Owner: Orders
 ```
+
+### Example: resource policy inside the handler
+
+```ts
+// features/orders/get-order/handler.ts — authorized read body
+const order = await orderDal.getOwned(deps.db, actor, input.orderId);
+return toOrderView(order);
+```
+
+`getOwned` filters by the trusted actor's access, not a caller-supplied owner ID; it hides inaccessible records according to the selected disclosure policy. `toOrderView` allowlists public fields. The API already authenticated and checked the named read action; the resource check remains necessary.

@@ -13,10 +13,15 @@
 **WEB-05 MUST:** Measure LCP, INP, CLS and a few named journeys by device class. Optimize measured bottlenecks; do not log every render. Session replay requires explicit privacy configuration.
 
 ```ts
+// features/orders/cancel/api/use-cancel-order.ts — hook excerpt
 const { analytics } = useTelemetry();
-analytics.track(OrderAnalytics.Cancelled, { kind: order.kind });
+const onSuccess = (order: OrderView) => {
+  analytics.track(OrderAnalytics.Cancelled, { kind: order.kind });
+};
 const enabled = useFlag(OrderFlag.NewSearch);
 const permitted = useCan(OrderAction.Read);
 ```
 
 **Check:** recording-adapter payloads, logout/consent, flag failure and one measured journey. **Vary when:** disable analytics for product/privacy constraints; browser OpenTelemetry is not a mandatory runtime. Sources: [OpenFeature](https://openfeature.dev/docs/reference/sdks/client/web/react/), [Web Vitals](https://web.dev/articles/vitals).
+
+Pass `onSuccess` to the mutation callback; never emit analytics during render. Compose it with the affected-query refresh from the reference flow. Constants and event property types are declared by the owning feature; the telemetry adapter enforces consent and scope.

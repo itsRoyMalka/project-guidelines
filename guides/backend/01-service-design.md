@@ -30,7 +30,7 @@ Brace notation abbreviates separate files. Create only responsibilities the acti
 
 **BE-04 MUST:** Map typed internal failures to safe public errors once at the transport boundary. Preserve the cause for diagnostics and log unexpected errors once; do not return provider messages or stacks.
 
-**BE-05 MUST:** The handler definition chooses transaction scope. A small app-owned `defineHandler` supplies app dependencies, telemetry and transaction execution; callers cannot override that choice. Nested actions join an explicit context, never silently open independent commits.
+**BE-05 MUST:** The handler definition explicitly selects `transaction: true` or `false`. The app-owned factory starts or joins one transaction for `true`; a participating child failure marks it rollback-only even if caught. `false` cannot run inside an active transaction. Follow the [transaction contract](recipes/transactions.md); callers never override modes.
 
 **BE-06 SHOULD:** A service chassis owns config validation, telemetry startup, feature registration, HTTP/RPC, workers, readiness and bounded shutdown. Register dependencies once; keep seed/demo data outside bootstrap.
 
@@ -43,16 +43,24 @@ Brace notation abbreviates separate files. Create only responsibilities the acti
 export const cancelOrder = defineHandler({
   name: OrderAction.Cancel,
   transaction: true,
-  run: async ({ input, actor, tx }) => {
+  audit: {
+    action: AuditAction.OrderCancelled,
+    resourceType: AuditResource.Order,
+    resourceId: ({ result }) => result.id,
+  },
+  run: async ({ input, actor, tx, deps }) => {
     const order = await orderDal.getOwned(tx, actor, input.orderId);
     assertCancellable(order);
-    await orderDal.cancelIfPending(tx, order.id);
-    await outbox.add(tx, OrderCancelled.create({ orderId: order.id }));
+    const changed = await orderDal.cancelIfPending(tx, order.id);
+    if (changed !== 1) throw new OrderConflictError();
+    await deps.outbox.add(tx, OrderCancelled.create({ orderId: order.id }));
     return { id: order.id, status: OrderStatus.Cancelled };
   },
 });
 ```
 
-**Check:** follow one request through policy, handler, DAL, commit and [action test](07-testing.md). **Vary when:** an existing healthy layout can remain under a recorded exception. Further reading: internal review record (not distributed).
+**Check:** follow one request through policy, handler, DAL, commit and [action test](07-testing.md). **Vary when:** an existing healthy layout can remain under a recorded exception.
 
 Chassis startup: telemetry → validated config → DB/provider capabilities → feature manifests → HTTP/RPC/consumers/workers → readiness. Shutdown stops new work, drains with a deadline, releases leases and closes resources. Features do not own process hooks.
+
+Audited actions use the [audit metadata contract](recipes/audit.md); the factory persists success evidence inside the same transaction.

@@ -26,3 +26,15 @@ Startup validates configuration and initializes pools. Startup probes allow boun
 ## Recovery drills
 
 Set RPO (acceptable data loss) and RTO (recovery time) from product needs. Restore into isolation with required keys/config/dependencies; check integrity, tenant permissions, recent writes and representative journeys. Reapply deletion/restriction records before serving restored personal data. Measure achieved RPO/RTO and record gaps. Test backup access loss and key availability; backup completion alone is not restore proof.
+
+### Example: owned SLO record
+
+```text
+docs/operations/orders.md
+Journey: customer cancellation
+Good: eligible requests commit within the selected latency budget
+Bad: failed/late eligible requests, including dependency failures
+Window/target: product-approved values recorded before release
+Owner: Orders; alert: sustained error-budget burn
+Recovery: halt rollout; compatible rollback; verify state and pending intent
+```

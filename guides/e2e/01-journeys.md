@@ -24,6 +24,8 @@ packages/test-ids/orders.ts
 ```
 
 ```ts
+// apps/e2e/web/orders/create-and-cancel.test.ts
+// test is the Playwright app fixture; helpers import web/support UI flows.
 test('customer cancels an order', async ({ page, user }) => {
   await signIn(page, user);
   const order = await createOrder(page, { quantity: 2 });

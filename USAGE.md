@@ -27,6 +27,6 @@ For a new product, provide the PRD and target location to the [start-project ski
 
 ## Update and ownership
 
-The consuming project's technical owner records revision, profiles and exceptions. The handbook maintainer reviews source/security changes and at least quarterly; the project owner schedules adoption by impact. A commit change never silently changes an already pinned consumer. Retired IDs keep a pointer to their successor. Current normative content is in `guides/`; `reviews/` describes old snapshots.
+The consuming project's technical owner records revision, profiles and exceptions. The handbook maintainer reviews source/security changes and at least quarterly; the project owner schedules adoption by impact. A commit change never silently changes an already pinned consumer. Retired IDs keep a pointer to their successor. Current normative content is in `guides/`.
 
 A task may use general engineering knowledge, but mark consequential assumptions and verify platform-specific behavior. For a meaningful change, report adopted rules, actual checks and remaining gaps. See [templates](guides/templates/decisions.md).

@@ -22,7 +22,7 @@
 
 **OPS-09 MUST:** Each deployable has a service record with owner, dependencies, release/recovery path, dashboards, runbook and escalation. Incidents record impact, facts/hypotheses, mitigation and user-flow recovery proof.
 
-**OPS-10 MUST:** Initialize Node telemetry before instrumented imports. Use OpenTelemetry/OTLP to Collector for traces/metrics and Pino stdout through one log collector. Select provider exporters outside features; avoid duplicate shipping.
+**OPS-10 MUST:** For Node services, initialize telemetry before instrumented imports. Use OpenTelemetry/OTLP to Collector for traces/metrics and Pino stdout through one log collector. Select provider exporters outside features; avoid duplicate shipping.
 
 **OPS-11 MUST:** Instrument request/RPC/DB/queue boundaries and named actions. Use bounded dimensions, sampled routine diagnostics, safe correlation and redaction; never export raw bodies, SQL parameters, tokens or personal data. Measure rate/error/latency/saturation and oldest pending work.
 
@@ -31,3 +31,17 @@ bootstrap → telemetry setup → app/features
 traces/metrics → OTLP Collector → selected backends
 Pino stdout → platform collector → log backend
 ```
+
+### Example: safe boundary logging
+
+```ts
+// src/shared/telemetry/handler-logging.ts — factory boundary excerpt
+logger.info({
+  action: OrderAction.Cancel,
+  outcome: OperationOutcome.Committed,
+  requestId: context.requestId,
+  durationMs,
+}, 'Action completed');
+```
+
+Emit after confirmed completion at the selected boundary, not from every layer. The logger is app-bound with redaction; metric labels use bounded action/outcome values and exclude requestId. This diagnostic is not the durable audit record.

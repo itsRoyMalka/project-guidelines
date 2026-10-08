@@ -25,3 +25,18 @@ cancel_rate = eligible cancelled orders / eligible created orders
 Scope: real orders only; business calendar timezone declared
 Grain: one row per order; source: Orders; owner: Operations analytics
 ```
+
+### Example: declared metric grain
+
+```sql
+-- models/marts/orders/order_cancellation_rate.sql — dbt model excerpt
+-- Input contract: one current row per real order; test traffic excluded upstream.
+SELECT
+  business_date,
+  SUM(CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END) AS cancelled_orders,
+  COUNT(*) AS eligible_orders
+FROM {{ ref('fct_eligible_orders') }}
+GROUP BY business_date
+```
+
+`business_date` uses the declared business timezone; `fct_eligible_orders` owns eligibility and deletion filtering. This is a mutable cohort metric: late cancellations revise earlier dates. Consumers divide these counts with a defined zero-denominator policy; they do not average precomputed percentages across groups.

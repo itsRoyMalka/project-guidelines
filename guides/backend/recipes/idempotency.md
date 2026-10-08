@@ -4,14 +4,15 @@ Read for an API write, worker, webhook or scheduled job that can repeat. Own rul
 
 ## One business action
 
-Scope the key by trusted tenant/principal and operation. Hash a canonicalized representation of meaningful input. Store the fingerprint and resulting public outcome under a unique scoped key; define expiry longer than the supported client retry window. Do not reuse keys across distinct actions.
+Scope the key by trusted principal and operation; include tenant only for multi-tenant products. Hash a canonicalized representation of meaningful input. Store the fingerprint and resulting public outcome under a unique scoped key; define expiry longer than the supported client retry window. Do not reuse keys across distinct actions.
 
 Inside a transaction, reserve the key, validate current authorization/state, conditionally write the state transition and any outbox intent, and store the replayable outcome. A concurrent reservation uses a bounded wait or documented in-progress response; a different fingerprint with the same key conflicts. Recheck access before disclosing a stored result. Persist a successful result before responding; a lost response then permits replay. Transient failures before commit can be retried under the same key.
 
 ```text
-UNIQUE(tenant_id, actor_id, operation, idempotency_key)
+UNIQUE(actor_id, operation, idempotency_key)
+# Include tenant_id in the key only when the product is multi-tenant.
 input fingerprint + state: processing/completed + safe result + expiry
-order UPDATE scoped by tenant, id, expected status/version
+order UPDATE scoped by trusted access, id, expected status/version
 order state + completed result + outbox intent commit together
 ```
 
@@ -19,7 +20,7 @@ This is a responsibility sketch, not drop-in SQL. Select atomic insert/conflict 
 
 ## Publication and consumption
 
-An outbox publisher claims a bounded batch under a recoverable lease, sends, and records publication. A crash between send and record can resend. A consumer records event ID and its owned state change in one transaction and acknowledges after durable progress. Acknowledge/lease policy must match the broker; ordering is per declared aggregate/partition, not assumed global. Keep a cleanup policy that preserves required replay/retention evidence.
+Use the [outbox/consumer recipe](outbox-and-consumers.md): producer state and intent commit together; the relay sends outside the transaction. Consumers atomically insert a receipt keyed by consumer/source/event with their owned effect and any new intent, then acknowledge. Failures roll back the receipt; a lost acknowledgement permits safe redelivery. See the [transaction contract](transactions.md) for nested calls and rollback-only semantics.
 
 For email/payment/provider calls, the provider is outside the local transaction. Durably record a stable attempt identity before sending. After a worker crash or expired lease, an unfinished attempt may already have reached the provider; classify it as potentially accepted and reconcile rather than assuming failure. After timeout following possible acceptance, record **unknown outcome**. Reuse a supported provider idempotency key, reconcile through a receipt/status API, or ask the business owner to choose the documented duplicate-versus-loss policy. A local sent marker alone cannot remove the crash window. Do not blindly retry a financial effect or claim exactly-once delivery.
 

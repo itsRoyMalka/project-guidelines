@@ -11,9 +11,11 @@
 **CACHE-04 MUST:** `integrations/cache/` owns the port and Valkey/Redis adapters. Emit bounded hit/miss/bypass/error/invalidation metrics and load latency by cache name; sample routine diagnostics and never log raw keys or values.
 
 ```ts
-const result = await cache.getOrLoad(orderSummaryCache.key(scope, orderId), {
+// get-summary/handler.ts — transaction:false; ports are app-bound.
+await deps.orderAccess.requireRead(actor, input.orderId);
+const result = await deps.cache.getOrLoad(orderSummaryCache.key(actor.visibilityKey, input.orderId), {
   policy: orderSummaryCache,
-  load: () => orderDal.getSummary(db, scope, orderId),
+  load: () => orderDal.getSummary(deps.db, actor, input.orderId),
 });
 ```
 

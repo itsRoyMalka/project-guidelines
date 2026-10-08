@@ -14,7 +14,7 @@
 | Application tests | Existing runner or Vitest, Testing Library, MSW and focused Playwright journeys | Equivalent established tools; choose test layers by risk |
 | Observability | OpenTelemetry-compatible signals with bounded metric labels | Platform instrumentation providing required evidence |
 
-React Router supports server rendering; SSR alone does not select Next.js. A full-stack web server may call operations directly; a static SPA calls a separate API. Do not accidentally add both server ownership models. The [verified integration record](profiles/verification.md) gives the tested narrow stack combination, including a compiler/generator compatibility constraint discovered during verification.
+React Router supports server rendering; SSR alone does not select Next.js. A full-stack web server may call operations directly; a static SPA calls a separate API. Do not accidentally add both server ownership models. Verify the actual compiler, schema generator, framework and deployment combination selected for the project.
 
 
 **STACK-01 MUST:** Declare supported versions and dependency resolution for each runtime/profile. Prefer one version per runtime in a cohesive workspace, allowing documented migration windows. Commit the appropriate lockfiles and pin the toolchain; production Node uses an Active or Maintenance LTS release.
@@ -23,7 +23,7 @@ React Router supports server rendering; SSR alone does not select Next.js. A ful
 
 **STACK-03 SHOULD:** Avoid Module Federation, a global client-state library, a workflow engine, a message broker, and a second database until the architecture brief identifies a need. Introduce a capability with its operational and testing model.
 
-**STACK-04 MUST:** Before adoption or a major upgrade, record the tested runtime, framework, compiler, schema adapters and deployment mode. Prove the relevant contract/build path against these versions; see [profile verification](profiles/verification.md). A source link is not compatibility proof.
+**STACK-04 MUST:** Before adoption or a major upgrade, record the tested runtime, framework, compiler, schema adapters and deployment mode. Prove the relevant contract/build path against these versions. A source link is not compatibility proof.
 
 **STACK-05 MUST:** Treat named tools in the table as a recommended project profile, not an industry requirement. Recheck major-version migration and operational behavior—especially the database layer—when the architecture brief is written. A stable existing stack that meets the same invariants does not need replacement.
 
@@ -42,3 +42,14 @@ React Router supports server rendering; SSR alone does not select Next.js. A ful
 | Managed DS | React Aria behavior, DTCG tokens, Storybook; keep a healthy existing Radix system |
 
 Versions are selected and checked during project setup, never inferred from these names. Local conventions such as test IDs and factory names are not framework mandates.
+
+### Example: selected stack record
+
+```text
+docs/architecture/overview.md
+Profile: split web/API; Node LTS + Fastify; React Router SPA + Query
+Forms: RHF + Zod; DB: PostgreSQL + selected Prisma major
+Optional now: none; add jobs/cache only for an identified need
+Versions: record the exact verified versions and lockfile in this project
+Proof: API contract + client build + first action integration test
+```

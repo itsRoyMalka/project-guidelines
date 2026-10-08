@@ -16,4 +16,15 @@ packages/test-ids/<feature>.ts
 apps/e2e/web/
 ```
 
-**Check:** invalid input, safe output, runtime response validation, auth/CSRF, generated contract compatibility and one Query mutation/revalidation flow. **Alternative:** [fullstack](typescript-fullstack.md) for one runtime. See [contracts](../backend/recipes/contracts.md) and [FE architecture](../frontend/01-architecture.md). [Old fixture evidence](verification.md) is historical, not proof of this revised profile.
+**Check:** invalid input, safe output, runtime response validation, auth/CSRF, generated contract compatibility and one Query mutation/revalidation flow. **Alternative:** [fullstack](typescript-fullstack.md) for one runtime. See [contracts](../backend/recipes/contracts.md) and [FE architecture](../frontend/01-architecture.md). Verify the selected dependency versions in the adopting project.
+
+### Example: app composition
+
+```ts
+// apps/api/src/app/create-app.ts — project-owned composition API
+const app = createApiApp({ config, db, integrations });
+app.registerFeatures([ordersFeature]);
+await app.ready();
+```
+
+`createApiApp` owns Fastify plugins, endpoint policies and serializers; feature registration binds handlers and dependencies once. Tests create their own app/database and call `app.inject`; production listens only after startup checks. Browser code imports contracts, never this module.

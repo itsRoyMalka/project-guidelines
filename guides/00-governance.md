@@ -11,15 +11,15 @@
 
 ## Rule format
 
-Write one short rule per decision, usually one to three sentences. Add a small example when behavior or placement needs it; keep deeper mechanics in a linked recipe. Skills link to rule owners instead of repeating checklists.
+Use the [example conventions](recipes/example-conventions.md) for names, placement, required context and proof labels. Write one short rule per decision, usually one to three sentences. Add a small example when behavior or placement needs it; keep deeper mechanics in a linked recipe. Skills link to rule owners instead of repeating checklists.
 
 Each new rule needs a stable ID and **MUST** or **SHOULD**. Its owning guide states the scope, rationale, verification method, and conditions that justify an exception; add a rule-specific note when those differ. Add a small code/file example only when wording alone leaves ambiguity. Define the complete convention locally; public references are optional further reading.
 
 ## Change control
 
 - **GOV-01 MUST:** Keep one canonical location for a rule. Cross-reference it elsewhere.
-- **GOV-02 MUST:** Label draft, owner-approved, and retired decisions distinctly. Selection under the owner's authorization is recorded in the decision register; do not imply an individual approval that was not given.
-- **GOV-03 MUST:** Record a cross-guide change in internal review record (not distributed), including affected guides and migration impact. Update all affected guides together.
+- **GOV-02 MUST:** Label proposed, selected, and retired guidance distinctly in its owning guide or change description. Do not imply an individual approval that was not given.
+- **GOV-03 MUST:** For a cross-guide change, state affected guides and migration impact in the change description. Update all affected guides together.
 - **GOV-04 SHOULD:** Prefer decision criteria over a tool mandate when the product context can legitimately change the answer. Record the selected tool in the new project's architecture brief.
 - **GOV-05 MUST:** Record an exception with rule ID, scope, reason, compensating controls where needed, decision owner and review trigger. Design exceptions use the project owner; security/privacy exceptions use the organization's authorized risk owner. Existing user authorization remains valid within its scope. A guide or agent cannot grant itself new permissions. Use the [decision template](templates/decisions.md).
 
@@ -27,6 +27,16 @@ Each new rule needs a stable ID and **MUST** or **SHOULD**. Its owning guide sta
 
 ## Interpreting evidence and examples
 
-Rules are this edition's selected baseline. Public protocol/security requirements, documented framework behavior and team design preferences are distinct: internal review record (not distributed) is the current evidence index and links historical source research as provenance. MUST applies only within a rule's stated scope and selected profile. A SHOULD can vary for a concrete reason; style preferences are not security defects. Recipes demonstrate a rule without creating a second normative owner.
+Rules are this edition's selected baseline. Distinguish public standards, framework behavior and house preferences. MUST applies only within a rule's stated scope and selected profile. A SHOULD can vary for a concrete reason; style preferences are not security defects. Recipes demonstrate a rule without creating a second normative owner.
 
-The canonical definition uses a stable ID; references may cite it without copying its text. Current rule scope and the selected profiles determine applicability. The internal review record (not distributed) reports what was actually checked; it creates no additional requirements. Historical reviews describe earlier commits. The owner authorized this revision's design choices; individual product deployments and organization risk acceptance remain governed by their actual scope.
+The canonical definition uses a stable ID; references may cite it without copying its text. Current rule scope and selected profiles determine applicability. Each adopting project verifies its selected implementation and records actual results. Individual product deployments and organization risk acceptance remain governed by their actual scope.
+
+### Example: apply a rule with a scoped exception
+
+```text
+Rule: FE-03 (request/query separation)
+Scope: legacy reporting screen only
+Reason: replacement is already scheduled; current client has access/error tests
+Owner: Web team; revisit: reporting replacement release
+Other features: continue applying the selected profile
+```

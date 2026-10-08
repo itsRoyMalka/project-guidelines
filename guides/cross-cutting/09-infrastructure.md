@@ -21,3 +21,15 @@ infra/
 ```
 
 **Check:** isolated state/locking, drift, readiness failure, failed/missing metric, actual traffic allocation and rollback desired state. **Vary when:** low traffic may need synthetic blue/green checks or controlled rolling; an equivalent managed declarative platform is valid. Sources: [OpenTofu modules](https://opentofu.org/docs/language/modules/develop/), [Kubernetes deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/), [ECS strategies](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs_service-options.html).
+
+### Example: provider-specific root
+
+```hcl
+# infra/stacks/aws/dev/main.tf — existing service module contract
+module "orders_api" {
+  source       = "../../../modules/aws/service"
+  image_digest = var.orders_api_image_digest
+}
+```
+
+`image_digest` names a verified immutable artifact, not a mutable tag. Provider/auth, protected remote state and required module inputs belong to this root's other files. This is a call-site excerpt; the module must implement and prove the selected rollout/health/rollback behavior before use.

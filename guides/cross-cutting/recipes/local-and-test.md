@@ -27,3 +27,17 @@ Keep mocks at genuinely external boundaries; mock-only database tests cannot pro
 A retry pass does not erase the first failure. Preserve the failing attempt, classify environment versus product cause, assign owner and repair deadline. A quarantined check needs a tracked reason, expiry and compensating coverage; it must not silently make a required release condition green.
 
 Report: command, revision, environment, assertions/coverage, result, skipped/unavailable checks and residual risk. Coverage percentages are diagnostic signals, not a universal acceptance threshold. Record performance sample size/workload, accessibility manual scope and threat-based security cases separately.
+
+### Example: shared test-environment declaration
+
+```text
+apps/api/README.md — verification environment
+Database: real PostgreSQL, isolated schema/database per test worker
+App: real Fastify instance; actual policies/handlers/DAL
+Provider calls: recording adapters; no live payments or email
+Events: real outbox/relay/dispatcher with recording transport
+Teardown: stop workers, close app, delete only this run's isolated data
+Unproved here: production broker and provider-specific delivery behavior
+```
+
+Pair this record with actual project commands; do not paste commands for tools the app has not installed.

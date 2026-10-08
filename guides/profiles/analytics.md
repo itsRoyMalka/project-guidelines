@@ -19,3 +19,19 @@ Apply tests to model invariants: required keys, uniqueness at the declared grain
 Adapter capabilities and generated SQL vary; validate the selected dbt/warehouse versions and representative late-update/delete/replay cases in the project. No warehouse execution was performed for this handbook revision.
 
 Sources: [dbt incremental models](https://docs.getdbt.com/docs/build/incremental-models), [data tests](https://docs.getdbt.com/docs/build/data-tests).
+
+### Example: model tests
+
+```yaml
+# models/marts/orders/schema.yml — selected dbt project
+version: 2
+models:
+  - name: fct_eligible_orders
+    columns:
+      - name: order_id
+        data_tests:
+          - not_null
+          - unique
+```
+
+These tests fit a declared one-row-per-order model. Add reconciliation/freshness checks tied to its consumers; do not apply uniqueness to an event model that legitimately has many rows per order. Version-specific dbt syntax is verified in the consuming project.

@@ -2,7 +2,7 @@
 
 Short rules and small examples for agents building a product from a PRD and maintaining it afterward. This repository contains guides and skills; generated application code belongs in the target project.
 
-**Edition: 2026-10-08.** The owner's approved discussions are reconciled into `guides/`. internal review record (not distributed) maps each topic to its current owner. internal review record (not distributed) states what was checked and what remains unproven.
+**Edition: 2026-10-08.** [The guide map](guides/README.md) identifies the current owner for each topic. Examples describe project-owned patterns; adopting projects must implement and verify them against their chosen stack.
 
 | Task | Start here |
 | --- | --- |
@@ -17,4 +17,4 @@ Read [usage](USAGE.md) and [governance](guides/00-governance.md), then select on
 
 Core profiles cover TypeScript web/backend, React Native mobile, Python and analytics. Load optional tenancy, RPC, events, background jobs, cache, vault and DocStore only when needed. AI evaluation, complex offline synchronization, embedded/ML systems and jurisdiction-specific compliance need a project extension.
 
-**Authority:** user/host/target instructions → canonical guides → selected profiles. Recipes illustrate; skills route work. `decisions/drafts/` and `reviews/` are historical evidence, not instructions. Factory snippets describe project-owned patterns and do not claim an installed framework or tested implementation.
+**Authority:** user/host/target instructions → canonical guides → selected profiles. Recipes illustrate; skills route work. Factory snippets describe project-owned patterns and do not claim an installed framework or tested implementation.

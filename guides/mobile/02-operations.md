@@ -15,9 +15,16 @@
 **MOPS-06 MUST:** Keep BE contracts compatible with supported older app versions. Define minimum-version policy and monitor crashes, ANRs, startup and critical journeys during rollout.
 
 ```ts
+// features/orders/cancel/api/use-cancel-order.ts — callbacks passed to useMutation
 const { analytics, diagnostics } = useTelemetry();
-analytics.track(OrderAnalytics.Cancelled, { kind: order.kind });
-diagnostics.record(OrderLog.CancelFailed, { reasonCode });
+const onSuccess = (order: OrderView) => {
+  analytics.track(OrderAnalytics.Cancelled, { kind: order.kind });
+};
+const onError = (error: unknown) => {
+  diagnostics.record(OrderLog.CancelFailed, { reasonCode: toSafeReasonCode(error) });
+};
 ```
 
 **Check:** safe payload, encrypted buffer/upload expiry, crash capture, both release profiles and rollback/fix compatibility. **Vary when:** omit OTA or disable diagnostics for the product's privacy needs. Sources: [Expo runtime versions](https://docs.expo.dev/eas-update/runtime-versions/), [Android vitals](https://developer.android.com/topic/performance/vitals/), [OWASP mobile logs](https://mas.owasp.org/MASWE/MASVS-STORAGE/MASWE-0005/).
+
+The telemetry port owns consent and identity scope; `toSafeReasonCode` returns an allowlisted code, never the raw exception. Success and failure callbacks run on their respective outcomes.

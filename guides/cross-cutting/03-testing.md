@@ -25,3 +25,22 @@
 **Verification:** tests fail for the targeted defect, pass for the fix, and remain reproducible in CI. Further reading: [Playwright best practices](https://playwright.dev/docs/best-practices).
 
 Read [BE test shape](../backend/07-testing.md), [FE test shape](../frontend/07-testing.md) and [shared dev targeting](../e2e/02-environments.md) for the selected boundary. No separate per-action test-plan document or universal coverage threshold is required.
+
+### Example: rejected flow proof
+
+```ts
+// features/orders/cancel-order/cancel-order.test.ts
+// test is the app-scoped API fixture; helpers exercise the real API/DB.
+test('another customer cannot cancel the order', async ({ api }) => {
+  const { createUser, createOrder, cancelOrder, getOrder, sideEffects } = api;
+  const owner = await createUser();
+  const other = await createUser();
+  const order = await createOrder(owner);
+  const response = await cancelOrder(other, order.id);
+  expect(response.statusCode).toBe(HttpStatus.NotFound);
+  expect((await getOrder(owner, order.id)).status).toBe(OrderStatus.Pending);
+  expect(await sideEffects.outbox.forResource(order.id, OrderEvent.Cancelled)).toHaveLength(0);
+});
+```
+
+This example selects the hidden-resource 404 policy; test the product's actual policy. The outbox inspection reads committed intent, not broker-send counts. Helpers and status constants are declared by the consuming test library.

@@ -15,9 +15,10 @@ Read when adding an abstraction. Owners: ARCH-03/05, BE-03/05, TS-04, REPO-03. A
 Composition wires dependencies once at the runtime boundary; it need not use a dependency-injection container. Prefer explicit clock/client arguments when tests need control. Keep business policy out of generic base classes and “universal” CRUD repositories. Value objects/classes are legitimate when they enforce invariants; global singleton mutable state needs lifecycle and concurrency proof.
 
 ```ts
-type Transition = { ok: true; next: 'cancelled' } | { ok: false; code: 'conflict' };
-function cancel(status: 'open' | 'shipped' | 'cancelled'): Transition {
-  return status === 'shipped' ? { ok: false, code: 'conflict' } : { ok: true, next: 'cancelled' };
+// features/orders/shared/handler.shared.ts — pure decision helper
+// OrderStatus is the shared contract constant/type.
+function canCancelOrder(status: OrderStatus): boolean {
+  return status === OrderStatus.Pending;
 }
 ```
 

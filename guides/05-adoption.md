@@ -13,3 +13,13 @@
 **ADOPT-05 MUST:** Consumers record the handbook revision and selected profiles. A standard change identifies affected rules, examples, skills and consumers, with upgrade/deprecation notes. Preserve retired IDs and their successors. Use [handbook consumption](../USAGE.md) to keep local instructions aligned without copying the whole rule set.
 
 **Verification:** each adopted rule has a concrete owner and evidence; exceptions are discoverable; the target project can still ship safely while migrating.
+
+### Example: bounded adoption
+
+```text
+docs/decisions/handbook-exceptions.md
+Rule: FE-03; scope: legacy Orders search
+Decision: retain the existing request client during the current release
+Owner: Web team; revisit: Orders search replacement
+Proof: existing access/error behavior remains covered
+```

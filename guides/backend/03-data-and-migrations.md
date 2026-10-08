@@ -20,7 +20,7 @@
 
 For concrete scoped joins, tenant foreign keys and conflict strategy see [persistence](recipes/persistence.md).
 
-**DATA-08 MUST:** Features own table/enumeration definitions in `features/<feature>/db/`; the deployable owns one composed schema and one migration history under top-level `db/`. Explicitly select `db/prisma.config.ts`; prove discovery/generation for the installed Prisma major. Do not mix v7 schema-directory commands with v8 contract commands.
+**DATA-08 MUST:** Features own table/enumeration definitions in `features/<feature>/db/`; shared infrastructure owns its tables beside its capability. The deployable owns one composed schema and one migration history under top-level `db/`. When Prisma is selected, explicitly select `db/prisma.config.ts`; prove discovery/generation for the installed Prisma major. Do not mix v7 schema-directory commands with v8 contract commands.
 
 **DATA-09 MUST:** Comment each model's class: reference, operational, event or audit. Record mutation, retention and growth decisions. Size alone does not justify partitions or change the table's class.
 
@@ -36,3 +36,25 @@ src/features/audit/db/audit.prisma   # class: audit; append-only; owned retentio
 ```
 
 Prisma v8 supports an explicit contract glob; v7 reads a configured schema directory and needs deliberate composition when models live elsewhere. Verify all feature models are included, rather than assuming discovery. See [Prisma config](https://www.prisma.io/docs/cli/configuration) and [v7 multi-file schema](https://www.prisma.io/blog/organize-your-prisma-schema-with-multi-file-support). Generated output is never the hand-edited source.
+
+### Example: feature-owned model
+
+```prisma
+// src/features/orders/db/orders.prisma — Prisma ORM 7 schema excerpt
+// class: operational; mutable state; retention owned by Orders
+model Order {
+  id        String      @id @default(uuid()) @db.Uuid
+  status    OrderStatus @default(Pending)
+  version   Int         @default(0)
+  createdAt DateTime    @default(now()) @db.Timestamptz(3) @map("created_at")
+  @@map("orders")
+}
+// enums.prisma — storage values agree with the public OrderStatus map
+// In the real tree this enum is in the feature's second schema file.
+enum OrderStatus {
+  Pending   @map("pending")
+  Cancelled @map("cancelled")
+}
+```
+
+This single-tenant excerpt does not introduce a tenant column. Prisma-generated enums stay behind the DAL; public DTOs use the shared wire map. Compose both files with the selected-major configuration; add indexes for demonstrated DAL queries, not merely to decorate the example.

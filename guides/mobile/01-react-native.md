@@ -27,3 +27,21 @@ packages/test-ids/              # shared semantic targets
 ```
 
 Use [FE forms/state](../frontend/02-state-and-forms.md), [feature tests](../frontend/07-testing.md) with React Native Testing Library, [mobile telemetry/release](02-operations.md) and [device E2E](../e2e/01-journeys.md). **Check:** both platform builds, native integration, auth/deep links, permission denial, foreground/offline and accessible large-text/RTL states. **Vary when:** React Navigation without Expo or a supported native stack meets the same controls. Sources: [RN framework guidance](https://reactnative.dev/docs/environment-setup), [Expo monorepos](https://docs.expo.dev/guides/monorepos/), [native OAuth](https://datatracker.ietf.org/doc/html/rfc8252).
+
+### Example: native form bridge
+
+```tsx
+// features/orders/create/ui/create-order-form.tsx — RN DS exports
+// form uses RHF defaults + zodResolver(createOrderDraftSchema).
+<Controller
+  control={form.control}
+  name="name"
+  render={({ field, fieldState }) => (
+    <TextField value={field.value} onChangeText={field.onChange}
+      onBlur={field.onBlur} ref={field.ref} label={t('create.name')}
+      error={fieldState.error?.message} testId={OrderTestId.NameInput} />
+  )}
+/>
+```
+
+`Controller` is from React Hook Form; `TextField` is the native DS wrapper. It forwards focus/ref and testID to the editable native input. The DS submit button calls `form.handleSubmit` and exposes pending/disabled state; native code does not rely on HTML form events.

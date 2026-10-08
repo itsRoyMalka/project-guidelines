@@ -12,7 +12,7 @@ services/<service>/
     app/                # composition, settings, routers
     features/<domain>/  # action-owned api, contract, handler, dal as needed
   tests/
-  migrations/           # only when this service owns a database
+  db/migrations/        # Alembic history when this service owns a database
 ```
 
 **PY-01 MUST:** Keep HTTP routers thin: parse boundary models, derive trusted identity, authorize, call a named operation and map errors. Pydantic field validation is appropriate; business checks belong in handlers. Preserve existing coherent layouts.
@@ -26,3 +26,17 @@ services/<service>/
 **PY-05 MUST:** Workers follow the canonical [event rules](../backend/04-events-and-workflows.md) for retries, deduplication and recovery; tenant controls apply to scoped workloads. Define sync/async resource lifecycle. Shared capabilities use explicit package contracts, without importing another deployable's implementation.
 
 **Verification:** Ruff/mypy/pytest, real boundary tests, migration review, and a service-local agent entrypoint.
+
+### Example: Python wire model
+
+```python
+# src/orders/features/orders/cancel_order/contract.py — Pydantic v2
+from uuid import UUID
+from pydantic import BaseModel, ConfigDict
+
+class CancelOrderInput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    order_id: UUID
+```
+
+The router supplies verified identity separately; callers cannot set actor/grants through this model. Python uses snake_case files/functions and PascalCase models; do not copy TypeScript casing mechanically. The [lifecycle example](recipes/lifecycle.md) owns session/transaction handling.

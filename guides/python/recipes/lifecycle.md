@@ -10,12 +10,12 @@ Create a process-level engine/client pool during application lifespan and close 
 
 ```python
 # Illustrative SQLAlchemy 2 async unit of work; engine/factory owned by lifespan.
-async def cancel_order(factory, tenant_id, order_id, version):
+async def cancel_order(factory, trusted_scope, order_id, version):
     async with factory() as session:
         async with session.begin():
             # Scoped conditional UPDATE; assert one changed row.
             # Write audit/outbox intent in this same transaction.
-            return await cancel_scoped(session, tenant_id, order_id, version)
+            return await cancel_scoped(session, trusted_scope, order_id, version)
 ```
 
 `cancel_scoped` is a conceptual application operation, not supplied library code. Authenticate/authorize at the boundary and inside reusable policy-aware operations; never trust an arbitrary tenant argument. Test rollback on exceptions and cancellation. Hold no transaction open during a slow provider call. A background request task is not durable; pass IDs, not request/session objects, to a durable worker that opens its own resources and follows the outbox/outcome protocol.

@@ -4,7 +4,8 @@
 
 ```text
 src/
-  app/{routes,providers,store}.tsx
+  app/{routes,providers}.tsx
+  app/store.ts                   # optional central client store
   pages/orders/{page.tsx,params.ts,sections.ts}
   features/orders/
     browse/
@@ -37,4 +38,15 @@ src/
 
 Fullstack route data follows the [router profile](../profiles/typescript-fullstack.md); do not add Query as a second owner of the same data.
 
-**Check:** trace UI → hook → plain request → shared client/contract. **Vary when:** framework route filenames may differ; ownership and import rules remain. Source: internal review record (not distributed), [React context](https://react.dev/learn/passing-data-deeply-with-context).
+**Check:** trace UI → hook → plain request → shared client/contract. **Vary when:** framework route filenames may differ; ownership and import rules remain. Further reading: [React context](https://react.dev/learn/passing-data-deeply-with-context).
+
+### Example: the request boundary
+
+```ts
+// features/orders/cancel/api/cancel-order.ts — split web/API profile
+export function cancelOrderRequest(api: ApiClient, orderId: string) {
+  return api.call(orderEndpoints.cancel, { params: { orderId } });
+}
+```
+
+`ApiClient` and `orderEndpoints` come from the shared client/contract; no React or provider SDK is imported here. `useCancelOrder` binds the client from context and owns Query mutation effects as shown in the [reference flow](../06-reference-flow.md).

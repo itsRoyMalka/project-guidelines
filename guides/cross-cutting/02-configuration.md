@@ -13,3 +13,19 @@
 **CFG-05 MUST:** Keep operationally significant config changes reviewed and traceable. New external dependencies need local/test configuration and a failure-mode note. Do not log secret values while reporting config errors.
 
 **Verification:** cold-start validation, missing/invalid config cases, local and deployed config comparison, and flag-off regression. Further reading: [Twelve-Factor config](https://www.12factor.net/config).
+
+### Example: one Node config boundary
+
+```ts
+// src/app/config.ts — z is Zod; only this boundary reads process.env.
+const serverConfigSchema = z.object({
+  port: z.coerce.number().int().min(1).max(65535),
+  databaseUrl: z.string().min(1),
+});
+export const serverConfig = serverConfigSchema.parse({
+  port: process.env.PORT,
+  databaseUrl: process.env.DATABASE_URL,
+});
+```
+
+This is server-only configuration. Bootstrap reports safe field names on failure, not values or raw exception payloads; it validates before readiness. A separate allowlisted public config feeds the browser—never serialize this object to FE.

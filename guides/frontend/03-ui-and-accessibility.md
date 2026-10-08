@@ -20,8 +20,27 @@
 
 Use the [UI recipe](recipes/ui-patterns.md) for component selection, interaction states, supported locale/input matrix and manual evidence.
 
-**UI-08 MUST:** Public components accept and forward `testId` to a meaningful root; exposed feature boundaries assign it. Keep per-domain constants in shared `packages/test-ids`. Use stable scoped instance IDs, never copy, CSS, array position or PII.
+**UI-08 MUST:** Public components accept `testId`; interactive controls forward it to the actual input/button, while noninteractive compositions use their root. Give independently targeted composite slots explicit IDs; exposed feature boundaries assign them. Keep per-domain constants in shared `packages/test-ids`. Use stable scoped instance IDs, never copy, CSS, array position or PII.
 
 **UI-09 MUST:** Features own shallow locale JSON groups by user flow under `messages/<locale>.json`. App navigation and design-system copy have their own owners; shared i18next setup/formatters register namespaces. Verify en/he key completeness, interpolation/plurals and mixed-direction text.
 
 See [design system](04-design-system.md) for managed tokens and reusable components, and [frontend tests](07-testing.md) for composition proof.
+
+### Example: shared selector declarations
+
+```ts
+// packages/test-ids/orders.ts — declaration source
+export const OrderTestId = {
+  CreateForm: 'orders.create.form',
+  NameInput: 'orders.create.name',
+  SaveButton: 'orders.create.save',
+  CancelButton: 'orders.cancel.open',
+  ConfirmCancelButton: 'orders.cancel.confirm',
+  CancelError: 'orders.cancel.error',
+  CancelDialog: 'orders.cancel.dialog',
+  row: (orderId: string) => `orders.row.${orderId}`,
+  cancelled: (orderId: string) => `orders.cancelled.${orderId}`,
+} as const;
+```
+
+Only opaque non-PII resource IDs may form instance IDs. Scope repeated control IDs to a unique row/dialog through shared builders; do not render duplicate global IDs for several instances. The [DS example](04-design-system.md) forwards NameInput to the input and uses translations for labels.

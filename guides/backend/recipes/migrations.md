@@ -15,3 +15,12 @@ Before contraction, rollback can mean the old app using the still-compatible sch
 **Proof:** empty and populated databases; interrupted backfill; simultaneous old/new writes; constraint and lock behavior; resumed batches; rollback before contract; documented recovery after contract. Capture exact engine/tool versions and actual commands/results. **Alternative:** a maintenance window is acceptable when explicitly justified by product availability requirements and rehearsed.
 
 Sources: [PostgreSQL isolation](https://www.postgresql.org/docs/current/transaction-iso.html), [Prisma version-specific editing](https://www.prisma.io/docs/orm/migrations/editing-a-migration). Prisma 8's source/generated artifact workflow differs from older majors; Alembic uses its own history. The core rollout invariant is independent of that syntax.
+
+### Example: expansion only
+
+```sql
+-- db/migrations/<selected-history-entry> — reviewed PostgreSQL SQL excerpt
+ALTER TABLE orders ADD COLUMN display_name text;
+```
+
+This adds a nullable column; it is not the entire rename rollout. Establish compatibility for old writers, then run the bounded backfill, reconcile, and contract in a later release. Apply with the chosen migration tool and lock budget; do not run schema changes in every app replica's startup.

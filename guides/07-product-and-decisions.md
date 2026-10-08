@@ -17,3 +17,13 @@ Use the [brief/ADR templates](templates/decisions.md). For a small internal tool
 **PROD-05 SHOULD:** Deliver small usable vertical slices with explicit dependencies and unfinished exposure. Link enabling work to its user outcome; product owners decide consequential behavior and priority.
 
 **PROD-06 MUST:** Define launch success signals and revisit decisions when measured outcomes contradict assumptions. Use a short ADR for durable tradeoffs, not every implementation choice.
+
+### Example: issue brief
+
+```text
+ODR-123: Customer can cancel a pending order
+Success: owner cancels; status persists after reload
+Forbidden: another customer cannot cancel it
+Race: cancellation and fulfilment cannot both win
+Proof: action integration + feature interaction; critical E2E journey
+```

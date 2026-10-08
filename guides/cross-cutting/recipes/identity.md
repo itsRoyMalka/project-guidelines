@@ -22,3 +22,16 @@ external request → verified principal → allowed tenant selection
 For hidden resources, the profile can map wrong-tenant and absent resources to the same public not-found response before revealing role/state distinctions. Authentication and valid IDs alone never authorize the resource. Global reference/admin data has an explicit separate policy. On browser logout or scope change, apply [cache cleanup](../../frontend/recipes/state-and-forms.md); SSR user data is request-isolated.
 
 **Proof:** expired/wrong-audience token, forged gateway header, direct-service bypass, cross-tenant read/write/relation, revoked account, CSRF attempt, logout and stale client data. Rate-limit sensitive identity actions; use organization-selected SSO/MFA/provisioning requirements rather than inventing password flows. Sources: [browser OAuth](https://www.rfc-editor.org/rfc/rfc10017.html), [OWASP REST security](https://cheatsheetseries.owasp.org/cheatsheets/REST_Security_Cheat_Sheet.html). Exact provider configuration is a project overlay.
+
+### Example: session boundary
+
+```ts
+// src/app/http/identity.ts — selected session adapter, not raw JWT decoding
+await security.requireCsrf(request);
+const actor = await sessions.requireVerifiedActor(request);
+await access.requireAction(actor, OrderAction.Cancel);
+const input = orderEndpoints.cancel.params.parse(routeParams);
+return handlers.cancelOrder({ input, actor, requestId });
+```
+
+`handlers`, `security`, `access` and `sessions` are bound at app composition. The shown mutation boundary applies CSRF and RBAC before invoking the handler. Session lookup alone does not grant resource access; the handler/DAL enforce it. Never construct actor grants from request headers.

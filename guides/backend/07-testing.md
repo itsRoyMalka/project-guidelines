@@ -23,11 +23,13 @@ src/features/orders/cancel-order/cancel-order.test.ts
 ```
 
 ```ts
-test('owner cancels an eligible order', async ({ createUser, createOrder, cancelOrder, getOrder, sideEffects }) => {
+// test is imported from the shared api-test fixture below.
+test('owner cancels an eligible order', async ({ api }) => {
+  const { createUser, createOrder, cancelOrder, getOrder, sideEffects } = api;
   const owner = await createUser();
   const order = await createOrder(owner, { quantity: 2 });
   const response = await cancelOrder(owner, order.id);
-  expect(response.statusCode).toBe(200);
+  expect(response.statusCode).toBe(HttpStatus.Ok);
   expect((await getOrder(owner, order.id)).status).toBe(OrderStatus.Cancelled);
   const event = await sideEffects.events.waitFor({
     type: OrderEvent.Cancelled,
@@ -52,3 +54,27 @@ const createOrder = async (actor: Actor, overrides: Partial<CreateOrderInput> = 
 ```
 
 Cleanup must cover all app DB connections; an outer transaction alone is insufficient unless every request shares it.
+
+## Transaction and delivery regressions
+
+Use the [failure matrix](recipes/outbox-and-consumers.md#failure-checks) and [transaction proof](recipes/transactions.md). Exercise these in shared infrastructure tests once; feature tests cover their own state transitions, access and required intent.
+
+For a rejected action, assert unchanged state and no committed outbox intent. Do not prove absence by sleeping or requiring exactly one transport call: retries may legitimately resend. For accepted work, verify committed intent and separately observe the relay delivering it; publication alone does not prove consumer completion.
+
+For audited actions, assert one committed success record with safe actor/resource context. On rejection or rollback, assert no committed success audit, and the selected separate attempt record. See the [audit proof cases](recipes/audit.md).
+
+### Example: fixture ownership
+
+```ts
+// test/lib/api-test.ts — Vitest fixture extension
+import { test as base } from 'vitest';
+export const test = base.extend<{ api: ApiTestContext }>({
+  api: async ({}, use) => {
+    const api = await createApiTestContext();
+    try { await use(api); }
+    finally { await api.close(); }
+  },
+});
+```
+
+`ApiTestContext` is this app's typed collection of bound helpers, sideEffects and close. `createApiTestContext` allocates isolated DB state, constructs the real app with recording provider adapters and starts the real relay; it cleans partial setup if construction fails. `close` stops workers before closing app/DB and removing owned test data. Helpers never use a global app. This fixture example defines lifecycle ownership, not a supplied test package.

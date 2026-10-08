@@ -11,10 +11,14 @@
 **FET-04 MUST:** Use shared test IDs for targeting, consistently with [E2E](../e2e/01-journeys.md). Verify accessible name/role/state as assertions; test localized copy against the selected locale's messages.
 
 ```tsx
+// features/orders/cancel/cancel.test.tsx
+// test is Vitest; renderFeature/server/orderFixture are the shared test library.
 test('failed cancellation keeps the dialog open', async () => {
+  const order = orderFixture();
   server.use(cancelOrderFails());
   const { user } = renderFeature(<CancelOrder orderId={order.id} />);
   await user.click(screen.getByTestId(OrderTestId.CancelButton));
+  await user.click(screen.getByTestId(OrderTestId.ConfirmCancelButton));
   expect(await screen.findByTestId(OrderTestId.CancelError)).toBeVisible();
   expect(screen.getByTestId(OrderTestId.CancelDialog)).toBeVisible();
 });

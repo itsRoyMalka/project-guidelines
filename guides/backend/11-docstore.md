@@ -21,3 +21,18 @@ features/orders/import-orders/     # owns import progress and business writes
 ```
 
 **Check:** changed upload bytes cannot inherit an earlier scan; rejected files cannot download; failed cleanup retries safely. **Vary when:** a managed document service provides the same custody contract. Source: [OWASP uploads](https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html).
+
+### Example: download action
+
+```ts
+// features/docstore/get-download/handler.ts — transaction:false body excerpt
+// ports are app-bound; scoped helpers enforce resource authorization.
+const document = await documentDal.getAuthorized(deps.db, actor, input.documentId);
+if (document.state !== DocumentState.Ready) throw new DocumentNotReadyError();
+return deps.documentStorage.createDownload({
+  objectVersion: document.verifiedObjectVersion,
+  expiresInSeconds: DocumentPolicy.DownloadTtlSeconds,
+});
+```
+
+The storage port hides bucket/vendor details. Only immutable, scan-approved bytes are referenced. A short-lived signed URL can survive later access revocation until expiry; use an authorization gateway when immediate revocation is required, as described in the [file recipe](recipes/files-and-bulk.md).

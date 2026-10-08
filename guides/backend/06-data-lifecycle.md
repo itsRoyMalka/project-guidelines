@@ -29,3 +29,11 @@ await customerDal.setNationalIdRef(db, customerId, ref);
 ```
 
 Vault fields: random ID/reference, kind, subject, ciphertext/nonce/tag, key version and lifecycle metadata. Add blind indexes only for a proven lookup need with equality-leakage review. A separate vault service is a risk decision, not mandatory for every app. Source: [OWASP cryptographic storage](https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html).
+
+## Declarative audit
+
+**LIFE-10 MUST:** Audited handlers declare action/resource and allowlisted metadata through `defineHandler.audit`. The factory supplies trusted actor, time, outcome and correlation. Successful transactional changes and their audit record commit together; central delivery uses same-transaction outbox intent. See the [audit recipe](recipes/audit.md).
+
+**LIFE-11 MUST:** Record selected denied/failed attempts outside the rolled-back business transaction, including denials before handler execution. Sensitive reads record the observed access stage under an explicit failure policy. Never label an unknown commit/provider outcome as confirmed success or failure.
+
+**LIFE-12 MUST:** Give audit records stable IDs across delivery retries and deduplicate central ingestion. Restrict app writes to append-only access; separate read, retention and administration privileges. Define retention/tamper protection by risk; ordinary sampled diagnostics are not the audit store.

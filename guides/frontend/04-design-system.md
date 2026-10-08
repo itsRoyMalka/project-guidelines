@@ -15,14 +15,19 @@
 **DS-06 MUST:** Show meaningful component states in Storybook; test interaction/accessibility and representative keyboard/screen-reader behavior. Review visual changes, version breaking APIs and use Changesets when packages release independently.
 
 ```tsx
-// Feature composition; all rendered primitives come from the DS.
-<Stack>
+// features/orders/create/ui/create-order-form.tsx
+// form uses RHF + zodResolver(createOrderDraftSchema); submit uses handleSubmit.
+<Form onSubmit={submit} testId={OrderTestId.CreateForm}>
   <TextField {...form.register('name')} label={t('create.name')}
     error={form.formState.errors.name?.message} testId={OrderTestId.NameInput} />
-  <Button onPress={submit} isPending={pending} testId={OrderTestId.SaveButton}>
+  <Button type="submit" isPending={pending} testId={OrderTestId.SaveButton}>
     {t('create.save')}
   </Button>
-</Stack>
+</Form>
 ```
 
 **Check:** disabled/error/loading states, both directions/themes, zoom, keyboard and form focus. **Vary when:** a vetted existing DS can satisfy these controls without a new package. Sources: [DTCG](https://www.designtokens.org/), [React Aria](https://react-spectrum.adobe.com/react-aria/), [WCAG 2.2](https://www.w3.org/TR/WCAG22/).
+
+DS `Form` renders a semantic HTML form; `TextField` forwards `name`, ref, change and blur to the editable input. Its primary test ID targets that input; named slot IDs cover separate errors/triggers when needed. The form hook uses explicit defaults and a Zod resolver; Enter and click share `handleSubmit`. All shown components are DS exports.
+
+Draft validation and server-field mapping produce localized safe messages; do not render raw provider errors as field text.

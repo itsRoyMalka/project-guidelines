@@ -3,7 +3,7 @@
 **Read when:** connecting the guides. Factory/helper APIs below are illustrative project-owned interfaces; adapt and prove them in the target project.
 
 ```text
-packages/contracts/orders/endpoints.const.ts
+packages/contracts/orders/{orders.const,endpoints.const}.ts
 packages/test-ids/orders.ts
 apps/api/src/features/orders/
   db/orders.prisma
@@ -19,9 +19,8 @@ apps/e2e/web/orders/create-and-cancel.test.ts
 ```
 
 ```ts
-// Shared source declarations; literals belong here.
-export const OrderAction = { Cancel: 'orders:cancel' } as const;
-export const OrderStatus = { Pending: 'pending', Cancelled: 'cancelled' } as const;
+// packages/contracts/orders/endpoints.const.ts
+// z is Zod; OrderStatus comes from orders.const.ts (see example conventions).
 export const orderEndpoints = {
   cancel: {
     method: 'POST', path: '/orders/:orderId/cancel',
@@ -42,7 +41,7 @@ export const cancelEndpoint = defineEndpoint({
 
 ```ts
 // Plain FE operation stays callable outside React.
-export const cancel = (api: ApiClient, orderId: string) =>
+export const cancelOrderRequest = (api: ApiClient, orderId: string) =>
   api.call(orderEndpoints.cancel, { params: { orderId } });
 
 export function useCancelOrder() {
@@ -50,12 +49,28 @@ export function useCancelOrder() {
   const queryClient = useQueryClient();
   const scope = useScopeKey();
   return useMutation({
-    mutationFn: (orderId: string) => cancel(api, orderId),
-    onSuccess: order => queryClient.invalidateQueries({
-      queryKey: orderKeys.detail(scope, order.id),
-    }),
+    mutationFn: (orderId: string) => cancelOrderRequest(api, orderId),
+    onSuccess: async order => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: orderKeys.detail(scope, order.id) }),
+        queryClient.invalidateQueries({ queryKey: orderKeys.lists(scope) }),
+      ]);
+    },
   });
 }
 ```
 
 The UI uses DS components, translations, shared test IDs and backend capabilities. The handler owns resource access, conditional state change and durable event intent. BE tests assert response/state/event; FE tests assert interaction; E2E creates and cancels through UI. See [BE slice](backend/01-service-design.md), [BE test](backend/07-testing.md), [FE architecture](frontend/01-architecture.md) and [E2E](e2e/01-journeys.md).
+
+## Query key declarations
+
+```ts
+// features/orders/shared/api/query-keys.const.ts — split/mobile profile
+export const orderKeys = {
+  lists: (scope: string) => ['orders', scope, 'list'] as const,
+  list: (scope: string, filters: OrderFilters) => [...orderKeys.lists(scope), filters] as const,
+  detail: (scope: string, orderId: string) => ['orders', scope, 'detail', orderId] as const,
+};
+```
+
+`scope` is the app's verified visibility key, not a credential; `OrderFilters` is the parsed filter contract. Refresh both detail and affected list families because cancellation changes membership/status. See [shared example names](recipes/example-conventions.md). `ApiClient.call` is a project port that validates responses; this excerpt assumes its declared successful JSON response path.

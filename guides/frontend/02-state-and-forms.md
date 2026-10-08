@@ -31,7 +31,12 @@
 **STATE-09 MUST:** Save resets the draft baseline only after confirmed success; discard uses the latest known saved snapshot. Never overwrite dirty edits on a background refresh. Persist drafts only for a defined product need, privacy policy and expiry.
 
 ```ts
-const form = useForm<SearchDraft>({ defaultValues: { query: params.query } });
+// features/orders/browse/ui/use-order-search-form.ts
+// searchDraftSchema is the flow-owned Zod schema; zodResolver is the RHF adapter.
+const form = useForm<SearchDraft>({
+  defaultValues: { query: params.query },
+  resolver: zodResolver(searchDraftSchema),
+});
 const submit = form.handleSubmit(draft => updateParams({ query: draft.query, page: 1 }));
 ```
 

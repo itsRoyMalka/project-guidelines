@@ -13,3 +13,18 @@ Bulk import: validate an initial manifest/sample, then process bounded chunks wi
 Bulk export: use stable snapshot/cursor semantics where consistency matters, cap resource use and prevent tenant mixing across pages/jobs. Apply expiry and deletion propagation to generated artifacts. Reauthorize job/status/download access, not only job creation.
 
 **Proof:** forged MIME/path, oversized/archive expansion, rejected content, unauthorized capability issuance/use according to the selected capability policy, expired capability, interrupted streaming, partial retry and deletion of generated artifacts. **Alternative:** use the platform's maintained object-storage/scanning pipeline with the same access and lifecycle contract. [OWASP upload guidance](https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html) supports combined controls; exact scanners/types are project decisions.
+
+### Example: scan result admission
+
+```ts
+// features/docstore/complete-verification/handler.ts — transactional body
+// scannerResult is authenticated/validated by the inbound adapter.
+const changed = await documentDal.markReadyIfVersionMatches(tx, {
+  documentId: input.documentId,
+  objectVersion: scannerResult.objectVersion,
+  requiredChecksPassed: scannerResult.requiredChecksPassed,
+});
+if (changed !== 1) throw new DocumentVerificationConflictError();
+```
+
+The DAL performs a conditional transition only when every required check for those immutable bytes has passed. Store failed attempts too; unavailable scans cannot produce Ready. Storage network work is performed before this short transaction, with reconciliation for partial failure.
