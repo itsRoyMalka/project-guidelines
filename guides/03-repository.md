@@ -2,19 +2,24 @@
 
 **Applies to:** new TypeScript products. See [architecture](01-architecture.md) for choosing separate repos/services.
 
-## Example: split web/API profile
+## Example: one product monorepo
 
 ```text
 apps/
   web/                 # frontend deployable
-  api/                 # backend deployable
+  mobile/              # optional React Native deployable
+  services/
+    orders-api/        # independently deployable backend service
+  e2e/                 # cross-app user journeys
 packages/
   contracts/           # only genuinely shared wire contracts
   ui/                  # shared design system if multiple consumers exist
+infra/                 # declarative deployment/infrastructure source
+.github/CODEOWNERS     # area owners and reviewers
 docs/                  # architecture, decisions, operations
 ```
 
-For one fullstack deployment, use the [fullstack profile](profiles/typescript-fullstack.md) with server/browser feature boundaries inside one app; do not create a second API just to match this example.
+For a modular backend with one deployable, use `apps/api/` instead of `apps/services/*`. For one fullstack deployment, use the [fullstack profile](profiles/typescript-fullstack.md) with server/browser feature boundaries inside one app; do not create a second API just to match this example. Add optional apps and packages only when they exist.
 
 Create a package only for a real consumer boundary. Do not create empty `packages/` entries just to match this tree. Keep each app's config and tests near the app; cross-app E2E lives at the workspace level when needed.
 
@@ -28,4 +33,6 @@ Create a package only for a real consumer boundary. Do not create empty `package
 
 **REPO-05 SHOULD:** Prefer named, explicit public exports and avoid wildcard barrels or deep imports that bypass a boundary. Framework-required default exports and generated entrypoints are valid. Aliases name stable public paths; they do not change dependency direction.
 
-**Verification:** a reader can locate a behavior and its tests from the domain name; a dependency graph has no cycles across features or apps.
+**REPO-06 SHOULD:** Keep related web, optional mobile, backend deployables, E2E, genuinely shared packages and infrastructure in one product monorepo by default. Independent service releases do not require separate repositories. Use path-based `CODEOWNERS` for applications, shared packages, infrastructure, CI and the ownership file itself, with protected-branch review controls under [GIT-06](cross-cutting/08-git-collaboration.md). Cross-app changes may touch several owned areas; request the relevant owners. Split repositories when access/compliance isolation, separate products or governance make a shared repository unsuitable. See [Git collaboration](cross-cutting/08-git-collaboration.md) for branch and PR rules.
+
+**Verification:** a reader can locate a behavior and its tests from the domain name; a dependency graph has no cycles across features or apps; shared-package changes mark consumers affected; owners are requested for changed paths. Further reading: [Nx module boundaries](https://nx.dev/docs/features/enforce-module-boundaries), [GitHub CODEOWNERS](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners).

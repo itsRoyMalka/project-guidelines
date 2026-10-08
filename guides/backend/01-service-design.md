@@ -1,34 +1,58 @@
-# TypeScript backend service design
+# Backend feature slices
 
-**Applies to:** server-side application operations in fullstack web, API and worker deployables. Choose the deployable boundary in [architecture](../01-architecture.md); this guide defines the inside of one backend.
-
-## Feature shape
+**Scope:** TypeScript server code. **Why:** each action is easy to find, understand and test. Deployable boundaries belong to [architecture](../01-architecture.md).
 
 ```text
-src/
-  app/                       # composition, config, transport registration
-  features/orders/
-    contracts/               # validated inputs/outputs and domain types
-    http/                    # transport adaptation
-    operations/              # use cases; authorization and transaction boundary
-    domain/                  # business decisions and pure rules
-    persistence/             # owned data access
-    tests/
-    index.ts                 # public operations
+src/features/orders/
+  db/{orders,enums}.prisma
+  shared/{contract,dal,types,errors}.shared.ts
+  cancel-order/
+    api.ts
+    contract.ts                 # local contract; re-export shared wire contract if present
+    validations.ts              # optional extra parsed-request checks
+    handler.ts
+    cancel-order.test.ts
+  create-order/{api,contract,handler}.ts
+  api.ts                        # this feature's endpoint list
+  index.ts                      # public business operations
+src/app/                        # composition and service lifecycle
+src/shared/                     # genuine cross-feature capabilities
+src/integrations/               # provider ports and adapters
 ```
 
-Use the few folders a feature needs; this is a responsibility map, not a demand for empty directories. A normal request flows transport → operation → domain/persistence → response mapping. The operation owns one business action, including authorization and transaction scope; HTTP files stay thin.
+Brace notation abbreviates separate files. Create only responsibilities the action needs.
 
-**BE-01 MUST:** One feature owns its invariant and write path. Other features call a named public operation. Do not export write repositories as a cross-feature API.
+**BE-01 MUST:** Organize by feature, then action. A feature owns its writes; other features call its public operations and never its private DAL.
 
-**BE-02 MUST:** Validate at the edge, authenticate before sensitive work, and authorize the action/resource using trusted scope. A minimal scoped read may be necessary to evaluate resource policy. Avoid revealing inaccessible existence or properties; the selected API disclosure policy decides forbidden versus not-found. Frontend gates never replace backend enforcement.
+**BE-02 MUST:** The API parses input and establishes trusted identity; the handler checks resource access and business state. Tenant scope exists only in multi-tenant products.
 
-**BE-03 SHOULD:** Keep domain decisions independent of HTTP, ORM, queue, and vendor SDKs. Inject clocks, clients, and gateways at the composition boundary when they affect behavior or tests. Avoid an interface for every trivial function.
+**BE-03 SHOULD:** Use `api`, `contract`, `handler`, `dal` and optional `validations` responsibilities. Keep reusable code in feature `shared/`, grouped by responsibility; extract business helpers only when useful.
 
-**BE-04 MUST:** Define internal error categories and map them once at the transport boundary to [API-03](02-api-contracts.md). Decide hidden-resource behavior explicitly. Return safe documented details; log an unexpected failure with its cause at the responsible boundary, never expose provider messages or stacks. See [contract example](recipes/contracts.md).
+**BE-04 MUST:** Map typed internal failures to safe public errors once at the transport boundary. Preserve the cause for diagnostics and log unexpected errors once; do not return provider messages or stacks.
 
-**BE-05 MUST:** The business operation owns the transaction. Helpers may participate in its transaction context but do not commit independently. Define composition when operations call each other; avoid external network waits in long transactions. When state and a durable notification must agree, commit state plus publication intent atomically under [EVT-03](04-events-and-workflows.md).
+**BE-05 MUST:** The handler definition chooses transaction scope. A small app-owned `defineHandler` supplies app dependencies, telemetry and transaction execution; callers cannot override that choice. Nested actions join an explicit context, never silently open independent commits.
 
-**BE-06 SHOULD:** Keep bootstrap separate from demo/seed data. Validate required config before readiness. Health/readiness, graceful shutdown, and background-worker lifecycle are part of the service composition, not feature business logic.
+**BE-06 SHOULD:** A service chassis owns config validation, telemetry startup, feature registration, HTTP/RPC, workers, readiness and bounded shutdown. Register dependencies once; keep seed/demo data outside bootstrap.
 
-**Verification:** trace one use case through its public operation, authorization, transaction, tests, and error mapping.
+**BE-07 MUST:** Keep transactions short and exclude external network calls. Commit state plus required event/job intent together; external effects use [durable outcome rules](recipes/idempotency.md).
+
+**BE-08 SHOULD:** Use factories only where they perform real work. `defineEndpoint`, `defineHandler`, `defineEvent` and job registration can enforce policy; a `defineDal` or `defineContract` wrapper is unnecessary without a repeated problem.
+
+```ts
+// Project-owned factory API: illustrative, not an installed package.
+export const cancelOrder = defineHandler({
+  name: OrderAction.Cancel,
+  transaction: true,
+  run: async ({ input, actor, tx }) => {
+    const order = await orderDal.getOwned(tx, actor, input.orderId);
+    assertCancellable(order);
+    await orderDal.cancelIfPending(tx, order.id);
+    await outbox.add(tx, OrderCancelled.create({ orderId: order.id }));
+    return { id: order.id, status: OrderStatus.Cancelled };
+  },
+});
+```
+
+**Check:** follow one request through policy, handler, DAL, commit and [action test](07-testing.md). **Vary when:** an existing healthy layout can remain under a recorded exception. Further reading: internal review record (not distributed).
+
+Chassis startup: telemetry → validated config → DB/provider capabilities → feature manifests → HTTP/RPC/consumers/workers → readiness. Shutdown stops new work, drains with a deadline, releases leases and closes resources. Features do not own process hooks.

@@ -2,7 +2,7 @@
 
 **Applies to:** starting a project or applying this baseline to an existing one.
 
-**ADOPT-01 MUST:** For a new product, complete the architecture brief, select the relevant language/profile guides, and state the first deployables/data owner/critical journey before implementation. Add only the packages and infrastructure needed now.
+**ADOPT-01 MUST:** For a new product, complete the architecture brief, select the relevant language/profile guides, and state the first deployables/data owner/critical journey before implementation. Add only the packages and infrastructure needed now. When building from a PRD, use the [project-setup flow](08-project-setup.md) through starter verification.
 
 **ADOPT-02 MUST:** For an existing system, map boundaries and tests first. Adopt a small coherent change that addresses a concrete risk, including related contract/data/security rules together where necessary. Do not rewrite working code to match a directory example.
 

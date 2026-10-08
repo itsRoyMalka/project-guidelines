@@ -4,7 +4,8 @@ These repository-local skills explain recurring work. An agent can read the matc
 
 | Task | Skill |
 | --- | --- |
-| Decide the first product boundaries and stack | [start-project](start-project/SKILL.md) |
+| Turn a PRD into a tailored, runnable project | [start-project](start-project/SKILL.md) |
+| Create/maintain tickets, sprints and handoffs | [manage-project-work](manage-project-work/SKILL.md) |
 | Orient in an existing codebase | [read-project](read-project/SKILL.md) |
 | Plan a meaningful change | [plan-change](plan-change/SKILL.md) |
 | Implement a scoped feature or fix | [implement-feature](implement-feature/SKILL.md) |

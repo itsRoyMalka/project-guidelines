@@ -4,7 +4,7 @@
 
 **TS-01 MUST:** Use strict checking for new TypeScript packages and check affected packages plus consumers. Track inherited errors separately without introducing new ones. Parse genuinely untrusted JSON/config/storage as unknown; typed library callbacks need not be revalidated solely because they are external functions. Avoid any except a narrow documented adapter. Evaluate noUncheckedIndexedAccess and exactOptionalPropertyTypes deliberately; runtime validation is separate.
 
-**TS-02 SHOULD:** Prefer discriminated unions and `as const` maps to TypeScript `enum` for application states and wire values. A generated contract's enum remains authoritative when that contract owns it. Exhaustively handle variants.
+**TS-02 MUST:** Declare domain/protocol values once in typed `as const` maps or justified enums: actions, states, events/jobs, routes, params and test IDs. Import them at call sites; use exhaustive mappings/switches. Ordinary prose and declaration literals do not need constants.
 
 ```ts
 type Job =

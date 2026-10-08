@@ -1,5 +1,6 @@
 # TypeScript profile verification
 
+**Historical runtime evidence:** this fixture predates D-18. It proves only the recorded scenario and versions, not the revised shared-contract, mobile or custom factory profiles.
 **Executed:** 2026-10-05 in an isolated temporary workspace outside the handbook. These are compatibility observations for the listed combination, not required permanent version pins. Consumers select supported versions, commit a lockfile and rerun relevant proof on adoption/upgrade.
 
 ## Environment and selected versions

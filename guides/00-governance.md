@@ -11,6 +11,8 @@
 
 ## Rule format
 
+Write one short rule per decision, usually one to three sentences. Add a small example when behavior or placement needs it; keep deeper mechanics in a linked recipe. Skills link to rule owners instead of repeating checklists.
+
 Each new rule needs a stable ID and **MUST** or **SHOULD**. Its owning guide states the scope, rationale, verification method, and conditions that justify an exception; add a rule-specific note when those differ. Add a small code/file example only when wording alone leaves ambiguity. Define the complete convention locally; public references are optional further reading.
 
 ## Change control

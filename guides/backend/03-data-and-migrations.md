@@ -4,7 +4,7 @@
 
 **DATA-01 MUST:** Give tables and writes a domain owner. Enforce invariants using keys, uniqueness, foreign keys and checks, including tenant keys in relationships where needed. Design indexes separately for query performance. Application validation is additional protection; check-then-write alone is not a concurrency guard.
 
-**DATA-02 MUST:** A user may select a tenant, but the server verifies membership/delegation and creates trusted scope before access. Apply it to reads, joins, writes, caches, jobs and exports. Explicit global/reference data and privileged admin paths have their own policy and audit. Test cross-tenant identifiers and relationships; see [identity and scope](../cross-cutting/recipes/identity.md).
+**DATA-02 MUST:** Add tenant columns, filters and composite relationships only for a multi-tenant product. Resolve trusted scope from verified membership; apply it to reads, writes, caches, jobs and exports. Test cross-tenant access when applicable.
 
 **DATA-03 SHOULD:** Use PostgreSQL for new relational workflows and Prisma for ordinary typed data access in the default stack when its current version fits the schema and migration needs. Keep persistence behind feature operations; use reviewed SQL where ORM abstraction harms correctness or performance. Record a different datastore or access layer against workload requirements. Prisma's migration format and commands vary by major version; follow the selected version's official workflow.
 
@@ -19,3 +19,20 @@
 **Verification:** schema review, representative query plan for performance-sensitive paths, migration rehearsal on realistic data, and tenant isolation tests. Further reading: [PostgreSQL data definition](https://www.postgresql.org/docs/current/ddl.html), [current Prisma migration editing](https://www.prisma.io/docs/orm/migrations/editing-a-migration).
 
 For concrete scoped joins, tenant foreign keys and conflict strategy see [persistence](recipes/persistence.md).
+
+**DATA-08 MUST:** Features own table/enumeration definitions in `features/<feature>/db/`; the deployable owns one composed schema and one migration history under top-level `db/`. Explicitly select `db/prisma.config.ts`; prove discovery/generation for the installed Prisma major. Do not mix v7 schema-directory commands with v8 contract commands.
+
+**DATA-09 MUST:** Comment each model's class: reference, operational, event or audit. Record mutation, retention and growth decisions. Size alone does not justify partitions or change the table's class.
+
+**DATA-10 MUST:** Review a consequential DAL query with its filters, joins, order, bounds and supporting indexes. Check realistic plans for risky paths; avoid unbounded reads, N+1 calls and one-index-per-function rules.
+
+**DATA-11 SHOULD:** Use time partitions for measured retention/query needs. Prefer pg_partman for rolling partitions when supported; monitor future partitions, maintenance failures and default-partition rows. Verify archives before removal and account for partition-key uniqueness limits.
+
+```text
+db/prisma.config.ts
+db/migrations/                       # history format depends on selected Prisma major
+src/features/orders/db/orders.prisma # class: operational; mutable order state
+src/features/audit/db/audit.prisma   # class: audit; append-only; owned retention
+```
+
+Prisma v8 supports an explicit contract glob; v7 reads a configured schema directory and needs deliberate composition when models live elsewhere. Verify all feature models are included, rather than assuming discovery. See [Prisma config](https://www.prisma.io/docs/cli/configuration) and [v7 multi-file schema](https://www.prisma.io/blog/organize-your-prisma-schema-with-multi-file-support). Generated output is never the hand-edited source.

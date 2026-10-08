@@ -2,19 +2,19 @@
 
 **Applies to:** all code changes. Test behavior and contracts at the cheapest layer that can prove them. A repo-local no-test policy is not the baseline for a new enterprise application.
 
-| Layer | Proves | Typical dependencies |
+| Boundary | Proves | Default use |
 | --- | --- | --- |
-| Unit/domain | Decisions and edge cases | Pure code or small fakes |
-| Component | User-visible UI behavior | Rendered UI, mocked network boundary |
-| Integration | Database, queue, auth, or service boundary | Real local/test dependency where feasible |
-| Contract | Consumer/provider schema compatibility | Published API/event schema |
-| E2E | Critical user journey across deployables | Deployed or representative environment |
+| BE API integration | Policy, handler, persistence and side effects together | Per action, real app/database |
+| FE feature interaction | User-visible flow and API reaction | Per flow, rendered UI and mocked HTTP |
+| E2E | Critical user journey across deployables | Small deployed web/device suite |
+| Focused unit/integration | Otherwise uncovered algorithm, query or provider risk | Add only for distinct proof |
+| Contract | Consumer/provider compatibility | Published API/event boundaries |
 
-**TEST-01 MUST:** Test affected behavior at the cheapest meaningful layer. A practical regression test reproduces a bug; new logic covers meaningful success/failure/boundaries, adding authorization/tenant cases when those risks apply. Cosmetic or documentation changes need proportional review, not irrelevant domain tests. Assert outcomes rather than private calls.
+**TEST-01 MUST:** Test flows: BE action API integration and FE feature interaction are the defaults; E2E covers a small critical cross-app set. Add focused lower-level tests only for otherwise uncovered risk. Bug fixes reproduce the defect; documentation/cosmetic work gets proportional review.
 
 **TEST-02 MUST:** Keep tests isolated and parallel-safe, with unique namespaces and cleanup registered immediately after allocation. Deterministic clocks/IDs stay within each test namespace. Mock external providers as needed and use real integration proof for critical owned persistence/authorization boundaries. See [local and test lifecycle](recipes/local-and-test.md).
 
-**TEST-03 SHOULD:** Keep E2E coverage focused on critical journeys and cross-system risks. Use accessible/user-facing locators, controlled fixtures, and clear step narratives. Do not create a browser test for every component state.
+**TEST-03 MUST:** E2E uses shared test-ID constants for every app target and locale-independent state assertions. Business prerequisites run through reusable UI flows. Infrastructure-only provisioning/cleanup may use supported APIs; see [E2E rules](../e2e/01-journeys.md).
 
 **TEST-04 MUST:** Distinguish mocked UI E2E from deployed integration smoke. Report known blockers and skipped checks honestly. A test path or coverage percentage does not prove behavior quality.
 
@@ -23,3 +23,5 @@
 **TEST-06 SHOULD:** Use changed-code coverage as a diagnostic, not a substitute for review of assertions and risk. Performance and accessibility checks belong to affected critical flows.
 
 **Verification:** tests fail for the targeted defect, pass for the fix, and remain reproducible in CI. Further reading: [Playwright best practices](https://playwright.dev/docs/best-practices).
+
+Read [BE test shape](../backend/07-testing.md), [FE test shape](../frontend/07-testing.md) and [shared dev targeting](../e2e/02-environments.md) for the selected boundary. No separate per-action test-plan document or universal coverage threshold is required.

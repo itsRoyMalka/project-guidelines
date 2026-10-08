@@ -10,8 +10,28 @@
 
 **EVT-04 MUST:** Bound attempts, elapsed retry budget, concurrency and processing time. Classify transient/permanent/unknown outcomes, coordinate retry ownership, renew leases when needed and drain safely. Dead letters have an owner, alert and reviewed replay path; retain original identity on retry. See [worker lifecycle](recipes/idempotency.md).
 
-**EVT-05 SHOULD:** Use a durable workflow engine for long-running, multi-step work that requires timers, compensation, or resumption. A queue worker is enough for a short independent task. Record why orchestration complexity is needed.
+**EVT-05 SHOULD:** Use self-hosted Temporal as the selected runtime when durable jobs are needed. Features define provider-neutral jobs/workflows under `background/`; the app selects adapters. Follow [background rules](08-background.md), including provider capability and replay proof.
 
 **EVT-06 MUST:** Plan compatibility for old/new consumers and replay of stored events. Extra fields, new enum values and changed semantics need separate handling; tolerate supported additive data and reject/quarantine unsupported versions deliberately. Remove old fields/semantics only after consumers and replay policy permit it.
 
 **Verification:** duplicate/replay and failure-path tests, dashboard for backlog/dead letters, and an operator-owned recovery procedure.
+
+**EVT-07 MUST:** `defineEvent` declares a meaningful committed fact and validated payload. The envelope includes ID, source, version, occurredAt, correlation and data; omit `v1` from ordinary symbols/files. Share public TS event schemas in a narrow producer-owned contracts package.
+
+**EVT-08 MUST:** Features own `consumer.ts`; app `events/subscriptions.ts` composes consumers. `defineConsumer` validates and deduplicates through the production dispatcher; a separate handler is optional. Transport adapters own acknowledgement, retry and ordering behavior.
+
+**EVT-09 MUST:** Configure each destination explicitly. Fanout keeps one event ID and separate outbox delivery state per destination; consumers tolerate duplicates across routes. Never claim universal ordering or exactly-once side effects.
+
+```ts
+export const OrderCancelled = defineEvent({
+  type: OrderEvent.Cancelled,
+  version: 1,
+  data: z.object({ orderId: orderIdSchema }),
+});
+export const refundCancelledOrder = defineConsumer({
+  event: OrderCancelled,
+  handle: refundCancelledOrderHandler,
+});
+```
+
+Provider SDKs live in `src/integrations/events/`; Kafka, EventBridge, SQS or another adapter must preserve the declared semantics. [Tests](07-testing.md) observe publication through an app-scoped recorder and exercise consumers through the dispatcher.

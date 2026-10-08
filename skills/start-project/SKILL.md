@@ -1,13 +1,14 @@
 ---
 name: start-project
-description: Plan a new enterprise application from product needs, selecting its architecture, stack, initial boundaries, and verification approach using this guideline library. Use before creating application code; do not run scaffolding or deployment.
+description: Turn an MVP PRD into a tailored runnable project, clarifying consequential choices and verifying the starter against this complete handbook.
 ---
 
-Read [usage](../../USAGE.md) and [governance](../../guides/00-governance.md) before applying this skill. This skill requires the complete pinned handbook checkout; resolve links relative to this file. Use the [task map](../../guides/README.md) to select only relevant recipes.
+# PRD to project
 
+Read [USAGE](../../USAGE.md), [governance](../../guides/00-governance.md) and [SETUP rules](../../guides/08-project-setup.md) from the pinned checkout on each run. Create code only in the target repository. A planning-only request stops before scaffolding and says so.
 
-# Start a project
-
-Start with [product decisions](../../guides/07-product-and-decisions.md) and select one [runtime profile](../../guides/profiles/README.md). Read [architecture](../../guides/01-architecture.md), [stack](../../guides/02-stack.md), [repository structure](../../guides/03-repository.md), [security](../../guides/cross-cutting/01-security.md), and [testing](../../guides/cross-cutting/03-testing.md). Load frontend, backend, Python, or data guides only when the proposed project needs them.
-
-Produce a compact architecture brief: product journeys; domains and data owners; trust/tenant boundaries; first deployables and repository shape; selected stack with reasons; critical integrations and failure handling; test/operational proof; rejected alternatives; triggers to revisit. Start with the simplest shape that satisfies the stated constraints. Mark unknowns as assumptions and ask only for information that materially changes a boundary. This skill creates a decision proposal, not a scaffold or permission to deploy.
+1. Read PRD and target files. Extract first journey, roles, data, platforms, integrations, constraints and unknowns. Ask a small batch of boundary-changing questions with recommended defaults; continue independent work while waiting.
+2. Select [architecture](../../guides/01-architecture.md), [stack](../../guides/02-stack.md), [profile](../../guides/profiles/README.md) and [repo shape](../../guides/03-repository.md). Record reasons, alternatives and revisit triggers. Verify actual tool versions; choose only needed services/MFE/mobile/infrastructure.
+3. Read the affected guides from [the map](../../guides/README.md) before implementing. Set the target's handbook revision/profile/links, project coordinates and exceptions. Establish first issues under [project work](../../guides/cross-cutting/07-project-work.md); report unavailable access with exact drafts.
+4. Build the selected starter: runtime composition, a thin feature path, owned contracts/data, safe config/local dependencies, tests, CI and relevant delivery source. Follow the [worked setup](../../guides/recipes/project-setup.md); do not overwrite existing work or create empty optional layers.
+5. Verify clean install/start/build/checks and the first journey. Report exact proof, gaps, decisions and next ticket. A built welcome page alone is not ready; deployment follows the target's actual authorization and delivery rules.

@@ -15,3 +15,13 @@
 **ANA-06 MUST:** Apply access, retention and deletion policy to staging, marts, replicas, exports and BI. Rebuild/replay must honor deletion state instead of reintroducing erased records. Use the [data lifecycle](../backend/06-data-lifecycle.md) and assign ownership of derived-data propagation.
 
 **Verification:** model tests, lineage, sample reconciliation to source, backfill replay, and access review. Further reading: [dbt data tests](https://docs.getdbt.com/docs/build/data-tests), [dbt incremental models](https://docs.getdbt.com/docs/build/incremental-models).
+
+**ANA-07 MUST:** Product analytics events have one name, meaning, emission point, owner and allowlisted properties. Use typed app ports; operational events that trigger work have separate contracts. Exclude test traffic and unnecessary personal data.
+
+**ANA-08 MUST:** Publish one owned metric definition with eligible population, exclusions, numerator/denominator, timezone, cadence and change policy. Reconcile high-value totals and test late/duplicate/backfilled data; replay must honor deletion state.
+
+```text
+cancel_rate = eligible cancelled orders / eligible created orders
+Scope: real orders only; business calendar timezone declared
+Grain: one row per order; source: Orders; owner: Operations analytics
+```

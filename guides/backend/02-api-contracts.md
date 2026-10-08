@@ -2,7 +2,7 @@
 
 **Applies to:** HTTP APIs and other externally consumed boundaries. Event contracts are in [events](04-events-and-workflows.md).
 
-**API-01 MUST:** Select one canonical request/response schema owner and derive types/documentation from it. Distinguish request validation, response serialization and contract-test proof. Use compatible schema compilers/type providers in the selected profile; never compile schemas supplied by an untrusted user. External OpenAPI/protobuf ownership means generating adapters, not maintaining a second shape. See [contract pipeline](recipes/contracts.md).
+**API-01 MUST:** Own each public wire contract once. In a TS monorepo use browser-safe `packages/contracts/<feature>/endpoints.const.ts` with Zod input/output and method/path; the BE feature owns semantics. Generate OpenAPI/clients for separate repositories or languages; never hand-copy DTOs.
 
 **API-02 SHOULD:** Use resource-oriented HTTP for ordinary CRUD and named operations for domain actions that do not fit CRUD. Keep methods, status codes, and error codes consistent across the API. Do not encode business success as `200` with an error field.
 
@@ -21,3 +21,17 @@
 **Example:** `POST /orders/{id}/cancel` can be a named domain operation. A repeated cancellation with the same idempotency key returns the same effective result; a conflicting state returns a stable conflict code.
 
 **Verification:** published contract, runtime edge validation, backward-compatibility review, abuse limits, and consumer-facing tests for changed behavior. Further reading: [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457.html), [OWASP API risks](https://api-security.owasp.org/editions/2023/en/0x11-t10/), [Fastify schema guidance](https://fastify.dev/docs/latest/Reference/Validation-and-Serialization/).
+
+**API-09 MUST:** Bind the contract, handler and explicit `policy.access` in action `api.ts` through `defineEndpoint`. Feature `api.ts` exports the endpoint list; app composition adds the global prefix. The adapter enforces validation, serialization, access and documentation.
+
+**API-10 MUST:** Access is explicitly public, authenticated or RBAC with a named shared action constant. Optional rate limits declare trusted actor/IP keys and bounds separately. Extra boolean checks live in optional `validations.ts`; loaded-state checks stay in the handler.
+
+```ts
+export const cancelEndpoint = defineEndpoint({
+  contract: orderEndpoints.cancel,
+  policy: { access: { type: Access.Rbac, action: OrderAction.Cancel } },
+  handler: cancelOrder,
+});
+```
+
+RBAC uses code-owned action IDs, curated permissions, configurable roles and scoped grants. Every HTTP/RPC/job entry establishes its own trusted authorization boundary. An omitted policy must fail registration, not become public.

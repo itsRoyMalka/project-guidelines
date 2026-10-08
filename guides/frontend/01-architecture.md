@@ -1,33 +1,40 @@
-# Frontend architecture
+# Frontend feature flows
 
-**Applies to:** React/TypeScript web apps. The [stack guide](../02-stack.md) decides standalone framework versus an embedded host.
-
-## Default feature
+**Scope:** React web applications and each MFE. **Why:** keep a user flow and its data behavior together.
 
 ```text
 src/
-  app/                    # routes, providers, runtime config, composition
-  pages/                  # thin route compositions
+  app/{routes,providers,store}.tsx
+  pages/orders/{page.tsx,params.ts,sections.ts}
   features/orders/
-    ui/                   # rendering and interaction
-    model/                # feature behavior and local state
-    api/                  # query and mutation adapters
-    lib/                  # feature-private pure helpers
-    tests/
-    index.ts              # public surface
-  shared/                 # app-scoped primitives with real reuse
+    browse/
+      api/{get-orders,query-options,use-orders}.ts
+      ui/order-list/{order-list,order-list.skeleton}.tsx
+      lib/                       # optional pure helpers
+      browse.test.tsx
+    cancel/{api,ui}/
+    shared/api/query-keys.const.ts
+    store/                       # only truly global client state
+    messages/{en,he}.json
+    index.ts
+  shared/api/{client,use-api}.ts
+  test/{render,fixtures,handlers}.ts
 ```
 
-**FE-01 MUST:** Keep feature behavior with its owner and pages focused on routing/composition. Cross-feature use goes through explicit public contracts; the exact folders/index files follow the chosen profile. Compose peers without cyclic imports.
+**FE-01 MUST:** Use app → pages → features → shared. Group feature flows such as browse/details/cancel; reuse through feature public exports. Enforce resolved import boundaries and cycles in CI; no cross-app private imports.
 
-**FE-02 SHOULD:** Make leaves props-in/render-out. Hooks coordinate behavior near the owning feature. Prefer composition, children, slots, and named variants over boolean-heavy component APIs or wrappers that only forward props.
+**FE-02 SHOULD:** UI imports its flow's API hook and pure helpers. A smart view coordinates the flow; children accept data/callbacks. A separate `model/` exists only for substantial non-API interaction logic.
 
-**FE-03 MUST:** Centralize transport/auth/correlation/error policy while keeping domain operations and schemas with their owners. Browser feature code uses typed adapters. SSR/BFF credentials and persistence stay in server-only modules; never serialize secrets into loader data. Avoid a shared client that becomes the domain layer.
+**FE-03 MUST:** In the split/mobile profile, keep plain requests, Query options, key constants and hooks in `api/`. `shared/api` owns the injectable client and raw HTTP. Requests accept the client and work without React; `useApi()` retrieves it from context.
 
-**FE-04 SHOULD:** Use the router's built-in code splitting where supported; add manual lazy boundaries only for a measured need. Shell responsibilities include navigation, identity, layout and global failure boundaries. Respect server/client boundaries and declared host contracts rather than inventing parallel config/auth clients.
+**FE-04 SHOULD:** Pages compose public feature surfaces. Related skeletons and presentation files live under the view's domain name. Use router splitting; add manual optimization only for measured needs.
 
-**FE-05 MUST:** Gate queries/actions when the client has reliable grant information, and handle revoked/changed grants and authoritative forbidden responses. Do not invent a client permission model where none exists. Render loading, empty, error, forbidden and success states; the server always enforces access.
+**FE-05 MUST:** Render loading, empty, error, denied, data and mutation-pending states. Preserve usable data during failed background refresh; backend permissions remain authoritative.
 
-**FE-06 SHOULD:** Use Module Federation for a demonstrated runtime composition need. Specify shared dependencies, host/remote contracts, compatible version combinations and rollback artifacts. Prove mixed-version deployment or explicitly deploy the group atomically; a monorepo or independent builds alone do not justify federation.
+**FE-06 SHOULD:** Choose MFE only for justified independent runtime delivery. The host owns session, routing, i18n and telemetry; remotes use typed host contracts and test supported mixed versions, failure fallback and recovery.
 
-**Verification:** route-to-feature trace, import-boundary check, least-privilege role test, and a review of every external client.
+**FE-07 MUST:** Compose shared providers in `app/providers.tsx`; adapters implement external access and hooks expose small APIs. Providers own lifecycle, cleanup and scope, never domain policy or one request per consumer.
+
+Fullstack route data follows the [router profile](../profiles/typescript-fullstack.md); do not add Query as a second owner of the same data.
+
+**Check:** trace UI → hook → plain request → shared client/contract. **Vary when:** framework route filenames may differ; ownership and import rules remain. Source: internal review record (not distributed), [React context](https://react.dev/learn/passing-data-deeply-with-context).

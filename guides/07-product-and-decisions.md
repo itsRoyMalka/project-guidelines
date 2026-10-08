@@ -13,3 +13,7 @@
 Example: “An approver can decide a request once; two simultaneous decisions cannot both win; a requester sees the committed result; failed submission preserves the draft.” This identifies a domain invariant, concurrency test and UI recovery state without selecting a framework prematurely.
 
 Use the [brief/ADR templates](templates/decisions.md). For a small internal tool, five clear lines may suffice; for multiple teams or sensitive data, expand trust and failure analysis. **Verification:** another reader can derive success/failure cases and identify who owns each unresolved consequential assumption. **Exception:** reuse a maintained product spec instead of duplicating it. Source context: [NIST SSDF](https://csrc.nist.gov/pubs/sp/800/218/final); template and proportionality are local choices.
+
+**PROD-05 SHOULD:** Deliver small usable vertical slices with explicit dependencies and unfinished exposure. Link enabling work to its user outcome; product owners decide consequential behavior and priority.
+
+**PROD-06 MUST:** Define launch success signals and revisit decisions when measured outcomes contradict assumptions. Use a short ADR for durable tradeoffs, not every implementation choice.

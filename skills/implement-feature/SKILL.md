@@ -3,11 +3,8 @@ name: implement-feature
 description: Implement a scoped application feature or bug fix within the owning module while preserving contracts, authorization, tests, and documentation.
 ---
 
-Read [usage](../../USAGE.md) and [governance](../../guides/00-governance.md) before applying this skill. This skill requires the complete pinned handbook checkout; resolve links relative to this file. Use the [task map](../../guides/README.md) to select only relevant recipes.
-
-
 # Implement a feature
 
-Find the owning feature and its tests using [read-project](../read-project/SKILL.md). Load [repository](../../guides/03-repository.md), [TypeScript](../../guides/04-typescript.md) or [Python](../../guides/python/01-backend.md), and the affected frontend/backend/cross-cutting guides.
+Read [usage](../../USAGE.md), [governance](../../guides/00-governance.md), target instructions and current issue/handoff. Apply [WORK](../../guides/cross-cutting/06-workflow-and-docs.md), [project](../../guides/cross-cutting/07-project-work.md) and [Git](../../guides/cross-cutting/08-git-collaboration.md).
 
-Change behavior through the feature's public operation. Keep edge validation, backend authorization, data ownership, and error mapping intact. Add focused behavioral proof, including a regression case for a bug. Update the contract and owning documentation when behavior changes. Finish with the target project's relevant checks and a concise account of what changed and what remains unverified. Do not expand the task into a general rewrite.
+Load the selected profile and affected guides from [the map](../../guides/README.md). BE uses feature/action API/handler/DAL slices; FE uses flow api/ui/lib; mobile adds its native profile. Build a focused slice with behavior proof, update contracts/docs and inspect the diff for scope, security and duplication. Report actual checks and gaps. Update the issue at meaningful transitions; a stopped task gets a durable handoff. Do not mark Done before target verification.

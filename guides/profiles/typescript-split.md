@@ -1,20 +1,19 @@
-# TypeScript separate web/API profile
+# TypeScript web/API profile
 
-**Choose when:** distinct API clients, static hosting, trust or release requirements warrant separate deployables. Prerequisites: [API](../backend/02-api-contracts.md), [identity](../cross-cutting/recipes/identity.md), [frontend state](../frontend/02-state-and-forms.md).
+**Choose when:** separate clients, hosting, trust or release needs justify web and API deployables.
 
-Default shape: a static React Router SPA and Fastify API. Set the selected framework's SPA mode explicitly. Route data uses client loaders/actions calling a typed API adapter; server-only loaders are not available in static hosting. API operations own identity/resource policy, transactions and public errors. For React Router framework SPA mode, put `HydrateFallback` on the root route and keep document markup plus `<Scripts />` in the shared root `Layout`, so the fallback can hydrate. Even SPA mode renders the initial shell during build; do not access browser-only globals at module evaluation/render without the framework-supported boundary. Deploy routing fallback and cache headers so deep links and hashed assets work.
+- React Router web and Fastify API; explicitly select static SPA or SSR/BFF hosting.
+- TanStack Query owns API server data; route loaders may prefetch its cache.
+- Browser-safe Zod endpoint descriptors in `packages/contracts` are the one source; Fastify adapters own policy, validation, response serialization and OpenAPI export.
+- A same-origin session with HttpOnly cookie and CSRF protection is the browser default. Cross-origin/BFF/OAuth profiles explicitly define trusted origins and delegated identity.
+- Static hosting needs deep-link fallback. Even SPA shell builds may render before browser globals exist.
 
 ```text
-apps/web/app/routes/          # clientLoader/clientAction + UI
-apps/web/app/api/             # transport policy + generated API types
-apps/api/src/features/       # schemas, HTTP, operations, persistence
-packages/contracts/          # only when schemas/types have genuine shared consumers
+apps/web/src/{app,pages,features,shared}/
+apps/api/src/features/<feature>/<action>/
+packages/contracts/<feature>/endpoints.const.ts
+packages/test-ids/<feature>.ts
+apps/e2e/web/
 ```
 
-Choose identity topology before implementation. A same-origin reverse proxy may route `/api` to the API, which can own an HttpOnly session and CSRF validation. If web/API are cross-origin, explicitly define trusted credentialed origins and cookie policy; do not scatter tokens in web storage. A browser-only OAuth client uses its separate public-client controls.
-
-If SSR/BFF is needed, choose an explicit server-rendered web runtime instead of pretending it is static. The BFF can own session/token mediation; API still authorizes trusted delegated principal/resource scope. Record this third runtime role in the architecture brief, rather than accidentally duplicating business logic.
-
-Fastify owns canonical Zod wire schemas; the profile installs a compatible Zod type provider, validator/serializer compilers and OpenAPI transform. Generate consumers from published OpenAPI. [Contract recipe](../backend/recipes/contracts.md) and [verified versions](verification.md) show the integration boundary. TanStack Query may own a resource where justified; router loaders then coordinate that owner rather than retaining an independent cache.
-
-**Proof:** invalid input rejected, forbidden response fields excluded, generated consumer typecheck, independent deployment compatibility, mutation revalidation and cross-origin/session behavior where applicable. **Alternative:** one [full-stack app](typescript-fullstack.md) when separate deployables add no value. Source: [SPA mode](https://reactrouter.com/how-to/spa).
+**Check:** invalid input, safe output, runtime response validation, auth/CSRF, generated contract compatibility and one Query mutation/revalidation flow. **Alternative:** [fullstack](typescript-fullstack.md) for one runtime. See [contracts](../backend/recipes/contracts.md) and [FE architecture](../frontend/01-architecture.md). [Old fixture evidence](verification.md) is historical, not proof of this revised profile.

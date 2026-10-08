@@ -1,52 +1,27 @@
-# Guide map
+# Find the rule you need
 
-Read [usage](../USAGE.md) and [governance](00-governance.md) first. Then select by task; you do not need to load the whole library.
+Start with [usage](../USAGE.md), [governance](00-governance.md) and the chosen [profile](profiles/README.md). Load only the task's boundaries; examples do not create extra rules.
 
-| Subject | Guide |
+| Area | Canonical guides and examples |
 | --- | --- |
-| Architecture, domain and deployable boundaries | [Architecture](01-architecture.md) |
-| Recommended stack and selection criteria | [Stack](02-stack.md) |
-| Workspace, modules, packages, imports | [Repository structure](03-repository.md) |
-| TypeScript language rules | [TypeScript](04-typescript.md) |
-| How the decisions connect in one feature | [Reference feature flow](06-reference-flow.md) |
-| Backend layers and domain work | [TypeScript backend](backend/01-service-design.md) |
-| HTTP API and contracts | [API contracts](backend/02-api-contracts.md) |
-| Data ownership, persistence, migration | [Data and migrations](backend/03-data-and-migrations.md) |
-| Events, queues, durable work | [Events and workflows](backend/04-events-and-workflows.md) |
-| React feature organization | [Frontend architecture](frontend/01-architecture.md) |
-| URL, server and local state; forms | [Frontend state](frontend/02-state-and-forms.md) |
-| Design system, accessibility, localization | [UI and accessibility](frontend/03-ui-and-accessibility.md) |
-| Identity, authorization, tenant isolation | [Security](cross-cutting/01-security.md) |
-| Configuration, environments, feature flags | [Configuration](cross-cutting/02-configuration.md) |
-| Unit through E2E verification | [Testing](cross-cutting/03-testing.md) |
-| Logs, traces, metrics, reliability and speed | [Operations](cross-cutting/04-operations.md) |
-| CI, deployment, infrastructure | [Delivery](cross-cutting/05-delivery.md) |
-| Reading, planning, review, docs | [Workflow](cross-cutting/06-workflow-and-docs.md) |
-| Python services | [Python backend profile](python/01-backend.md) |
-| Warehouses, dbt and analytics | [Data and analytics profile](data/01-analytics.md) |
-| Greenfield and existing-project adoption | [Adoption](05-adoption.md) |
+| New project | [PRD setup](08-project-setup.md), [worked setup](recipes/project-setup.md), [product brief](07-product-and-decisions.md) |
+| Architecture and code | [Architecture](01-architecture.md), [stack](02-stack.md), [repo](03-repository.md), [TypeScript](04-typescript.md), [one feature](06-reference-flow.md) |
+| BE action | [Slices/chassis](backend/01-service-design.md), [endpoint/contracts](backend/02-api-contracts.md), [contract example](backend/recipes/contracts.md), [tests](backend/07-testing.md) |
+| Database | [Schema/migrations/indexes](backend/03-data-and-migrations.md), [migration example](backend/recipes/migrations.md), [concurrency](backend/recipes/persistence.md) |
+| Data lifecycle | [Retention/soft delete/vault/audit](backend/06-data-lifecycle.md), [DocStore/bulk](backend/11-docstore.md) |
+| Async and remote work | [Events](backend/04-events-and-workflows.md), [jobs/workflows](backend/08-background.md), [RPC](backend/09-rpc.md), [idempotency](backend/recipes/idempotency.md) |
+| Providers and cache | [Inbound/outbound](backend/05-integrations.md), [cache](backend/10-cache.md) |
+| FE structure/API | [Feature flows](frontend/01-architecture.md), [state/forms/store](frontend/02-state-and-forms.md), [state example](frontend/recipes/state-and-forms.md) |
+| FE UI | [RTL/i18n/a11y/test IDs](frontend/03-ui-and-accessibility.md), [DS](frontend/04-design-system.md), [UI example](frontend/recipes/ui-patterns.md) |
+| FE app | [Routing/auth/deep links](frontend/05-routing-and-access.md), [flags/providers/telemetry](frontend/06-flags-and-telemetry.md), [tests](frontend/07-testing.md) |
+| Mobile | [Native profile](mobile/01-react-native.md), [telemetry/build/release](mobile/02-operations.md) |
+| E2E | [Web/device journeys](e2e/01-journeys.md), [shared dev](e2e/02-environments.md) |
+| Security/config | [Security/threats](cross-cutting/01-security.md), [identity profiles](cross-cutting/recipes/identity.md), [configuration](cross-cutting/02-configuration.md) |
+| Quality/operations | [Testing philosophy](cross-cutting/03-testing.md), [local setup](cross-cutting/recipes/local-and-test.md), [operations](cross-cutting/04-operations.md) |
+| CI/CD | [Delivery/versions/rollback/hotfix](cross-cutting/05-delivery.md), [infra/rollout](cross-cutting/09-infrastructure.md), [delivery example](cross-cutting/recipes/delivery.md) |
+| Work | [Agent pipeline](cross-cutting/06-workflow-and-docs.md), [project/sprints](cross-cutting/07-project-work.md), [Git](cross-cutting/08-git-collaboration.md), [ticket examples](cross-cutting/recipes/project-work.md) |
+| Data analytics | [Analytics](data/01-analytics.md), [warehouse profile](profiles/analytics.md) |
+| Python | [Profile](python/01-backend.md), [I/O lifecycle](python/recipes/lifecycle.md) |
+| Adoption/docs | [Adoption](05-adoption.md), [templates](templates/decisions.md), [pattern selection](recipes/pattern-selection.md), [domain values](recipes/domain-values.md) |
 
-Rules use **MUST** for a baseline requirement and **SHOULD** for a strong default with a documented reason to vary. The exact framework, provider, and deployment mechanism can change when the architecture brief explains why. The stable rule ID is for discussion and traceability, not a substitute for the rule text.
-
-## Task routes and deeper recipes
-
-Core = governance plus the task's owning guide. Profile = load once when selecting/understanding a runtime. Conditional = load only if the change touches that boundary. Following every link is unnecessary.
-
-| Task | Core / profile | Conditional depth |
-| --- | --- | --- |
-| New application | [Product brief](07-product-and-decisions.md), architecture, [profile chooser](profiles/README.md) | [Decisions/templates](templates/decisions.md), identity, delivery |
-| HTTP contract change | API contracts, selected TS profile | [Schema pipeline](backend/recipes/contracts.md), [domain values](recipes/domain-values.md) |
-| Mutation / durable work | Backend, security, events | [Idempotency/concurrency/outbox](backend/recipes/idempotency.md) |
-| Database evolution | Data and delivery | [Tenant/concurrency SQL](backend/recipes/persistence.md), [migration/backfill](backend/recipes/migrations.md), [caching](backend/recipes/caching.md) |
-| UI feature | Frontend, state, UI | [State/forms](frontend/recipes/state-and-forms.md), [UI patterns](frontend/recipes/ui-patterns.md) |
-| Identity or permissions | Security | [Identity profiles](cross-cutting/recipes/identity.md), [threat/control map](cross-cutting/recipes/security-controls.md) |
-| Provider / webhook / upload | [Integrations](backend/05-integrations.md) | [Files/bulk](backend/recipes/files-and-bulk.md), retry/outcome protocol |
-| Account deletion / audit | [Data lifecycle](backend/06-data-lifecycle.md) | Caches, files/bulk, analytics, recovery |
-| Test or local environment | Configuration and testing | [Local/test recipe](cross-cutting/recipes/local-and-test.md) |
-| Release / infrastructure | Delivery | [CI and rollout](cross-cutting/recipes/delivery.md), migrations |
-| Debug or incident | Operations | [Operations/recovery](cross-cutting/recipes/operations.md), [incident skill](../skills/diagnose-incident/SKILL.md) |
-| Python service | Python profile | [I/O and resource lifecycle](python/recipes/lifecycle.md), shared boundary recipes |
-| Warehouse/dbt | Data/analytics rules | [Analytics profile](profiles/analytics.md) |
-| Choosing abstractions | Architecture, backend, TypeScript | [Pattern selection](recipes/pattern-selection.md) |
-
-[Profile verification](profiles/verification.md) records exact tested versions and limits. internal review record (not distributed) tracks the original subject inventory. Optional extensions in the root README need a project-specific profile before claiming coverage.
+Rules have stable IDs and MUST/SHOULD within their scope. Each guide supplies a check and exception/alternative. internal review record (not distributed) links approved topics; internal review record (not distributed) records actual proof. Framework versions and custom factory implementations still need project-level verification.

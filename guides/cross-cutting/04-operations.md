@@ -19,3 +19,15 @@
 **OPS-08 SHOULD:** Define capacity limits and degradation behavior before load forces an emergency. Measure high-cardinality telemetry cost, queue lag, database saturation, and browser performance on representative journeys. A performance budget is meaningful only when measured in a reproducible environment.
 
 **Verification:** a production request can be traced end to end without revealing sensitive data; alerts, recovery steps, and a restore are exercised. Further reading: [OpenTelemetry signals](https://opentelemetry.io/docs/concepts/signals/), [Google SRE SLO guidance](https://sre.google/workbook/implementing-slos/), [NIST contingency planning](https://csrc.nist.gov/pubs/sp/800/34/r1/upd1/final).
+
+**OPS-09 MUST:** Each deployable has a service record with owner, dependencies, release/recovery path, dashboards, runbook and escalation. Incidents record impact, facts/hypotheses, mitigation and user-flow recovery proof.
+
+**OPS-10 MUST:** Initialize Node telemetry before instrumented imports. Use OpenTelemetry/OTLP to Collector for traces/metrics and Pino stdout through one log collector. Select provider exporters outside features; avoid duplicate shipping.
+
+**OPS-11 MUST:** Instrument request/RPC/DB/queue boundaries and named actions. Use bounded dimensions, sampled routine diagnostics, safe correlation and redaction; never export raw bodies, SQL parameters, tokens or personal data. Measure rate/error/latency/saturation and oldest pending work.
+
+```text
+bootstrap → telemetry setup → app/features
+traces/metrics → OTLP Collector → selected backends
+Pino stdout → platform collector → log backend
+```

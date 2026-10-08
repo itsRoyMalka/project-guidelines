@@ -1,27 +1,19 @@
-# UI foundations and interaction patterns
+# UI composition example
 
-Applies to [UI rules](../03-ui-and-accessibility.md). Start with the product's supported browser, input and locale matrix.
+Owners: [UI](../03-ui-and-accessibility.md), [DS](../04-design-system.md).
 
-## Foundation
+```text
+features/orders/browse/ui/order-list/
+  order-list.tsx
+  order-list.skeleton.tsx
+  order-row.tsx
+```
 
-Choose an actively maintained accessible component library after trying keyboard behavior, labeling, composition, theming and bundle impact on a real form/table/dialog. Wrap only where the product needs stable semantics; do not fork a complete design system first. Define semantic tokens for surface/text/border/focus/intent, spacing, typography and motion. Themes map roles to values; each theme needs contrast checks. Tokens alone cannot prove accessibility.
+The feature view connects its API hook and renders loading/empty/error/data using DS primitives. The skeleton describes this view's structure. Presentational rows take data/callbacks; backend capabilities decide which business actions are available.
 
-| Pattern | Expected behavior | Evidence |
-| --- | --- | --- |
-| Form | Persistent label, help/error association, pending and success feedback | Keyboard submit, error focus, screen reader name/error |
-| Table | Header relationships, sort state, labeled pagination and actions | Screen reader navigation; stable loading/empty/error states |
-| Dialog | Accessible name, appropriate focus placement/containment, close behavior, return focus | Keyboard and assistive technology check |
-| Destructive action | Explain impact; use undo when truly reversible, confirmation when costly/irreversible | No accidental duplicate action; recovery path works |
-| Async content | Preserve useful context, expose progress/status without noisy announcements | Slow network, retry and empty-state action |
+```tsx
+<OrderRow order={order} onCancel={cancel}
+  testId={OrderTestId.row(order.id)} />
+```
 
-## Responsive and inclusive behavior
-
-Test narrow viewport and zoom without loss of controls/content. A genuine two-dimensional data table may use accessible horizontal overflow; keep surrounding content reflowing and expose overflow discoverably. Do not convert tables into unlabeled visual cards just to remove scrolling. Preserve focus visibility, adequate targets, contrast and meaningful reading order. Automated accessibility scans supplement manual keyboard and representative screen-reader checks against the chosen WCAG 2.2 target.
-
-Use logical CSS properties. Format numbers/dates with locale-aware APIs and distinguish display locale from scheduling timezone. Translate complete messages with plural rules; avoid concatenation. Test long strings and only the RTL locales actually supported. Empty/error copy says what happened and gives a useful next action without exposing internals.
-
-Honor reduced-motion preferences; avoid essential information conveyed only by animation or color. Test semantic light/dark themes and representative loading/error/empty/disabled/focus states. Visual regression uses stable fixtures, meaningful viewport/theme coverage and reviewed diffs; a pixel match is not usability proof.
-
-## Completion
-
-Attach the browser/locale/input matrix, manual checks, automated findings and representative screenshots to the consuming change. Record unsupported combinations explicitly. [WCAG 2.2](https://www.w3.org/TR/WCAG22/) defines criteria, not a universal widget implementation.
+Use logical spacing and mobile-first composition; check both directions, long translation, zoom and keyboard focus. DS components own behavior such as labels, dialog focus and reduced motion; feature tests verify the composed flow.

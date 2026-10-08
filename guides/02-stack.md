@@ -9,8 +9,8 @@
 | Web | React Router framework mode with an explicit SPA or SSR deployment choice | Next.js for its particular capabilities/ecosystem; existing React SPA router when adequate |
 | HTTP API, if separate | Fastify with Zod, compatible type provider and OpenAPI transform | JSON Schema/TypeBox, generated OpenAPI/protobuf, or existing framework contract |
 | Relational persistence | PostgreSQL; Prisma evaluated against the chosen major's migration/operational needs | Reviewed SQL/query builder or another store justified by workload |
-| Route data | Router loader/action revalidation | TanStack Query for justified persistent client cache/polling/invalidation; one owner per resource |
-| Complex forms | React Hook Form with draft validation | Native forms for simple cases; wire schema reused only where representation agrees |
+| Server data | TanStack Query for split web/API and mobile; router loaders/actions for fullstack route data | One freshness owner per resource; loaders may prefetch Query |
+| Forms | React Hook Form for every actual form, Zod for drafts | Non-form controls use local state |
 | Application tests | Existing runner or Vitest, Testing Library, MSW and focused Playwright journeys | Equivalent established tools; choose test layers by risk |
 | Observability | OpenTelemetry-compatible signals with bounded metric labels | Platform instrumentation providing required evidence |
 
@@ -26,3 +26,19 @@ React Router supports server rendering; SSR alone does not select Next.js. A ful
 **STACK-04 MUST:** Before adoption or a major upgrade, record the tested runtime, framework, compiler, schema adapters and deployment mode. Prove the relevant contract/build path against these versions; see [profile verification](profiles/verification.md). A source link is not compatibility proof.
 
 **STACK-05 MUST:** Treat named tools in the table as a recommended project profile, not an industry requirement. Recheck major-version migration and operational behavior—especially the database layer—when the architecture brief is written. A stable existing stack that meets the same invariants does not need replacement.
+
+## Selected optional capabilities
+
+| Need | Selected convention |
+| --- | --- |
+| Monorepo orchestration | pnpm workspace/lockfile; Nx affected tasks and boundaries; Turbo is a simpler alternative |
+| Global client state | Zustand, composed centrally from feature-owned slices |
+| Native mobile | React Native + TS; evaluate Expo, prove required native integrations |
+| Durable background work | Self-hosted Temporal behind the app background port |
+| Cache after measured need | Valkey or Redis adapter |
+| Internal service RPC | Protobuf + Buf + Connect behind app clients |
+| Native E2E | Detox + TypeScript; prove Expo builds when selected |
+| Infrastructure | OpenTofu; established Terraform/equivalent is valid |
+| Managed DS | React Aria behavior, DTCG tokens, Storybook; keep a healthy existing Radix system |
+
+Versions are selected and checked during project setup, never inferred from these names. Local conventions such as test IDs and factory names are not framework mandates.

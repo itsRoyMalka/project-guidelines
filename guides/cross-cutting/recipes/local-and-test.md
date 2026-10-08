@@ -12,7 +12,7 @@ A consuming project's command map names install, dev, format/lint, typecheck, un
 
 | Change risk | Focused proof |
 | --- | --- |
-| Domain transition | Pure operation cases including forbidden transition |
+| Domain transition | Action API integration including forbidden transition; pure test only for a distinct algorithm |
 | Tenant write | Real persistence integration, other-tenant identifier, stale version, no unauthorized effect |
 | New HTTP field | Parse/serialize round trip plus generated consumer; invalid input and forbidden output |
 | Migration | Production-like engine/version, old/new binaries during writes, backfill restart and reconciliation |

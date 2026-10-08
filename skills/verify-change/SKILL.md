@@ -3,13 +3,8 @@ name: verify-change
 description: Select and run proportionate checks for a code change, report actual evidence, and identify any unverified critical boundary before release.
 ---
 
-Read [usage](../../USAGE.md) and [governance](../../guides/00-governance.md) before applying this skill. This skill requires the complete pinned handbook checkout; resolve links relative to this file. Use the [task map](../../guides/README.md) to select only relevant recipes.
-
-
 # Verify a change
 
-Read [testing](../../guides/cross-cutting/03-testing.md), [delivery](../../guides/cross-cutting/05-delivery.md), and the target repository's check commands. Map changed behavior to the cheapest meaningful test layer plus any affected cross-boundary proof.
+Read [usage](../../USAGE.md), [governance](../../guides/00-governance.md), issue acceptance and [testing](../../guides/cross-cutting/03-testing.md). Select [BE action](../../guides/backend/07-testing.md), [FE flow](../../guides/frontend/07-testing.md), [mobile](../../guides/mobile/01-react-native.md) or [E2E](../../guides/e2e/01-journeys.md) proof for the risk.
 
-Run checks available in the current environment, inspect failures, and rerun only to resolve a concrete remaining risk. Report commands and results precisely. Separate skipped/unavailable tests from passes; never describe a mocked UI journey as deployed integration proof. For data or contract changes, include migration/compatibility evidence. Stop when the stated acceptance and critical risks are sufficiently verified, or name the exact gap and owner.
-
-Use the [risk-to-proof map](../../guides/cross-cutting/recipes/local-and-test.md). Finish with revision/environment, exact commands, observed results, unavailable checks and remaining release conditions. Skill completion never grants deployment permission.
+Discover actual commands. Check affected units and consumers; compare observed results with acceptance. E2E evidence names the deployed manifest under [ENV](../../guides/e2e/02-environments.md). Report command/environment/result, skips, limits and next action. Use [delivery](../../guides/cross-cutting/05-delivery.md) for release proof; green local checks do not establish production readiness.

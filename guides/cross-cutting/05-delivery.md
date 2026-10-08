@@ -19,3 +19,25 @@
 **DEL-08 MUST:** Protect CI/deployment edits and production credentials. Use minimal CI permissions, immutable third-party action references or equivalent provider controls, isolated untrusted PR execution and approved short-lived deploy identities where available. Review dependencies/lockfiles and trace security fixes to releases.
 
 **Verification:** CI matrix covers changed dependents, a release is traceable to source/artifact, build credentials are isolated, and rollback is rehearsed for a representative change. Further reading: [NIST SSDF](https://csrc.nist.gov/pubs/sp/800/218/final), [SLSA provenance](https://slsa.dev/spec/v1.2/provenance).
+
+**DEL-09 MUST:** Build immutable artifacts once after merge, deploy to shared dev, verify its stable manifest, then promote the same digest. Release FE/BE independently with human versions plus commit/digest; SemVer is strict for published package/public-contract compatibility, not proof for a deployment label.
+
+**DEL-10 MUST:** Existing deployment configuration is the version manifest linking digests, config/migrations and rollout order; add a custom manifest only if the platform cannot expose it. Independent services retain versions and prove compatibility with production peers, including queued events and running workflows.
+
+**DEL-11 MUST:** Provide an access-controlled rollback pipeline selecting a retained compatible release and incident/reason. Stop rollout, restore artifact/config and desired state, then verify running digests, readiness and critical smoke. Database reversal is a new migration and does not restore lost data.
+
+**DEL-12 MUST:** Emergency hotfix starts from deployed source, applies a narrow fix and builds a new artifact. Keep focused build/type/behavior/contract/security checks and rapid review; explicitly own deferred broad checks. Canary or constrain rollout, verify, then reconcile into main.
+
+**DEL-13 MUST:** Rollout uses named signals, thresholds, observation window and owner. Failed signals abort; missing/inconclusive evidence pauses. Keep an available recovery path compatible with schema, peers and persisted state.
+
+See [infrastructure](09-infrastructure.md), [shared dev E2E](../e2e/02-environments.md) and [mobile release](../mobile/02-operations.md). Local, shared dev and production are the baseline; staging is added for a concrete risk.
+
+```text
+orders-api: 1.4.2 → sha256:artifact-a
+web: 2.1.0 → sha256:artifact-b
+release: REL-42 → both digests + config/migration revisions + rollout order
+```
+
+**DEL-14 MUST:** PRs check affected apps/packages and dependents; global tooling changes broaden scope. Main builds/deploys affected artifacts to dev; deployed smoke/E2E gates promotion. Required-check aggregation must reject missing/skipped jobs for the actual candidate.
+
+**DEL-15 MUST:** Keep environment config outside promoted artifacts where supported. Browser settings are public; build-time environment values create separate artifacts that each need proof. Use environment-scoped short-lived deployment identity and keep production secrets out of untrusted PR jobs.

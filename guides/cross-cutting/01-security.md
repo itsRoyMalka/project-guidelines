@@ -19,3 +19,14 @@
 **SEC-08 MUST:** Select applicable security checks from product risk and the chosen ASVS scope. CI performs applicable secret/dependency/container checks under DEL-02; findings have severity, owner, response target and documented expiring exceptions. Escalate urgent exposures and preserve release evidence. A guide or passing scan is not an ASVS assessment.
 
 **Verification:** cross-tenant/object/property and role tests, session/CSRF/CORS checks, secret exposure review, dependency scan, and threat review of new trust boundaries. Further reading: [OWASP API risks](https://api-security.owasp.org/editions/2023/en/0x11-t10/), [OWASP session guidance](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html), [OWASP CSRF guidance](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html).
+
+**SEC-09 MUST:** Maintain a short threat model for consequential trust/data changes: asset/boundary → threat → control → proof → owner. Store durable context in `docs/security/threat-model.md`; small changes may link the relevant ticket entry.
+
+**SEC-10 MUST:** Inventory sensitive data by purpose, owner, access and lifecycle; minimize collection and include derived copies. Track vulnerability severity, owner, response deadline and expiring exceptions. Privacy/security incidents use the normal owned incident process.
+
+```text
+Threat: customer guesses another order ID
+Control: trusted actor + scoped DAL read
+Proof: forbidden cross-account API test
+Owner: Orders
+```

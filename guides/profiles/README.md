@@ -6,7 +6,8 @@ Profiles express the shared rules in a concrete environment. They do not overrid
 | --- | --- | --- |
 | [TS full-stack](typescript-fullstack.md) | One web product, shared release owner, server rendering or server operations useful | One web server owns session and domain operations |
 | [TS split](typescript-split.md) | Independent API consumers, static hosting or separate release/trust/scale needs | API owns domain writes; static web or explicit BFF owns presentation |
+| [Mobile](../mobile/01-react-native.md) | iOS/Android app | React Native feature flows and native lifecycle |
 | [Python](../python/01-backend.md) | Workload/team benefits from Python | FastAPI operation/session lifecycle, shared wire principles |
 | [Analytics](analytics.md) | Warehouse/reporting/dbt work | Declared model grain/lineage; transactional owner remains upstream |
 
-[Version and integration evidence](verification.md) describes what was exercised. Choose installed versions at adoption and repeat the relevant proof. Provider deployment specifics, native mobile and AI model pipelines are explicit extensions.
+[Version and integration evidence](verification.md) describes what was exercised. Choose installed versions at adoption and repeat the relevant proof. Provider-specific implementation and AI model pipelines need project-level proof. Native mobile is covered by its linked profile.

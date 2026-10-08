@@ -14,10 +14,16 @@ Shared handbook: <absolute path to complete project-guidelines checkout>
 Adopted revision: <actual commit>
 Profiles: TypeScript split web/API
 Read that checkout's README.md and guides/00-governance.md, then the relevant skill.
+Work tracker: <authoritative product Project and issue repository>
+Ticket keys: <prefix and unambiguous issue mapping, e.g. ODR-123>
+Accountable owner: <team or role>
+Sprints: two weeks; project issue is the work and handoff record
 Local exceptions: docs/decisions/handbook-exceptions.md
 ```
 
 The complete folder can be copied to another location without changing its internal links. Optional agent-host discovery configuration belongs in the consuming environment and must preserve access to the complete checkout. Standalone distributable skill bundles are outside this edition's supported interface.
+
+For a new product, provide the PRD and target location to the [start-project skill](skills/start-project/SKILL.md). It reads the pinned handbook, asks only boundary-changing questions, selects applicable guides, builds the target starter and records actual readiness checks. A planning-only request stops before code creation and says so explicitly.
 
 ## Update and ownership
 

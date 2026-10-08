@@ -1,6 +1,6 @@
 # Files, downloads and bulk operations
 
-Read when importing/exporting data or handling user files. Owners: SEC-07, API-08, INT-04, LIFE-01–05. Apply only when this capability exists.
+Read when importing/exporting data or handling user files. Owners: SEC-07, API-08, INT-04, LIFE-01–09, [DOC-01–05](../11-docstore.md) and [JOB-06](../08-background.md). Apply only when this capability exists.
 
 Upload: authenticate/authorize scope, cap size and decompression/processing cost, allow required types, and validate content as well as untrusted filename/MIME. Generate storage keys independent of caller paths; quarantine until required scanning/transformation completes. Store outside an executable/public web root. Serve with deliberate content type/disposition and isolated origin where active content is possible. A signed URL is a short-lived scoped capability, not permanent authorization.
 

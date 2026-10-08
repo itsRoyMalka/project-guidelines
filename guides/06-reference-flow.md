@@ -1,33 +1,61 @@
-# Reference feature flow
+# One feature across the system
 
-**Purpose:** demonstrate how the baseline guides fit together. This is an illustrative “cancel an order” action, not a required domain model. Each rule remains in its owning guide.
+**Read when:** connecting the guides. Factory/helper APIs below are illustrative project-owned interfaces; adapt and prove them in the target project.
 
 ```text
-User opens order page
-  → route reads validated order ID and shareable URL state
-  → selected owner loads order: server loader → operation, or SPA client loader → API
-  → backend authenticates, derives tenant, authorizes read, scopes query
-  → UI shows loaded/empty/error/forbidden state
-
-User requests cancellation (confirmation/undo depends on actual impact)
-  → action sends expected version and stable operation/idempotency key where retries need it
-  → backend validates request and authorizes this order
-  → order operation conditionally checks invariant/version and commits state + required durable intent
-  → API maps result or stable error code
-  → router revalidates, or the chosen query owner invalidates; UI shows confirmed/conflict/unknown outcome
-  → if an external effect is required, worker uses dedupe/provider key and reconciles unknown outcomes
+packages/contracts/orders/endpoints.const.ts
+packages/test-ids/orders.ts
+apps/api/src/features/orders/
+  db/orders.prisma
+  shared/dal.shared.ts
+  cancel-order/{api,handler}.ts
+  cancel-order/cancel-order.test.ts
+  api.ts
+apps/web/src/features/orders/cancel/
+  api/{cancel-order,use-cancel-order}.ts
+  ui/cancel-dialog.tsx
+  cancel.test.tsx
+apps/e2e/web/orders/create-and-cancel.test.ts
 ```
 
-| Boundary | Owner | Proof |
-| --- | --- | --- |
-| Route and user action | `orders` frontend feature; shell owns identity/layout | Component test of states and keyboard flow |
-| Wire shape | Canonical API contract; versioned when consumed independently | Request/response contract test |
-| Cancellation decision | `orders` backend operation/domain | Unit tests for permitted, conflict, repeat cases |
-| Tenant and authorization | Trusted backend context and data guard | Cross-tenant and least-privilege integration tests |
-| Persistence and publication | Order feature transaction/outbox | Integration test including rollback/retry |
-| Downstream delivery | Event consumer | Duplicate, failure, and replay tests |
-| Whole journey | Product E2E smoke | User-visible cancel path and recovery |
+```ts
+// Shared source declarations; literals belong here.
+export const OrderAction = { Cancel: 'orders:cancel' } as const;
+export const OrderStatus = { Pending: 'pending', Cancelled: 'cancelled' } as const;
+export const orderEndpoints = {
+  cancel: {
+    method: 'POST', path: '/orders/:orderId/cancel',
+    params: z.object({ orderId: z.string().uuid() }),
+    response: z.object({ id: z.string(), status: z.literal(OrderStatus.Cancelled) }),
+  },
+} as const;
+```
 
-This flow uses [architecture](01-architecture.md), [repository](03-repository.md), [API contracts](backend/02-api-contracts.md), [data](backend/03-data-and-migrations.md), [events](backend/04-events-and-workflows.md), [frontend state](frontend/02-state-and-forms.md), [security](cross-cutting/01-security.md), and [testing](cross-cutting/03-testing.md). If a new rule would make this journey inconsistent, update the relevant owners and the internal review record (not distributed) together.
+```ts
+// API binds shared contract to backend policy and handler.
+export const cancelEndpoint = defineEndpoint({
+  contract: orderEndpoints.cancel,
+  policy: { access: { type: Access.Rbac, action: OrderAction.Cancel } },
+  handler: cancelOrder,
+});
+```
 
-For the actual mechanics see [idempotency](backend/recipes/idempotency.md), [identity](cross-cutting/recipes/identity.md) and [state/forms](frontend/recipes/state-and-forms.md). No broker/worker is needed when the feature has no durable asynchronous effect.
+```ts
+// Plain FE operation stays callable outside React.
+export const cancel = (api: ApiClient, orderId: string) =>
+  api.call(orderEndpoints.cancel, { params: { orderId } });
+
+export function useCancelOrder() {
+  const api = useApi();
+  const queryClient = useQueryClient();
+  const scope = useScopeKey();
+  return useMutation({
+    mutationFn: (orderId: string) => cancel(api, orderId),
+    onSuccess: order => queryClient.invalidateQueries({
+      queryKey: orderKeys.detail(scope, order.id),
+    }),
+  });
+}
+```
+
+The UI uses DS components, translations, shared test IDs and backend capabilities. The handler owns resource access, conditional state change and durable event intent. BE tests assert response/state/event; FE tests assert interaction; E2E creates and cancels through UI. See [BE slice](backend/01-service-design.md), [BE test](backend/07-testing.md), [FE architecture](frontend/01-architecture.md) and [E2E](e2e/01-journeys.md).
