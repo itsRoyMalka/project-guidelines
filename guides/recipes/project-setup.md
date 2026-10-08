@@ -22,6 +22,11 @@ The agent asks the identity question because it changes safe access and the firs
 ```text
 AGENTS.md
 README.md
+.github/
+  CODEOWNERS
+  ISSUE_TEMPLATE/
+  PULL_REQUEST_TEMPLATE.md
+  workflows/
 docs/
   product/mvp.md
   architecture/overview.md
@@ -39,8 +44,8 @@ apps/
     db/                     # config and migration history
 ```
 
-The target's actual framework may place routes or migrations differently; preserve one owner and the selected profile's boundaries. Add `apps/e2e/` when the first journey needs a browser-level check. Add `packages/contracts/` only after a separate consumer exists. Keep provider, infrastructure and CI files where the chosen target platform requires them.
+The target's actual framework may place routes or migrations differently; preserve one owner and the selected profile's boundaries. Add `apps/e2e/` when the first journey needs a browser-level check. Add `packages/contracts/` only after a separate consumer exists. Keep provider and infrastructure files where the chosen target platform requires them. The `.github/` files are an example for GitHub; use the host's equivalent. Follow the [Git/Project setup recipe](../cross-cutting/recipes/git-project-setup.md) to configure the remote Project and protections, not just these files.
 
 ## Ready means observed behavior
 
-From a fresh checkout, install with the pinned runtime and lockfile; start a safe local database; apply migrations; start the app; create an order as authorized staff; view the resulting status as the intended customer; run the relevant checks and inspect CI definitions. Record the exact commands, results and anything unverified. A real tracker issue then holds the next slice and handoff. A scaffold that only serves a welcome page is still in progress.
+From a fresh checkout, install with the pinned runtime and lockfile; start a safe local database; apply migrations; start the app; create an order as authorized staff; view the resulting status as the intended customer; run the relevant checks. Verify the Git/Project trial matrix against the actual remote settings. Record exact commands, results and anything unverified. A real tracker issue then holds the next slice and handoff. A scaffold that only serves a welcome page is still in progress.

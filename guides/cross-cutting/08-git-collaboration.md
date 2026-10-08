@@ -18,7 +18,7 @@
 
 **GIT-06 MUST:** Protect main/release branches with review, applicable checks, CODEOWNERS and resolved findings. Recheck material changes; reject stale/wrong-source/skipped proof. Merge queues need checks on the merge-group candidate; no ordinary direct/force push.
 
-**GIT-07 MUST:** A required gate verifies ticket prefixes, real matching linked issue in the project, metadata and final squash subject. Missing/inaccessible/mismatched evidence fails closed. Human review judges acceptance and handoff truth; automation validates structure.
+**GIT-07 MUST:** A required gate verifies ticket prefixes, real matching linked issue in the project and PR metadata; host commit restrictions or a controlled merge flow preserve the ticket key in the final squash subject. Missing/inaccessible/mismatched evidence fails closed. Human review judges acceptance and handoff truth; automation validates structure. See [setup and trials](recipes/git-project-setup.md).
 
 ## Merge, release and repair
 

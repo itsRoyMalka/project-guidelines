@@ -40,7 +40,7 @@ Done: scenarios verified on production release 1.4.2; issue closed after evidenc
 
 ## Enforcement and exceptions
 
-The consuming repository's agent entrypoint points to this guide and supplies real project coordinates. Use issue forms/templates for the ticket shape, project workflows for mechanical field updates and a [required Git check](08-git-collaboration.md) for issue/PR linkage. The [ticket, sprint and handoff examples](recipes/project-work.md) show an adoption shape. Automation assists but cannot prove that acceptance or a handoff comment is truthful; a reviewer checks those. The project owner periodically reviews unassigned, blocked, stale and carried-over work.
+The consuming repository's agent entrypoint points to this guide and supplies real project coordinates. Follow the [Git/Project setup recipe](recipes/git-project-setup.md) to configure forms, fields, workflows and required PR checks. The [ticket, sprint and handoff examples](recipes/project-work.md) show adoption. Automation assists but cannot prove that acceptance or a handoff comment is truthful; a reviewer checks those. The project owner periodically reviews unassigned, blocked, stale and carried-over work.
 
 **Rationale:** A single current issue gives the team and a new agent the same scope and next action. Two-week goals make capacity and scope changes visible while release stays independent of the calendar. Target-based Done prevents merged code from being mistaken for delivered behavior.
 
