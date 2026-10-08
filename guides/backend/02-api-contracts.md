@@ -14,7 +14,7 @@
 
 **API-06 MUST:** Define safe repeated writes and concurrent transitions. For idempotency keys, specify trusted scope, payload fingerprint, atomic reservation, concurrent replay behavior, stored outcome and expiry. Reauthorize before returning a replayed result. Protect lost updates with a domain constraint, conditional version write or selected isolation/lock strategy. See [idempotency recipe](recipes/idempotency.md).
 
-**API-07 MUST:** Declare accepted wire formats and bounds: timestamps with explicit offset normalized to UTC, supported precision, date-only YYYY-MM-DD, duration units, ID semantics and exact decimal/large-integer representation. Preserve timezone/recurrence intent separately when required. Use public DTOs rather than database/vendor objects. See [domain values](../recipes/domain-values.md).
+**API-07 MUST:** Declare accepted wire formats and bounds: timestamps with explicit offset normalized to UTC, supported precision, date-only YYYY-MM-DD, duration units, ID semantics and exact decimal/large-integer representation. Preserve timezone/recurrence intent separately when required. Use public DTOs rather than database/vendor objects. See [domain values](../recipes/domain-values.md) and [BE time decisions](14-time-and-dates.md).
 
 **API-08 MUST:** Bound body/page size, rate and expensive actions according to threat/capacity needs. Use 429 for client quota exhaustion and Retry-After when a meaningful retry time is known; distinguish service overload. Allowlist response fields and test the configured serializer's actual behavior, including rejected output and error responses.
 

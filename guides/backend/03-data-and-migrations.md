@@ -8,7 +8,7 @@
 
 **DATA-03 SHOULD:** Use PostgreSQL for new relational workflows and Prisma for ordinary typed data access in the default stack when its current version fits the schema and migration needs. Keep persistence behind feature operations; use reviewed SQL where ORM abstraction harms correctness or performance. Record a different datastore or access layer against workload requirements. Prisma's migration format and commands vary by major version; follow the selected version's official workflow.
 
-**DATA-04 MUST:** Store instants consistently and dates as dates; preserve business timezone/recurrence definitions for future local schedules. Use stable identifiers and deliberate decimal/money types. Scope public representation through [domain values](../recipes/domain-values.md), not incidental ORM serialization.
+**DATA-04 MUST:** Store instants consistently and dates as dates; preserve business timezone/recurrence definitions for future local schedules. Use stable identifiers and deliberate decimal/money types. Scope public representation through [domain values](../recipes/domain-values.md), not incidental ORM serialization. See [BE time and clock rules](14-time-and-dates.md).
 
 **DATA-05 MUST:** Review migration data loss, locks, backfill load and recovery. Use expand/migrate/contract for overlapping versions, bounded restartable backfills and realistic rehearsal. Do not rewrite applied migrations; create a new correction. Review generated operations and customize through the selected version's supported source. Engine-specific recipes must name their engine. See [live migration](recipes/migrations.md).
 

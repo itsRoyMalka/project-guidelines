@@ -14,7 +14,7 @@ type Job =
   | { status: 'done'; resultId: string };
 ```
 
-**TS-03 MUST:** Distinguish absence, null and failure; narrow before dereferencing and do not assert away uncertainty. Name temporal units. Separate instants, calendar dates and future zoned schedules; use deliberate money/large-number representations described in [domain values](recipes/domain-values.md).
+**TS-03 MUST:** Distinguish absence, null and failure; narrow before dereferencing and do not assert away uncertainty. Name temporal units. Separate instants, calendar dates and future zoned schedules; use deliberate money/large-number representations described in [domain values](recipes/domain-values.md). Apply the [BE](backend/14-time-and-dates.md) or [FE](frontend/10-time-and-dates.md) time guide at the relevant boundary.
 
 **TS-04 SHOULD:** Prefer simple functions and cohesive values. Use classes when they improve invariants, lifecycle or framework integration; value objects are valid. Keep business decisions separate from I/O and avoid classes or interfaces that merely add ceremony. See [pattern selection](recipes/pattern-selection.md).
 

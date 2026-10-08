@@ -26,7 +26,7 @@ packages/contracts/             # same public wire contract as web
 packages/test-ids/              # shared semantic targets
 ```
 
-Use [FE forms/state](../frontend/02-state-and-forms.md), [feature tests](../frontend/07-testing.md) with React Native Testing Library, [mobile telemetry/release](02-operations.md) and [device E2E](../e2e/01-journeys.md). **Check:** both platform builds, native integration, auth/deep links, permission denial, foreground/offline and accessible large-text/RTL states. **Vary when:** React Navigation without Expo or a supported native stack meets the same controls. Sources: [RN framework guidance](https://reactnative.dev/docs/environment-setup), [Expo monorepos](https://docs.expo.dev/guides/monorepos/), [native OAuth](https://datatracker.ietf.org/doc/html/rfc8252).
+Use [FE forms/state](../frontend/02-state-and-forms.md), [time/date input and display](../frontend/10-time-and-dates.md), [feature tests](../frontend/07-testing.md) with React Native Testing Library, [mobile telemetry/release](02-operations.md) and [device E2E](../e2e/01-journeys.md). **Check:** both platform builds, native integration, auth/deep links, permission denial, foreground/offline and accessible large-text/RTL states. **Vary when:** React Navigation without Expo or a supported native stack meets the same controls. Sources: [RN framework guidance](https://reactnative.dev/docs/environment-setup), [Expo monorepos](https://docs.expo.dev/guides/monorepos/), [native OAuth](https://datatracker.ietf.org/doc/html/rfc8252).
 
 ### Example: native form bridge
 

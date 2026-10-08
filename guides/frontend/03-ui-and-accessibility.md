@@ -8,7 +8,7 @@
 
 **UI-03 MUST:** Build mobile-first and adapt components to their container. Verify phone width, long text and zoom/reflow for each important data state; keep inherently two-dimensional content in accessible contained scroll regions.
 
-**UI-04 MUST:** Support RTL throughout layouts, overlays, navigation, focus, tables, charts and forms. Set lang/dir from locale, use logical CSS and direction-aware primitives; mirror only directional meaning. Format numbers/dates with locale and explicit time semantics.
+**UI-04 MUST:** Support RTL throughout layouts, overlays, navigation, focus, tables, charts and forms. Set lang/dir from locale, use logical CSS and direction-aware primitives; mirror only directional meaning. Format numbers/dates with locale and explicit time semantics; see [FE time and date rules](10-time-and-dates.md).
 
 **UI-05 SHOULD:** Use proportionate error prevention for consequential actions: clear scope, review, confirmation or safe undo according to impact and reversibility. Avoid routine confirmation dialogs when inline feedback or undo provides the needed protection.
 
