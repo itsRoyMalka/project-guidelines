@@ -23,12 +23,14 @@ Read when collecting personal/sensitive data or publishing derived data. Owners 
 **LIFE-09 MUST:** Design rotation, deletion markers, cache invalidation and backup recovery before claiming crypto-erasure. Prevent key recreation or writes after erasure starts. Never retain prohibited post-authorization card authentication data such as CVV/PIN.
 
 ```ts
-const ref = await vault.store({ kind: SensitiveKind.NationalId, subjectId, value });
-await customerDal.setNationalIdRef(db, customerId, ref);
+// features/customers/set-national-id/handler.ts — transaction:false excerpt
+await deps.customerAccess.requireManage(actor, customerId);
+const ref = await deps.vault.store({ kind: SensitiveKind.NationalId, subjectId, value });
+await customerDal.setNationalIdRef(deps.db, customerId, ref);
 // Only the explicitly authorized reveal action may recover the value.
 ```
 
-Vault fields: random ID/reference, kind, subject, ciphertext/nonce/tag, key version and lifecycle metadata. Add blind indexes only for a proven lookup need with equality-leakage review. A separate vault service is a risk decision, not mandatory for every app. Source: [OWASP cryptographic storage](https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html).
+This excerpt requires a failure policy: if the DB write fails after `vault.store`, reconcile or remove the orphaned reference; do not leave an untracked plaintext/recoverable value. Vault fields: random ID/reference, kind, subject, ciphertext/nonce/tag, key version and lifecycle metadata. Add blind indexes only for a proven lookup need with equality-leakage review. A separate vault service is a risk decision, not mandatory for every app. Source: [OWASP cryptographic storage](https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html).
 
 ## Declarative audit
 

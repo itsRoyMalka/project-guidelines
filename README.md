@@ -2,7 +2,7 @@
 
 Short rules and small examples for agents building a product from a PRD and maintaining it afterward. This repository contains guides and skills; generated application code belongs in the target project.
 
-**Edition: 2026-10-08.** [The guide map](guides/README.md) identifies the current owner for each topic. Examples describe project-owned patterns; adopting projects must implement and verify them against their chosen stack.
+**Edition: 2026-10-11.** [The guide map](guides/README.md) identifies the current owner for each topic. Examples describe project-owned patterns; adopting projects must implement and verify them against their chosen stack.
 
 | Task | Start here |
 | --- | --- |
@@ -15,6 +15,6 @@ Short rules and small examples for agents building a product from a PRD and main
 
 Read [usage](USAGE.md) and [governance](guides/00-governance.md), then select only relevant subjects from [the guide map](guides/README.md). [One feature](guides/06-reference-flow.md) connects contracts, API, UI and tests.
 
-Core profiles cover TypeScript web/backend, React Native mobile, Python and analytics. Load optional tenancy, RPC, events, background jobs, cache, vault and DocStore only when needed. AI evaluation, complex offline synchronization, embedded/ML systems and jurisdiction-specific compliance need a project extension.
+Core profiles cover TypeScript web/backend, React Native mobile, macOS desktop, Python and analytics. Load optional tenancy, RPC, events, background jobs, cache, vault and DocStore only when needed. AI evaluation, complex offline synchronization, embedded/ML systems and jurisdiction-specific compliance need a project extension.
 
 **Authority:** user/host/target instructions → canonical guides → selected profiles. Recipes illustrate; skills route work. Factory snippets describe project-owned patterns and do not claim an installed framework or tested implementation.

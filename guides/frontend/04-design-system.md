@@ -31,3 +31,22 @@
 DS `Form` renders a semantic HTML form; `TextField` forwards `name`, ref, change and blur to the editable input. Its primary test ID targets that input; named slot IDs cover separate errors/triggers when needed. The form hook uses explicit defaults and a Zod resolver; Enter and click share `handleSubmit`. All shown components are DS exports.
 
 Draft validation and server-field mapping produce localized safe messages; do not render raw provider errors as field text.
+
+### Example: the DS owns the native button
+
+```tsx
+// apps/web/src/shared/ui/button/button.tsx — one web app; styles use semantic tokens
+type ButtonProps = Omit<React.ComponentPropsWithoutRef<'button'>, 'className' | 'style'> & {
+  testId?: string;
+  isPending?: boolean;
+};
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  function Button({ testId, isPending = false, disabled, type = 'button', ...props }, ref) {
+    return <button {...props} ref={ref} type={type} data-testid={testId}
+      disabled={disabled || isPending} aria-busy={isPending}
+      data-pending={isPending ? 'true' : undefined} className="ds-button" />;
+  },
+);
+```
+
+The DS stylesheet maps `ds-button` to semantic color, spacing, focus and motion tokens; a feature cannot restyle it with raw palette values. The caller supplies translated text and a shared test ID, as in the form above. Publish this DS as `packages/ui` only when multiple consumers share its meaning and lifecycle under REPO-03. For a complex control, follow DS-05's behavior-library guidance rather than extending this native-button example into a custom widget.

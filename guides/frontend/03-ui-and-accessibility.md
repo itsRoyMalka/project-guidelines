@@ -10,6 +10,12 @@
 
 **UI-04 MUST:** Support RTL throughout layouts, overlays, navigation, focus, tables, charts and forms. Set lang/dir from locale, use logical CSS and direction-aware primitives; mirror only directional meaning. Format numbers/dates with locale and explicit time semantics; see [FE time and date rules](10-time-and-dates.md).
 
+```tsx
+// app/locale-shell.tsx — app boundary; DS owns the layout primitive
+return <LocaleSurface lang={locale} dir={locale === Locale.He ? 'rtl' : 'ltr'}>{children}</LocaleSurface>;
+// DS CSS: padding-inline-start: var(--space-4); avoid padding-left for flow spacing.
+```
+
 **UI-05 SHOULD:** Use proportionate error prevention for consequential actions: clear scope, review, confirmation or safe undo according to impact and reversibility. Avoid routine confirmation dialogs when inline feedback or undo provides the needed protection.
 
 **UI-06 SHOULD:** Show outcomes at the affected surface. Use toasts for outcomes that would otherwise be invisible, not for every success. Keep field errors at fields, loading skeletons shaped like the resulting content, and durable notices in a discoverable location.
@@ -23,6 +29,12 @@ Use the [UI recipe](recipes/ui-patterns.md) for component selection, interaction
 **UI-08 MUST:** Public components accept `testId`; interactive controls forward it to the actual input/button, while noninteractive compositions use their root. Give independently targeted composite slots explicit IDs; exposed feature boundaries assign them. Keep per-domain constants in shared `packages/test-ids`. Use stable scoped instance IDs, never copy, CSS, array position or PII.
 
 **UI-09 MUST:** Features own shallow locale JSON groups by user flow under `messages/<locale>.json`. App navigation and design-system copy have their own owners; shared i18next setup/formatters register namespaces. Verify en/he key completeness, interpolation/plurals and mixed-direction text.
+
+`features/orders/cancel/messages/en.json` (matching `he.json` has the same keys):
+
+```json
+{ "cancel": { "confirm": "Cancel order", "success": "Order cancelled" } }
+```
 
 See [design system](04-design-system.md) for managed tokens and reusable components, and [frontend tests](07-testing.md) for composition proof.
 
@@ -38,6 +50,8 @@ export const OrderTestId = {
   ConfirmCancelButton: 'orders.cancel.confirm',
   CancelError: 'orders.cancel.error',
   CancelDialog: 'orders.cancel.dialog',
+  Details: 'orders.details.root',
+  ExportButton: 'orders.details.export',
   row: (orderId: string) => `orders.row.${orderId}`,
   cancelled: (orderId: string) => `orders.cancelled.${orderId}`,
 } as const;

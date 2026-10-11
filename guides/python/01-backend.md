@@ -25,6 +25,8 @@ services/<service>/
 
 **PY-05 MUST:** Workers follow the canonical [event rules](../backend/04-events-and-workflows.md) for retries, deduplication and recovery; tenant controls apply to scoped workloads. Define sync/async resource lifecycle. Shared capabilities use explicit package contracts, without importing another deployable's implementation.
 
+**PY-06 MUST:** Apply the same [time meanings and clock ownership](../backend/14-time-and-dates.md): aware UTC `datetime` for instants, `date` for calendar-only values, IANA `ZoneInfo` for local business rules, and an injected clock for decisions. Never use a naive `datetime` as an instant or infer a venue's zone from the server.
+
 **Verification:** Ruff/mypy/pytest, real boundary tests, migration review, and a service-local agent entrypoint.
 
 ### Example: Python wire model
@@ -40,3 +42,15 @@ class CancelOrderInput(BaseModel):
 ```
 
 The router supplies verified identity separately; callers cannot set actor/grants through this model. Python uses snake_case files/functions and PascalCase models; do not copy TypeScript casing mechanically. The [lifecycle example](recipes/lifecycle.md) owns session/transaction handling.
+
+```python
+# src/orders/features/orders/checkout/handler.py — clock is injected
+from zoneinfo import ZoneInfo
+
+now = clock.now()  # aware UTC datetime; production adapter uses datetime.now(UTC)
+if now >= reservation.expires_at:
+    raise ReservationExpiredError()
+business_date = now.astimezone(ZoneInfo(store.time_zone)).date()
+```
+
+`business_date` is derived in the store's declared zone; a birthday remains a `date`, never a midnight UTC `datetime`. **Check:** fixed-clock cutoff and DST boundary cases. **Vary when:** a supported date library is needed for complex recurrence; preserve aware/naive and zone semantics. Source: [Python datetime and zoneinfo](https://docs.python.org/3/library/datetime.html).

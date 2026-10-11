@@ -15,8 +15,14 @@ Read for wire types, storage models and business calculations. Owners: TS-03, AP
 For money, define rounding mode and stage, currency precision, overflow bounds, and who converts exchange rates. Never add different currencies without an explicit conversion policy. For schedules, decide what happens at a skipped/repeated local time and when timezone rules change. Retain the original business intent, not only a computed next instant.
 
 ```ts
+// packages/contracts/shared/domain-values.ts — illustrative wire types
 type Money = { currency: string; amountMinor: string };
-type LocalSchedule = { localTime: string; timeZone: string; overlap: 'earlier' | 'later' };
+type LocalSchedule = {
+  localTime: string;
+  timeZone: string;
+  gap: 'skip' | 'next-valid';
+  overlap: 'earlier' | 'later';
+};
 ```
 
 These shapes still require runtime validators; they do not implement arithmetic or recurrence. **Proof:** decimal rounding boundaries, safe-integer overflow, negative/refund rules, leap dates and DST gap/overlap. **Alternative:** use a maintained domain library with contract-compatible serialization; avoid writing your own date or decimal engine. Platform behavior: [PostgreSQL numeric types](https://www.postgresql.org/docs/current/datatype-numeric.html), [date/time types](https://www.postgresql.org/docs/current/datatype-datetime.html).

@@ -6,11 +6,27 @@
 
 **MOB-02 MUST:** App owns typed navigation, stacks/tabs and deep-link/auth mapping. Screens are thin feature compositions; pass resource IDs rather than objects. Reset protected navigation on identity changes and test cold/warm links and Back.
 
+```ts
+// app/navigation/types.ts — app-owned navigation contract
+type RootStack = { Orders: undefined; OrderDetails: { orderId: string } };
+// Open: navigation.navigate('OrderDetails', { orderId }); screen loads by ID.
+```
+
 **MOB-03 MUST:** Features render only mobile DS components. Native View/Text/Pressable/Input live inside the DS, which owns safe area, keyboard, touch targets, native semantics, text scaling, RTL, reduced motion and testID forwarding.
 
 **MOB-04 MUST:** TanStack Query owns remote data; app data setup connects network/foreground state. Default online-first; persist only explicitly approved data with scope/expiry. Offline writes require durable idempotent queue, conflict/reconciliation and visible pending/failure states.
 
 **MOB-05 MUST:** Device ports own media, location, notifications and background work. Request least permission in context; handle limited, denied, revoked and unavailable states. Push carries safe resource references; token association follows the active account and is removed on logout.
+
+```ts
+// features/orders/attach-photo/ui/use-attach-photo.ts — device port hides native SDK
+const permission = await deviceMedia.requestPhotoAccess();
+if (permission !== DevicePermission.Granted) {
+  setAccessState(permission);
+  return;
+}
+const photo = await deviceMedia.pickPhoto(); // adapter enforces type and size bounds
+```
 
 **MOB-06 MUST:** OAuth uses system browser, code + PKCE and validated callbacks. Keep persistent credentials in OS secure storage; define backup/reinstall behavior. Biometrics unlock local access, never replace server authentication.
 

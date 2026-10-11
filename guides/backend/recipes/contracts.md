@@ -11,6 +11,7 @@ apps/web/src/features/orders/cancel/api/cancel-order.ts # client.call(descriptor
 The endpoint adapter registers the descriptor with Fastify's compatible schema compiler, serializer and OpenAPI transform. Response validation and serialization must match the public schema; no hidden private fields. Shared TS consumers infer types and validate responses at runtime. Separate-repo or other-language clients generate from published OpenAPI.
 
 ```ts
+// apps/api/src/features/orders/cancel-order/api.ts — project-owned endpoint factory
 export const cancelEndpoint = defineEndpoint({
   contract: orderEndpoints.cancel,
   policy: { access: { type: Access.Rbac, action: OrderAction.Cancel } },

@@ -12,6 +12,12 @@
 
 **STATE-01 MUST:** Do not copy props or query data into component state with an effect merely to derive another value. Derive during render or memoize an expensive pure transformation. Effects synchronize with external systems.
 
+```tsx
+// features/orders/browse/ui/order-list/order-list.tsx — derived view, no mirrored state
+const visibleOrders = orders.filter(order => !filters.status || order.status === filters.status);
+return <OrderListView orders={visibleOrders} />; // DS-backed presentational view
+```
+
 **STATE-02 MUST:** Cache identities include every scope/filter that changes returned data or visibility. On identity/tenant transitions, cancel obsolete work and clear or partition protected data; SSR caches are request-isolated. Mutations update/revalidate through the selected owner. See [state lifecycle](recipes/state-and-forms.md).
 
 **STATE-03 MUST:** Keep shareable navigation state in the URL and validate it on read. Avoid losing filters on refresh, back/forward navigation, or copied links. Secrets and large drafts do not belong in URLs.
@@ -22,11 +28,28 @@
 
 **STATE-06 SHOULD:** Use Zustand for genuinely global mutable client state; features own slice definitions and selectors, while `app/store.ts` composes them. Allow only the narrow feature-to-store-hook import edge; prevent runtime cycles. Redux Toolkit is a justified alternative.
 
+```ts
+// features/orders/store/selection.slice.ts — feature-owned slice
+export const createOrderSelectionSlice = (set: SetState<AppStore>) => ({
+  selectedOrderId: null as string | null,
+  selectOrder: (id: string | null) => set({ selectedOrderId: id }),
+});
+// app/store.ts composes slices once; the slice imports only shared store types.
+```
+
 **STATE-07 MUST:** Split web/API and mobile use TanStack Query by default; fullstack route data uses loaders/actions. One resource has one freshness owner; loaders may prefetch Query without creating a second cache.
 
 **Verification:** refresh/back-link behavior, mutation failure and retry tests, and a state-ownership review. Further reading: [React Router modes](https://reactrouter.com/start/modes), [TanStack Query keys](https://tanstack.com/query/latest/docs/framework/react/guides/query-keys), [React effects](https://react.dev/learn/you-might-not-need-an-effect).
 
 **STATE-08 MUST:** URL owns applied shareable state; form owns its draft. Commit search on submit by default. Live search debounces URL updates, replaces history and cancels obsolete requests; never debounce save/destructive actions.
+
+```ts
+// pages/orders/params.ts — project-owned URL codec, using shared OrderParam map
+export const readOrderParams = (search: URLSearchParams) => orderParamsSchema.parse({
+  query: search.get(OrderParam.Query) ?? '',
+  page: search.get(OrderParam.Page) ?? '1',
+});
+```
 
 **STATE-09 MUST:** Save resets the draft baseline only after confirmed success; discard uses the latest known saved snapshot. Never overwrite dirty edits on a background refresh. Persist drafts only for a defined product need, privacy policy and expiry.
 

@@ -13,15 +13,22 @@
 **WEB-05 MUST:** Measure LCP, INP, CLS and a few named journeys by device class. Optimize measured bottlenecks; do not log every render. Session replay requires explicit privacy configuration.
 
 ```ts
+// packages/contracts/orders/experience.const.ts — shared web/mobile declarations
+export const OrderFlag = { NewCancelFlow: 'orders.cancel.new-flow' } as const;
+export const OrderAnalytics = { Cancelled: 'orders.cancel.succeeded' } as const;
+```
+
+```ts
 // features/orders/cancel/api/use-cancel-order.ts — hook excerpt
 const { analytics } = useTelemetry();
 const onSuccess = (order: OrderView) => {
   analytics.track(OrderAnalytics.Cancelled, { kind: order.kind });
 };
-const enabled = useFlag(OrderFlag.NewSearch);
-const permitted = useCan(OrderAction.Read);
+const enabled = useFlag(OrderFlag.NewCancelFlow);
+const permitted = useCan(OrderAction.Cancel);
+const canShowCancel = enabled && permitted; // UI gate; BE still authorizes
 ```
 
 **Check:** recording-adapter payloads, logout/consent, flag failure and one measured journey. **Vary when:** disable analytics for product/privacy constraints; browser OpenTelemetry is not a mandatory runtime. Sources: [OpenFeature](https://openfeature.dev/docs/reference/sdks/client/web/react/), [Web Vitals](https://web.dev/articles/vitals).
 
-Pass `onSuccess` to the mutation callback; never emit analytics during render. Compose it with the affected-query refresh from the reference flow. Constants and event property types are declared by the owning feature; the telemetry adapter enforces consent and scope.
+Pass `onSuccess` to the mutation callback; never emit analytics during render. Compose it with the affected-query refresh from the reference flow. The shared declarations above are justified when web and mobile emit the same named event; a single-app feature keeps them local. Event property types are owned by Orders; the telemetry adapter enforces consent and scope.

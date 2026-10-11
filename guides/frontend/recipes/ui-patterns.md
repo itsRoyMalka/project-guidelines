@@ -12,6 +12,7 @@ features/orders/browse/ui/order-list/
 The feature view connects its API hook and renders loading/empty/error/data using DS primitives. The skeleton describes this view's structure. Presentational rows take data/callbacks; backend capabilities decide which business actions are available.
 
 ```tsx
+// features/orders/browse/ui/order-list/order-list.tsx — feature composition
 <OrderRow order={order} onCancel={cancel}
   testId={OrderTestId.row(order.id)} />
 ```

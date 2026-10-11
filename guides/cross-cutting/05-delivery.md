@@ -38,6 +38,15 @@ web: 2.1.0 → sha256:artifact-b
 release: REL-42 → both digests + config/migration revisions + rollout order
 ```
 
+```yaml
+# infra/stacks/aws/prod/orders-api.values.yaml — when EKS/Helm is selected
+image:
+  repository: registry.example/orders-api
+  digest: sha256:<verified-immutable-digest>
+```
+
+The deployment source pins an existing verified artifact; promotion changes the environment's desired digest, not the build output. The platform's release record links that digest to config, migration state, source revision and the web digest. This is a platform configuration excerpt, not a second custom version manifest.
+
 **DEL-14 MUST:** PRs check affected apps/packages and dependents; global tooling changes broaden scope. Main builds/deploys affected artifacts to dev; deployed smoke/E2E gates promotion. Required-check aggregation must reject missing/skipped jobs for the actual candidate.
 
 **DEL-15 MUST:** Keep environment config outside promoted artifacts where supported. Browser settings are public; build-time environment values create separate artifacts that each need proof. Use environment-scoped short-lived deployment identity and keep production secrets out of untrusted PR jobs.

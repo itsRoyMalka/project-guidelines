@@ -6,11 +6,24 @@
 
 **ROUTE-02 MUST:** Use named Public, GuestOnly, Authenticated and Action policies. Every protected loader/action checks access because parent/child loaders can run concurrently. Backend checks every request independently.
 
+```ts
+// app/routes.ts — project-owned route policy, applied by every protected loader
+{ path: '/orders/:orderId', policy: { type: RouteAccess.Action, action: OrderAction.Read }, page: OrderPage }
+// order-loader.ts: await requireAction(request, OrderAction.Read);
+```
+
 **ROUTE-03 MUST:** Unauthenticated users get login with a validated internal return path; authenticated denial gets 403 and missing routes/resources get 404. Identity callbacks are separate protocol endpoints with state/nonce validation. Never turn 403 into a login loop.
 
 **ROUTE-04 MUST:** Decode/sanitize parameters and encode with URLSearchParams, preserving unrelated keys. Update related filter/page state atomically; clear selected items only when known invalid. Use push for deliberate navigation and replace for rapid live edits.
 
 **ROUTE-05 MUST:** Links include the tab/filter needed to reveal their target. Static sections use anchors; async sections wait until rendered, then scroll/focus with sticky-header spacing. Missing sections leave the page usable.
+
+```ts
+// pages/order-details/links.ts — page-owned deep-link builder
+export const orderPaymentLink = (orderId: string) =>
+  `/orders/${encodeURIComponent(orderId)}?tab=${OrderTab.History}#${OrderSection.Payment}`;
+// After the async history panel renders, focus the Payment heading by section ID.
+```
 
 **ROUTE-06 MUST:** `useCan(Action)` uses verified session grants; resource `allowedActions` reflects server policy. Gate UI without duplicating eligibility rules. On logout/scope/grant change, cancel old requests and clear/partition protected caches, drafts and client state.
 

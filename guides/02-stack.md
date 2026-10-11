@@ -27,6 +27,20 @@ React Router supports server rendering; SSR alone does not select Next.js. A ful
 
 **STACK-05 MUST:** Treat named tools in the table as a recommended project profile, not an industry requirement. Recheck major-version migration and operational behavior—especially the database layer—when the architecture brief is written. A stable existing stack that meets the same invariants does not need replacement.
 
+### Example: one workspace dependency boundary
+
+```yaml
+# pnpm-workspace.yaml — split web/API profile; list only existing packages
+packages:
+  - apps/web
+  - apps/api
+  - apps/e2e
+  - packages/contracts
+  - packages/test-ids
+```
+
+The root lockfile pins compatible resolutions; the project records actual runtime and package-manager versions. This workspace file does not imply that every app shares a deployment or that an optional package should be created before a consumer needs it. See [repository shape](03-repository.md).
+
 ## Selected optional capabilities
 
 | Need | Selected convention |
@@ -34,6 +48,7 @@ React Router supports server rendering; SSR alone does not select Next.js. A ful
 | Monorepo orchestration | pnpm workspace/lockfile; Nx affected tasks and boundaries; Turbo is a simpler alternative |
 | Global client state | Zustand, composed centrally from feature-owned slices |
 | Native mobile | React Native + TS; evaluate Expo, prove required native integrations |
+| macOS desktop | Electron + TS/React for web-stack reuse; evaluate Tauri or SwiftUI/AppKit against product/OS needs |
 | Durable background work | Self-hosted Temporal behind the app background port |
 | Cache after measured need | Valkey or Redis adapter |
 | Internal service RPC | Protobuf + Buf + Connect behind app clients |

@@ -20,4 +20,21 @@ identity: digest-c
 result: passed; manifest unchanged
 ```
 
+```ts
+// apps/e2e/web/support/run.ts — project-owned run fixture excerpt
+const before = await dev.readDeploymentManifest();
+await dev.requireCandidate(before, expectedCandidate);
+try {
+  await use({ runId, registerOwnedResource }); // UI journeys use this run scope
+} finally {
+  try { await cleanupOwnedResources(runId); }
+  finally {
+    try { await dev.assertManifestUnchanged(before); }
+    finally { await dev.releaseLease(runId); }
+  }
+}
+```
+
+The fixture acquires a run ID and a bounded deployment lease before this excerpt, and releases the lease even on failure. `registerOwnedResource` records each resource immediately; `requireCandidate` checks deployed FE, BE and worker digests, not merely a PR SHA. The journey itself still creates business prerequisites through UI flows under [E2E-01](01-journeys.md).
+
 **Check:** parallel tests plus a developer session remain isolated; force version drift, mid-test failure and unavailable dev. **Vary when:** global mutations or unisolatable risk use an exclusive or on-demand environment; there is no mandatory always-on QA clone. Sources: [Playwright CI](https://playwright.dev/docs/ci), [account isolation](https://playwright.dev/docs/auth).

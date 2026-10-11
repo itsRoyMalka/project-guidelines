@@ -8,7 +8,7 @@ src/features/orders/
   shared/{contract,dal,types,errors}.shared.ts
   cancel-order/
     api.ts
-    contract.ts                 # local contract; re-export shared wire contract if present
+    contract.ts                 # optional internal input; public wire stays in packages/contracts
     validations.ts              # optional extra parsed-request checks
     handler.ts
     cancel-order.test.ts

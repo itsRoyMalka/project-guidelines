@@ -37,6 +37,7 @@ Savepoint recovery is an explicit, separately proven extension for workflows tha
 Use conditional writes or constraints for concurrency. A prior read does not reserve the row. Check the affected row count before emitting the event:
 
 ```ts
+// features/orders/cancel-order/handler.ts — inside the handler-owned transaction
 const changed = await orderDal.cancelIfPending(tx, orderId);
 if (changed !== 1) throw new OrderConflictError();
 await deps.outbox.add(tx, OrderCancelled.create({ orderId }));

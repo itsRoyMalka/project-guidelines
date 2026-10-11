@@ -22,14 +22,14 @@
 ```ts
 // features/orders/shared/api/query-keys.const.ts — split/mobile profile
 export const orderKeys = {
-  all: (scope: OrderScope) => ['orders', scope] as const,
-  list: (scope: OrderScope, filter: OrderFilter) =>
-    [...orderKeys.all(scope), 'list', filter] as const,
-  detail: (scope: OrderScope, id: string) =>
-    [...orderKeys.all(scope), 'detail', id] as const,
+  lists: (scope: string) => ['orders', scope, 'list'] as const,
+  list: (scope: string, filters: OrderFilters) =>
+    [...orderKeys.lists(scope), filters] as const,
+  detail: (scope: string, orderId: string) =>
+    ['orders', scope, 'detail', orderId] as const,
 };
 ```
 
-`OrderScope` and `OrderFilter` are project-owned contract types; imports are omitted. Scope includes the result-changing identity/tenant context where relevant; filter is normalized before keying. The cancel mutation invalidates the affected list and detail. Fullstack loader data instead revalidates through its router. **Check:** a scope/filter change reads a distinct result, and a cancellation refreshes every affected surface.
+`OrderFilters` is the parsed contract type; imports are omitted. This matches the [reference flow](../06-reference-flow.md#query-key-declarations). Scope is the app's verified visibility key and includes result-changing identity/tenant context where relevant; filters are normalized before keying. The cancel mutation invalidates the affected list and detail. Fullstack loader data instead revalidates through its router. **Check:** a scope/filter change reads a distinct result, and a cancellation refreshes every affected surface.
 
 **Choose simply:** keep a pure view local until reused; add a store, provider or abstraction only when a real cross-component owner or integration exists. Sources: [React state structure](https://react.dev/learn/choosing-the-state-structure), [React effects](https://react.dev/learn/you-might-not-need-an-effect), [TanStack Query keys](https://tanstack.com/query/latest/docs/framework/react/guides/query-keys), [Testing Library principle](https://testing-library.com/docs/guiding-principles/).

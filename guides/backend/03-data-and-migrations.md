@@ -26,6 +26,17 @@ For concrete scoped joins, tenant foreign keys and conflict strategy see [persis
 
 **DATA-10 MUST:** Review a consequential DAL query with its filters, joins, order, bounds and supporting indexes. Check realistic plans for risky paths; avoid unbounded reads, N+1 calls and one-index-per-function rules.
 
+```ts
+// features/orders/shared/dal.shared.ts — scoped, bounded read
+return db.order.findMany({
+  where: { accountId: actor.accountId, status: OrderStatus.Pending },
+  orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+  take: 50,
+});
+// Review an index beginning (account_id, status, created_at DESC, id DESC)
+// against EXPLAIN on representative data; add it only if that plan needs it.
+```
+
 **DATA-11 SHOULD:** Use time partitions for measured retention/query needs. Prefer pg_partman for rolling partitions when supported; monitor future partitions, maintenance failures and default-partition rows. Verify archives before removal and account for partition-key uniqueness limits.
 
 ```text

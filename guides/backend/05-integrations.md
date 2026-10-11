@@ -28,11 +28,20 @@ Example path: verify signed raw callback → map account to scope → validate p
 | Twilio voice decision | Verify, call action, render TwiML synchronously | `answerIncomingCall(input)` |
 
 ```ts
+// integrations/outbound/shipping/port.ts — app-owned capability
 interface ShippingRates {
   quote(input: QuoteInput): Promise<Quote>;
 }
-// app composition selects the provider once
+// src/app/create-app.ts — app composition selects the provider once
 const shippingRates = createShippingAdapter(config);
 ```
+
+```ts
+// features/orders/create-order/handler.ts — pre-write excerpt outside the DB transaction
+const quote = await deps.shippingRates.quote({ destination: input.destination, items: input.items });
+// The handler uses our Quote type; no provider SDK or provider status leaks in.
+```
+
+The app injects `ShippingRates`; the selected adapter translates provider requests, errors and responses at `integrations/outbound/shipping/`. A later owned write rechecks any quote validity and uses the handler's transaction/outbox rules; an external quote call is not made while holding DB locks.
 
 Check each provider's current signature, delivery identity and response deadline; these examples are not implemented adapters. Sources: [Stripe](https://docs.stripe.com/webhooks), [GitHub](https://docs.github.com/en/webhooks/using-webhooks/best-practices-for-using-webhooks), [Twilio](https://www.twilio.com/docs/usage/webhooks/webhooks-security).

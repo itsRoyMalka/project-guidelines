@@ -30,3 +30,14 @@ Rejected alternatives and revisit trigger:
 **Alternatives:** microservices from day one for hard isolation or independent teams; separate repositories for access/release boundaries; one full-stack deployable for a small product with one runtime. Each is a scoped decision, not a quality tier.
 
 **Verification:** every deployable and database has a named owner, and the architecture brief explains why it exists.
+
+### Example: one backend deployable, clear feature owners
+
+```ts
+// apps/api/src/app/create-app.ts — project-owned composition API
+const app = createApiApp({ config, db, integrations });
+app.registerFeatures([ordersFeature, paymentsFeature]);
+await app.ready();
+```
+
+Orders and Payments own their data and public operations; API composition joins them without a service-to-service call. Add a separate backend service only when ARCH-05 has a named reason. The app factory, feature manifests and startup checks are defined by the consuming project; see [service design](backend/01-service-design.md) and the [split profile](profiles/typescript-split.md).

@@ -5,6 +5,7 @@ Owners: [LIFE-04/10–12](../06-data-lifecycle.md). Scope: selected consequentia
 ## Feature definition
 
 ```ts
+// features/orders/cancel-order/handler.ts — project-owned handler factory
 export const cancelOrder = defineHandler({
   name: OrderAction.Cancel,
   transaction: true,

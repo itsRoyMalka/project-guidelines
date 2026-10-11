@@ -65,6 +65,7 @@ Parallel claims do not imply ordering. When aggregate order matters, define sequ
 ## Consumer: one receipt per logical subscriber
 
 ```ts
+// features/payments/request-refund/consumer.ts — project-owned factory
 export const requestRefund = defineConsumer({
   name: PaymentConsumer.RequestCancellationRefund,
   event: OrderCancelled,

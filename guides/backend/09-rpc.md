@@ -35,3 +35,14 @@ message GetOrderResponse { string order_id = 1; }
 ```
 
 Generate the descriptor/client with the selected Buf toolchain. The feature's `api/rpc.ts` binds `GetOrder` to the authorized get-order handler; the caller wrapper supplies service identity, delegated scope and deadline. The deliberately small response omits private data; protobuf field numbers are wire declarations and must not be repurposed.
+
+```ts
+// features/orders/api/rpc.ts — project-owned binding API; descriptor is generated
+export const getOrderRpc = defineRpc({
+  method: ordersService.methods.getOrder,
+  policy: { access: { type: Access.Rbac, action: OrderAction.Read } },
+  handler: getOrder,
+});
+```
+
+The adapter authenticates the caller and maps the generated request to the handler's input; the handler still checks resource access. The consuming `clients/orders/client.ts` wraps its generated client with service identity, delegated actor scope, a deadline and method-specific retry policy. `ordersService` naming depends on the selected generated output; do not hand-copy protobuf types or call another service's private DAL.

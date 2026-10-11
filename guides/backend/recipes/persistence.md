@@ -7,6 +7,7 @@ Applies to [DATA rules](../03-data-and-migrations.md). PostgreSQL illustration; 
 This example selects a multi-tenant product. Omit tenant keys/filters for single-tenant products and enforce their actual account/resource policy.
 
 ```sql
+-- db/migrations/<migration>/migration.sql — illustrative PostgreSQL excerpt
 CREATE TABLE customers (
   tenant_id uuid NOT NULL,
   id uuid NOT NULL,

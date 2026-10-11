@@ -6,6 +6,12 @@
 
 **MOPS-02 MUST:** Local diagnostics use a bounded encrypted native buffer with an OS-protected key. Allowlist fields; never write tokens, PII, bodies or raw errors. Ordinary console/OS logs are not assumed encrypted.
 
+```ts
+// app/telemetry/diagnostics.ts — app port; native adapter owns key/buffer
+diagnostics.record(OrderLog.CancelFailed, { reasonCode: FailureCode.Network });
+// Adapter: allowlist fields → encrypt → append to bounded ring buffer.
+```
+
 **MOPS-03 MUST:** Support upload is user-triggered by default or follows an explicitly selected automatic policy. Authenticate uploads to the backend, return a support ID, and enforce access/expiry/deletion. Clear protected logs on scope change.
 
 **MOPS-04 MUST:** Build immutable signed binaries with app version, platform build number, commit and binary identity. Test both platforms, use TestFlight/Play internal tracks and phased/staged production rollout; protect signing credentials.
