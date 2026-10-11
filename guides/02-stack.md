@@ -48,7 +48,7 @@ The root lockfile pins compatible resolutions; the project records actual runtim
 | Monorepo orchestration | pnpm workspace/lockfile; Nx affected tasks and boundaries; Turbo is a simpler alternative |
 | Global client state | Zustand, composed centrally from feature-owned slices |
 | Native mobile | React Native + TS; evaluate Expo, prove required native integrations |
-| macOS desktop | Electron + TS/React for web-stack reuse; evaluate Tauri or SwiftUI/AppKit against product/OS needs |
+| desktop | Electron + TS/React for web-stack reuse across Windows, macOS and Linux; evaluate Tauri or a native stack against product/OS needs |
 | Durable background work | Self-hosted Temporal behind the app background port |
 | Cache after measured need | Valkey or Redis adapter |
 | Internal service RPC | Protobuf + Buf + Connect behind app clients |

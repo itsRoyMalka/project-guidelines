@@ -13,9 +13,9 @@ Examples demonstrate the owning guide's rules. They are excerpts, not a shipped 
 | UI | `CancelOrder`, `OrderRow`; PascalCase DS/feature components |
 | Tests | `cancel-order.test.ts` / `cancel.test.tsx`; descriptive scenario names |
 | Factories | `defineHandler`, `defineEndpoint`, `defineConsumer`: application conventions, not library exports |
-| macOS boundary | `DesktopChannel.SaveExport`, `DesktopIntent.OpenOrder`, `DesktopCommand.OpenOrder`: app-owned maps, not Electron exports |
-| macOS windows | `WindowKind.OrderDetails`: app-owned window identity, not a string repeated in routes or menus |
-| macOS sync | `SyncCommand.SaveOrderDraft`, `SyncStatus.Pending`: app-owned maps declared beside the local/remote contract |
+| desktop boundary | `DesktopChannel.SaveExport`, `DesktopIntent.OpenOrder`, `DesktopCommand.OpenOrder`: app-owned maps, not Electron exports |
+| desktop windows | `WindowKind.OrderDetails`: app-owned window identity, not a string repeated in routes or menus |
+| desktop sync | `SyncCommand.SaveOrderDraft`, `SyncStatus.Pending`: app-owned maps declared beside the local/remote contract |
 
 Boundary literals are declared once; call sites import the map. Field keys and human prose need not become constants just for ceremony. SQL/schema literals are wire/storage declarations and must agree with contract values.
 

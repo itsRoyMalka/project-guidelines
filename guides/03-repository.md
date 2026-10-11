@@ -8,7 +8,7 @@
 apps/
   web/                 # frontend deployable
   mobile/              # optional React Native deployable
-  desktop/             # optional installable macOS deployable
+  desktop/             # optional installable desktop deployable
   services/
     orders-api/        # independently deployable backend service
   e2e/                 # cross-app user journeys
@@ -20,7 +20,7 @@ infra/                 # declarative deployment/infrastructure source
 docs/                  # architecture, decisions, operations
 ```
 
-For a modular backend with one deployable, use `apps/api/` instead of `apps/services/*`. For one fullstack deployment, use the [fullstack profile](profiles/typescript-fullstack.md) with server/browser feature boundaries inside one app; do not create a second API just to match this example. An installable Mac app uses the [macOS profile](macos/01-app-and-security.md). Add optional apps and packages only when they exist.
+For a modular backend with one deployable, use `apps/api/` instead of `apps/services/*`. For one fullstack deployment, use the [fullstack profile](profiles/typescript-fullstack.md) with server/browser feature boundaries inside one app; do not create a second API just to match this example. An installable desktop app uses the [desktop profile](desktop/01-app-and-security.md). Add optional apps and packages only when they exist.
 
 Create a package only for a real consumer boundary. Do not create empty `packages/` entries just to match this tree. Keep each app's config and tests near the app; cross-app E2E lives at the workspace level when needed.
 
