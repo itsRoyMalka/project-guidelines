@@ -1,6 +1,7 @@
 # Backend feature slices
+**TypeScript implementation:** Apply the shared [backend rule](../shared/01-actions-and-boundaries.md); this guide supplies TypeScript-specific conventions and examples.
 
-**Scope:** TypeScript server code. **Why:** each action is easy to find, understand and test. Deployable boundaries belong to [architecture](../01-architecture.md).
+**Scope:** TypeScript server code. **Why:** each action is easy to find, understand and test. Deployable boundaries belong to [architecture](../../01-architecture.md).
 
 ```text
 src/features/orders/
@@ -22,7 +23,7 @@ src/integrations/               # provider ports and adapters
 
 Brace notation abbreviates separate files. Create only responsibilities the action needs.
 
-**BE-01 MUST:** Organize by feature, then action. A feature owns its writes; other features call its public operations and never its private DAL.
+**BE-01 MUST:** In TypeScript, use `src/features/<feature>/<action>/{api,contract,handler}.ts` with feature-owned `shared/` DAL and values as needed. A feature owns its writes; other features call public operations, never its private DAL.
 
 **BE-02 MUST:** The API parses input and establishes trusted identity; the handler checks resource access and business state. Tenant scope exists only in multi-tenant products.
 

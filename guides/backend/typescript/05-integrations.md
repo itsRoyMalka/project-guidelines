@@ -1,6 +1,7 @@
 # External integrations and webhooks
+**TypeScript implementation:** Apply the shared [backend rule](../shared/03-effects-and-operations.md); this guide supplies TypeScript-specific conventions and examples.
 
-Read when calling or receiving work from another system. Depends on [API](02-api-contracts.md), [events](04-events-and-workflows.md) and [security](../cross-cutting/01-security.md). Provider adapters own protocol details; domain operations own business interpretation.
+Read when calling or receiving work from another system. Depends on [API](02-api-contracts.md), [events](04-events-and-workflows.md) and [security](../../cross-cutting/01-security.md). Provider adapters own protocol details; domain operations own business interpretation.
 
 **INT-01 MUST:** Record provider contract/version, credential owner, scope, request/response bounds, timeout/deadline, rate limits, error mapping and lifecycle. Keep retries at one deliberate boundary and use the provider's documented idempotency/reconciliation guarantees.
 

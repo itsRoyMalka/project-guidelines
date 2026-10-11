@@ -26,7 +26,7 @@ type Job =
 
 `startedAt` is a validated UTC instant at the wire boundary; the TS type alone does not validate its format. Consumers compare with `JobStatus.*`, not repeated strings.
 
-**TS-03 MUST:** Distinguish absence, null and failure; narrow before dereferencing and do not assert away uncertainty. Name temporal units. Separate instants, calendar dates and future zoned schedules; use deliberate money/large-number representations described in [domain values](recipes/domain-values.md). Apply the [BE](backend/14-time-and-dates.md) or [FE](frontend/10-time-and-dates.md) time guide at the relevant boundary.
+**TS-03 MUST:** Distinguish absence, null and failure; narrow before dereferencing and do not assert away uncertainty. Name temporal units. Separate instants, calendar dates and future zoned schedules; use deliberate money/large-number representations described in [domain values](recipes/domain-values.md). Apply the [BE](backend/typescript/14-time-and-dates.md) or [FE](frontend/10-time-and-dates.md) time guide at the relevant boundary.
 
 ```ts
 // features/orders/shared/format-delivery.ts — pure TS; null is an explicit absence.

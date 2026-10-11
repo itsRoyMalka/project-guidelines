@@ -1,6 +1,6 @@
 # Frontend time and dates
 
-**Applies to:** web UI and browser-side feature code; the mobile profile adopts these rules with its runtime's verified `Intl`/Temporal support. **Why:** the UI must show and collect the user's intended time without changing its meaning. The [BE time guide](../backend/14-time-and-dates.md) owns business decisions.
+**Applies to:** web UI and browser-side feature code; the mobile profile adopts these rules with its runtime's verified `Intl`/Temporal support. **Why:** the UI must show and collect the user's intended time without changing its meaning. The [shared BE time guide](../backend/shared/02-data-and-time.md) owns business decisions.
 
 **FTIME-01 MUST:** Format instants with an explicit locale and IANA display zone from the user, resource or product policy. Label the zone when ambiguity matters. Do not silently use the browser's current zone; account for SSR and hydration using the same known zone or defer localized rendering until it is known.
 

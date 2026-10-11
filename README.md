@@ -15,6 +15,6 @@ Short rules and small examples for agents building a product from a PRD and main
 
 Read [usage](USAGE.md) and [governance](guides/00-governance.md), then select only relevant subjects from [the guide map](guides/README.md). [One feature](guides/06-reference-flow.md) connects contracts, API, UI and tests.
 
-Core profiles cover TypeScript web/backend, React Native mobile, desktop (Windows, macOS and Linux), Python and analytics. Load optional tenancy, RPC, events, background jobs, cache, vault and DocStore only when needed. AI evaluation, complex offline synchronization, embedded/ML systems and jurisdiction-specific compliance need a project extension.
+Core profiles cover TypeScript web/backend, Python backend, React Native mobile, desktop (Windows, macOS and Linux), and analytics. Backend guidance separates shared rules from TypeScript and Python implementation guides. Load optional tenancy, RPC, events, background jobs, cache, vault and DocStore only when needed. AI evaluation, complex offline synchronization, embedded/ML systems and jurisdiction-specific compliance need a project extension.
 
 **Authority:** user/host/target instructions → canonical guides → selected profiles. Recipes illustrate; skills route work. Factory snippets describe project-owned patterns and do not claim an installed framework or tested implementation.

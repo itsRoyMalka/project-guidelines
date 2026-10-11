@@ -1,6 +1,7 @@
 # Documents and bulk operations
+**TypeScript implementation:** Apply the shared [backend rule](../shared/06-optional-capabilities.md); this guide supplies TypeScript-specific conventions and examples.
 
-**Scope:** uploaded/generated files. **Why:** every download must refer to authorized, verified bytes.
+**Scope:** TypeScript uploaded/generated files. **Why:** every download must refer to authorized, verified bytes.
 
 **DOC-01 MUST:** DocStore owns document IDs, storage references, metadata, checks and retention. Business features own document links and resource authorization; store document IDs rather than bucket keys or provider URLs.
 

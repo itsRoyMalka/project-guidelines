@@ -1,6 +1,6 @@
 # Architecture selection
 
-**Applies to:** new products and major boundary changes. See [repository shape](03-repository.md) for directories and [service design](backend/01-service-design.md) for internal layers.
+**Applies to:** new products and major boundary changes. See [repository shape](03-repository.md) for directories and [shared backend actions](backend/shared/01-actions-and-boundaries.md) for internal layers.
 
 ## Default
 
@@ -40,4 +40,4 @@ app.registerFeatures([ordersFeature, paymentsFeature]);
 await app.ready();
 ```
 
-Orders and Payments own their data and public operations; API composition joins them without a service-to-service call. Add a separate backend service only when ARCH-05 has a named reason. The app factory, feature manifests and startup checks are defined by the consuming project; see [service design](backend/01-service-design.md) and the [split profile](profiles/typescript-split.md).
+Orders and Payments own their data and public operations; API composition joins them without a service-to-service call. Add a separate backend service only when ARCH-05 has a named reason. The app factory, feature manifests and startup checks are defined by the consuming project; see [service design](backend/typescript/01-service-design.md) and the [split profile](profiles/typescript-split.md).

@@ -1,6 +1,6 @@
 # Local service, database and remote sync
 
-**Scope:** desktop apps that own durable local state or work offline. Keep the [main/preload/renderer boundary](01-app-and-security.md); reuse [BE feature actions](../backend/01-service-design.md), [API contracts](../backend/02-api-contracts.md), [data integrity](../backend/03-data-and-migrations.md), [FE state](../frontend/02-state-and-forms.md) and [security](../cross-cutting/01-security.md). The local database and remote database are separate owners with an explicit protocol between them.
+**Scope:** desktop apps that own durable local state or work offline. Keep the [main/preload/renderer boundary](01-app-and-security.md); reuse [BE feature actions](../backend/shared/01-actions-and-boundaries.md), [API contracts](../backend/typescript/02-api-contracts.md), [data integrity](../backend/shared/02-data-and-time.md), [FE state](../frontend/02-state-and-forms.md) and [security](../cross-cutting/01-security.md). The local database and remote database are separate owners with an explicit protocol between them.
 
 | Mode | When | Source of truth |
 | --- | --- | --- |
@@ -81,7 +81,7 @@ await localDb.transaction(async tx => {
 
 The adapter handles partial batch failure, expiry, authentication and backoff; it never acknowledges an uncommitted local apply. `remote.apply` uses a versioned API action, not a database connection. A platform-managed replication engine may replace this protocol when its authority, schema, conflict and recovery behavior fit the product..
 
-**DESKDATA-05 MUST:** Define a conflict policy per entity or action. Use server version/conditional writes for server-owned business state; on conflict retain the local intent and show the user a recoverable choice. Automatic field merges or last-write-wins are allowed only for fields whose semantics make that safe. Never infer order from device wall clocks. [SQLite changeset conflicts](https://www.sqlite.org/sessionintro.html), [shared time rules](../backend/14-time-and-dates.md).
+**DESKDATA-05 MUST:** Define a conflict policy per entity or action. Use server version/conditional writes for server-owned business state; on conflict retain the local intent and show the user a recoverable choice. Automatic field merges or last-write-wins are allowed only for fields whose semantics make that safe. Never infer order from device wall clocks. [SQLite changeset conflicts](https://www.sqlite.org/sessionintro.html), [shared time rules](../backend/shared/02-data-and-time.md).
 
 ```ts
 // main/sync/policies/order-draft.ts — project-owned conflict decision

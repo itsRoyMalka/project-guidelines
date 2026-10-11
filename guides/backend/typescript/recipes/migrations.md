@@ -1,6 +1,6 @@
 # Live schema migration
 
-Read for schema/backfill changes while old and new versions overlap. Own rules: [DATA-05](../03-data-and-migrations.md), [DEL-04](../../cross-cutting/05-delivery.md). Record database/access-tool versions first. This recipe describes PostgreSQL decisions; copy no MySQL DDL or unverified ORM command.
+Read for schema/backfill changes while old and new versions overlap. Own rules: [DATA-05](../03-data-and-migrations.md), [DEL-04](../../../cross-cutting/05-delivery.md). Record database/access-tool versions first. This recipe describes PostgreSQL decisions; copy no MySQL DDL or unverified ORM command.
 
 Example: rename required `old_name` to `new_name` without losing writes.
 

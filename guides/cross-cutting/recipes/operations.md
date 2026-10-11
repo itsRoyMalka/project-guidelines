@@ -8,7 +8,7 @@ Structured logs carry request/trace correlation, operation, result and safe diag
 
 For each critical journey define: successful/eligible event, measurement source, exclusions, target, rolling window, owner and action. Example decision: 99.9% of eligible cancellation requests succeed within 1 second over 30 days; classify expected policy rejection separately and do not exclude dependency outages to hide failures. This is an illustrative product target, not a mandated number. Alert on actionable symptom/budget burn and route to an owner with a runbook; diagnostic saturation signals explain causes.
 
-Capacity plans include per-process and aggregate DB pools, bounded worker concurrency, queue arrival/service rates, provider quotas, memory and browser payload/interaction budgets. Measure representative p95/p99, errors and resource use; a low-traffic average does not prove peak capacity. Deadlines propagate inward; retries have jitter, caps, a total budget and one owner. Retrying a non-idempotent side effect requires the [outcome protocol](../../backend/recipes/idempotency.md).
+Capacity plans include per-process and aggregate DB pools, bounded worker concurrency, queue arrival/service rates, provider quotas, memory and browser payload/interaction budgets. Measure representative p95/p99, errors and resource use; a low-traffic average does not prove peak capacity. Deadlines propagate inward; retries have jitter, caps, a total budget and one owner. Retrying a non-idempotent side effect requires the [outcome protocol](../../backend/shared/03-effects-and-operations.md).
 
 ## Process lifecycle
 

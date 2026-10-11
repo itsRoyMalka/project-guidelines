@@ -1,6 +1,7 @@
 # Data lifecycle, audit and retention
+**TypeScript implementation:** Apply the shared [backend rule](../shared/05-data-lifecycle.md); this guide supplies TypeScript-specific conventions and examples.
 
-Read when collecting personal/sensitive data or publishing derived data. Owners for transactional writes remain in [data](03-data-and-migrations.md). Security classifies access; this guide owns propagation and retention decisions. Organization policy supplies applicable legal obligations.
+Read for TypeScript services collecting personal/sensitive data or publishing derived data. Owners for transactional writes remain in [data](03-data-and-migrations.md). Security classifies access; this guide owns propagation and retention decisions. Organization policy supplies applicable legal obligations.
 
 **LIFE-01 MUST:** Classify datasets by purpose, sensitivity, owner, access, retention and deletion behavior. Include operational logs, uploads, exports, caches, backups and analytical copies. Avoid collecting data merely because a field is available.
 
@@ -12,7 +13,7 @@ Read when collecting personal/sensitive data or publishing derived data. Owners 
 
 **LIFE-05 SHOULD:** Make bulk repair/deletion jobs dry-runnable or previewable, scoped, resumable and rate-limited. Record selected population, counts, progress, failures and reconciliation. Define irreversible cutoff and actual authorization before execution.
 
-**Proof:** revoke a member and attempt reads/jobs/cache reuse; delete a record and rebuild a derived model; restore a backup and reapply current deletion state; simulate partial bulk progress. An audit write failure policy is explicit: block the business action if atomic audit is required, or durably retry where acceptable. **Alternative:** an organization data-governance platform can own these controls if its guarantees are linked and verified. Use [retention/restore policy](../cross-cutting/04-operations.md) alongside applicable security policy.
+**Proof:** revoke a member and attempt reads/jobs/cache reuse; delete a record and rebuild a derived model; restore a backup and reapply current deletion state; simulate partial bulk progress. An audit write failure policy is explicit: block the business action if atomic audit is required, or durably retry where acceptable. **Alternative:** an organization data-governance platform can own these controls if its guarantees are linked and verified. Use [retention/restore policy](../../cross-cutting/04-operations.md) alongside applicable security policy.
 
 **LIFE-06 MUST:** Retention defines its clock, access cutoff, purge, holds and all copies. Use bounded idempotent purge jobs or verified partition expiry; monitor overdue work. Soft deletion alone is not erasure.
 

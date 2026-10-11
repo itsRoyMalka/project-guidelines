@@ -1,6 +1,6 @@
 # One wire contract, two consumers
 
-Owners: [API-01/09/10](../02-api-contracts.md), [FE-03](../../frontend/01-architecture.md).
+Owners: [API-01/09/10](../02-api-contracts.md), [FE-03](../../../frontend/01-architecture.md).
 
 ```text
 packages/contracts/orders/endpoints.const.ts  # Zod params/query/body/response + method/path

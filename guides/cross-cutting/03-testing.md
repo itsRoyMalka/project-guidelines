@@ -24,7 +24,7 @@
 
 **Verification:** tests fail for the targeted defect, pass for the fix, and remain reproducible in CI. Further reading: [Playwright best practices](https://playwright.dev/docs/best-practices).
 
-Read [BE test shape](../backend/07-testing.md), [FE test shape](../frontend/07-testing.md) and [shared dev targeting](../e2e/02-environments.md) for the selected boundary. No separate per-action test-plan document or universal coverage threshold is required.
+Read [shared BE test shape](../backend/shared/04-testing-and-proof.md), [FE test shape](../frontend/07-testing.md) and [shared dev targeting](../e2e/02-environments.md) for the selected boundary. No separate per-action test-plan document or universal coverage threshold is required.
 
 ### Example: rejected flow proof
 

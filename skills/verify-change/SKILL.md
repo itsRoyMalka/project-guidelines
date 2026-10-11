@@ -5,6 +5,6 @@ description: Select and run proportionate checks for a code change, report actua
 
 # Verify a change
 
-Read [usage](../../USAGE.md), [governance](../../guides/00-governance.md), issue acceptance and [testing](../../guides/cross-cutting/03-testing.md). Select [BE action](../../guides/backend/07-testing.md), [FE flow](../../guides/frontend/07-testing.md), [mobile](../../guides/mobile/01-react-native.md) or [E2E](../../guides/e2e/01-journeys.md) proof for the risk.
+Read [usage](../../USAGE.md), [governance](../../guides/00-governance.md), issue acceptance and [testing](../../guides/cross-cutting/03-testing.md). Select [TypeScript BE action](../../guides/backend/typescript/07-testing.md), [Python BE action](../../guides/backend/python/06-testing.md), [FE flow](../../guides/frontend/07-testing.md), [mobile](../../guides/mobile/01-react-native.md) or [E2E](../../guides/e2e/01-journeys.md) proof for the risk.
 
 Discover actual commands. Check affected units and consumers; compare observed results with acceptance. E2E evidence names the deployed manifest under [ENV](../../guides/e2e/02-environments.md). For a desktop app, apply [installed-app proof](../../guides/desktop/03-quality-and-delivery.md) to IPC, OS behavior and release candidates for every selected [platform profile](../../guides/desktop/07-platform-profiles.md). Report command/environment/result, skips, limits and next action. Use [delivery](../../guides/cross-cutting/05-delivery.md) for release proof; green local checks do not establish production readiness.

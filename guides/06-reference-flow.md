@@ -60,7 +60,7 @@ export function useCancelOrder() {
 }
 ```
 
-The UI uses DS components, translations, shared test IDs and backend capabilities. The handler owns resource access, conditional state change and durable event intent. BE tests assert response/state/event; FE tests assert interaction; E2E creates and cancels through UI. See [BE slice](backend/01-service-design.md), [BE test](backend/07-testing.md), [FE architecture](frontend/01-architecture.md) and [E2E](e2e/01-journeys.md).
+The UI uses DS components, translations, shared test IDs and backend capabilities. The handler owns resource access, conditional state change and durable event intent. BE tests assert response/state/event; FE tests assert interaction; E2E creates and cancels through UI. See [BE slice](backend/typescript/01-service-design.md), [BE test](backend/typescript/07-testing.md), [FE architecture](frontend/01-architecture.md) and [E2E](e2e/01-journeys.md).
 
 ## Query key declarations
 

@@ -8,6 +8,7 @@
 | Repository | Cohesive workspace; pnpm and shared lockfile when workspace packages share resolution | Separate repositories/lockfiles for real release/access boundaries |
 | Web | React Router framework mode with an explicit SPA or SSR deployment choice | Next.js for its particular capabilities/ecosystem; existing React SPA router when adequate |
 | HTTP API, if separate | Fastify with Zod, compatible type provider and OpenAPI transform | JSON Schema/TypeBox, generated OpenAPI/protobuf, or existing framework contract |
+| Python backend, when selected | Supported Python, FastAPI/Pydantic v2, PostgreSQL/SQLAlchemy 2/Alembic, uv lock, Ruff, strict mypy, pytest | Existing supported stack with equivalent boundary, migration and proof behavior |
 | Relational persistence | PostgreSQL; Prisma evaluated against the chosen major's migration/operational needs | Reviewed SQL/query builder or another store justified by workload |
 | Server data | TanStack Query for split web/API and mobile; router loaders/actions for fullstack route data | One freshness owner per resource; loaders may prefetch Query |
 | Forms | React Hook Form for every actual form, Zod for drafts | Non-form controls use local state |
@@ -48,7 +49,7 @@ The root lockfile pins compatible resolutions; the project records actual runtim
 | Monorepo orchestration | pnpm workspace/lockfile; Nx affected tasks and boundaries; Turbo is a simpler alternative |
 | Global client state | Zustand, composed centrally from feature-owned slices |
 | Native mobile | React Native + TS; evaluate Expo, prove required native integrations |
-| desktop | Electron + TS/React for web-stack reuse across Windows, macOS and Linux; evaluate Tauri or a native stack against product/OS needs |
+| Desktop | Electron + TS/React for web-stack reuse across Windows, macOS and Linux; evaluate Tauri or a native stack against product/OS needs |
 | Durable background work | Self-hosted Temporal behind the app background port |
 | Cache after measured need | Valkey or Redis adapter |
 | Internal service RPC | Protobuf + Buf + Connect behind app clients |

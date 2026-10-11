@@ -1,6 +1,7 @@
 # API and wire contracts
+**TypeScript implementation:** Apply the shared [backend rule](../shared/01-actions-and-boundaries.md); this guide supplies TypeScript-specific conventions and examples.
 
-**Applies to:** HTTP APIs and other externally consumed boundaries. Event contracts are in [events](04-events-and-workflows.md).
+**Applies to:** TypeScript HTTP APIs and other externally consumed boundaries. Event contracts are in [events](04-events-and-workflows.md).
 
 **API-01 MUST:** Own each public wire contract once. In a TS monorepo use browser-safe `packages/contracts/<feature>/endpoints.const.ts` with Zod input/output and method/path; the BE feature owns semantics. Generate OpenAPI/clients for separate repositories or languages; never hand-copy DTOs.
 
@@ -51,7 +52,7 @@ if (updated.count !== 1) throw new OrderConflictError();
 // The endpoint adapter handles scoped idempotency reservation and replay.
 ```
 
-**API-07 MUST:** Declare accepted wire formats and bounds: timestamps with explicit offset normalized to UTC, supported precision, date-only YYYY-MM-DD, duration units, ID semantics and exact decimal/large-integer representation. Preserve timezone/recurrence intent separately when required. Use public DTOs rather than database/vendor objects. See [domain values](../recipes/domain-values.md) and [BE time decisions](14-time-and-dates.md).
+**API-07 MUST:** Declare accepted wire formats and bounds: timestamps with explicit offset normalized to UTC, supported precision, date-only YYYY-MM-DD, duration units, ID semantics and exact decimal/large-integer representation. Preserve timezone/recurrence intent separately when required. Use public DTOs rather than database/vendor objects. See [domain values](../../recipes/domain-values.md) and [BE time decisions](14-time-and-dates.md).
 
 **API-08 MUST:** Bound body/page size, rate and expensive actions according to threat/capacity needs. Use 429 for client quota exhaustion and Retry-After when a meaningful retry time is known; distinguish service overload. Allowlist response fields and test the configured serializer's actual behavior, including rejected output and error responses.
 

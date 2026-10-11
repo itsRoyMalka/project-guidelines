@@ -1,6 +1,6 @@
 # Repository and module boundaries
 
-**Applies to:** new TypeScript products. See [architecture](01-architecture.md) for choosing separate repos/services.
+**Applies to:** new TypeScript or Python product repositories. See [architecture](01-architecture.md) for choosing separate repos/services.
 
 ## Example: one product monorepo
 
@@ -20,7 +20,7 @@ infra/                 # declarative deployment/infrastructure source
 docs/                  # architecture, decisions, operations
 ```
 
-For a modular backend with one deployable, use `apps/api/` instead of `apps/services/*`. For one fullstack deployment, use the [fullstack profile](profiles/typescript-fullstack.md) with server/browser feature boundaries inside one app; do not create a second API just to match this example. An installable desktop app uses the [desktop profile](desktop/01-app-and-security.md). Add optional apps and packages only when they exist.
+For a modular backend with one deployable, use `apps/api/` instead of `apps/services/*`. For one fullstack deployment, use the [fullstack profile](profiles/typescript-fullstack.md) with server/browser feature boundaries inside one app; do not create a second API just to match this example. An installable desktop app uses the [desktop profile](desktop/01-app-and-security.md). A Python backend uses the [Python profile](backend/python/01-backend.md) inside its deployable and may share this monorepo without importing another app's implementation. Add optional apps and packages only when they exist.
 
 Create a package only for a real consumer boundary. Do not create empty `packages/` entries just to match this tree. Keep each app's config and tests near the app; cross-app E2E lives at the workspace level when needed.
 
@@ -46,4 +46,14 @@ export { cancelOrder } from './cancel-order/handler';
 // Do not export ./shared/dal.shared or import it from another feature.
 ```
 
-The handler still applies the [service rules](backend/01-service-design.md), including trusted actor/resource scope and its transaction policy. Application composition calls this public operation; another feature never writes Orders tables through a private DAL.
+The handler still applies the [service rules](backend/typescript/01-service-design.md), including trusted actor/resource scope and its transaction policy. Application composition calls this public operation; another feature never writes Orders tables through a private DAL.
+
+### Example: Python service public boundary
+
+```python
+# apps/services/orders-api/src/orders/app/main.py — Python composition
+from orders.features.orders.api import router as orders_router
+
+app.include_router(orders_router)
+# Another feature imports the published orders operation, never shared/dal.py.
+```

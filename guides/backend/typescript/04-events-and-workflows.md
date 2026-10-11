@@ -1,6 +1,7 @@
 # Events, queues, and durable workflows
+**TypeScript implementation:** Apply the shared [backend rule](../shared/03-effects-and-operations.md); this guide supplies TypeScript-specific conventions and examples.
 
-**Applies to:** asynchronous cross-feature or cross-service work. Start with the need described in [architecture](../01-architecture.md), not a broker preference.
+**Applies to:** TypeScript asynchronous cross-feature or cross-service work. Start with the need described in [architecture](../../01-architecture.md), not a broker preference.
 
 **EVT-01 MUST:** Identify command versus committed-fact event. Declare owner, ID, version, occurrence time, correlation, trusted scope, producers/consumers and required ordering key. Authenticate the producer and validate delegated scope; a tenant field in a message is not inherently trusted.
 

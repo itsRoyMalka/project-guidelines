@@ -1,4 +1,5 @@
 # Backend action tests
+**TypeScript implementation:** Apply the shared [backend rule](../shared/04-testing-and-proof.md); this guide supplies TypeScript-specific conventions and examples.
 
 **Scope:** API-backed TypeScript features. **Why:** prove the whole action with a small suite.
 

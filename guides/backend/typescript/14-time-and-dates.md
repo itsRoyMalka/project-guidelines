@@ -1,6 +1,7 @@
 # Backend time and dates
+**TypeScript implementation:** Apply the shared [backend rule](../shared/02-data-and-time.md); this guide supplies TypeScript-specific conventions and examples.
 
-**Applies to:** TypeScript handlers, jobs and persistence that read or decide with time. **Why:** an instant, a calendar date and a local schedule have different meanings. Wire and storage representations remain owned by [API-07](02-api-contracts.md) and [DATA-04](03-data-and-migrations.md); see [domain values](../recipes/domain-values.md).
+**Applies to:** TypeScript handlers, jobs and persistence that read or decide with time. **Why:** an instant, a calendar date and a local schedule have different meanings. Wire and storage representations remain owned by [API-07](02-api-contracts.md) and [DATA-04](03-data-and-migrations.md); see [domain values](../../recipes/domain-values.md).
 
 **TIME-01 MUST:** The BE owns business time decisions: expiry, cutoffs, opening hours, retention and scheduled work. Declare whose IANA time zone defines a local rule (for example, a venue's zone); do not infer it from the server, browser or a numeric UTC offset. The FE formats the result for display.
 

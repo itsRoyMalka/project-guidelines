@@ -1,6 +1,7 @@
 # Explicit cache policy
+**TypeScript implementation:** Apply the shared [backend rule](../shared/06-optional-capabilities.md); this guide supplies TypeScript-specific conventions and examples.
 
-**Scope:** application data caches. **Why:** make performance gains and stale-data behavior visible.
+**Scope:** TypeScript application data caches. **Why:** make performance gains and stale-data behavior visible.
 
 **CACHE-01 MUST:** Justify caching with measured latency/load and an improvement target. Feature read `cache.ts` states name, scoped key, TTL, staleness, invalidation owner, outage behavior and evidence.
 

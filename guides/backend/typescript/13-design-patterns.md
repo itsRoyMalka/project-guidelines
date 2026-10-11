@@ -1,6 +1,7 @@
 # Backend pattern inventory
+**TypeScript implementation:** Apply the shared [backend rule](../shared/01-actions-and-boundaries.md); this guide supplies TypeScript-specific conventions and examples.
 
-**Scope:** TypeScript backend. Select for a concrete invariant; a pattern does not require its own class or package. [Feature layout](01-service-design.md) and [example names](../recipes/example-conventions.md) remain authoritative.
+**Scope:** TypeScript backend. Select for a concrete invariant; a pattern does not require its own class or package. [Feature layout](01-service-design.md) and [example names](../../recipes/example-conventions.md) remain authoritative.
 
 | Pattern | Use when | Shape here / limit |
 | --- | --- | --- |

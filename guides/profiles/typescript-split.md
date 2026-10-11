@@ -16,7 +16,7 @@ packages/test-ids/<feature>.ts
 apps/e2e/web/
 ```
 
-**Check:** invalid input, safe output, runtime response validation, auth/CSRF, generated contract compatibility and one Query mutation/revalidation flow. **Alternative:** [fullstack](typescript-fullstack.md) for one runtime. See [contracts](../backend/recipes/contracts.md) and [FE architecture](../frontend/01-architecture.md). Verify the selected dependency versions in the adopting project.
+**Check:** invalid input, safe output, runtime response validation, auth/CSRF, generated contract compatibility and one Query mutation/revalidation flow. **Alternative:** [fullstack](typescript-fullstack.md) for one runtime. See [contracts](../backend/typescript/recipes/contracts.md) and [FE architecture](../frontend/01-architecture.md). Verify the selected dependency versions in the adopting project.
 
 ### Example: app composition
 

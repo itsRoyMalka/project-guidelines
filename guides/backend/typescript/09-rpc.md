@@ -1,6 +1,7 @@
 # Service RPC
+**TypeScript implementation:** Apply the shared [backend rule](../shared/06-optional-capabilities.md); this guide supplies TypeScript-specific conventions and examples.
 
-**Scope:** separate backend services needing an immediate answer. **Why:** retain feature ownership across a network boundary.
+**Scope:** separate TypeScript backend services needing an immediate answer. **Why:** retain feature ownership across a network boundary.
 
 **RPC-01 MUST:** Split services by owned business capability, not table or endpoint. Keep rules requiring one atomic commit together. In-process features call public handlers directly.
 

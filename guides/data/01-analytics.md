@@ -1,6 +1,6 @@
 # Data and analytics extension
 
-**Applies to:** warehouses, dbt/SQL models, reporting, and analytical exports. Transactional ownership remains in [data and migrations](../backend/03-data-and-migrations.md).
+**Applies to:** warehouses, dbt/SQL models, reporting, and analytical exports. Transactional ownership remains in [shared data rules](../backend/shared/02-data-and-time.md).
 
 **ANA-01 MUST:** State source system, grain, owner, update cadence, tenant scope, and data contract for each published model. Organize raw/staging, transformed/core, and consumer-facing marts so transformations have a clear lineage.
 
@@ -12,7 +12,7 @@
 
 **ANA-05 SHOULD:** Use readable SQL with named CTEs, explicit join keys, scoped filters, and performance review on large models. Publish metric definitions and version changed semantics.
 
-**ANA-06 MUST:** Apply access, retention and deletion policy to staging, marts, replicas, exports and BI. Rebuild/replay must honor deletion state instead of reintroducing erased records. Use the [data lifecycle](../backend/06-data-lifecycle.md) and assign ownership of derived-data propagation.
+**ANA-06 MUST:** Apply access, retention and deletion policy to staging, marts, replicas, exports and BI. Rebuild/replay must honor deletion state instead of reintroducing erased records. Use the [shared data lifecycle](../backend/shared/05-data-lifecycle.md) and assign ownership of derived-data propagation.
 
 **Verification:** model tests, lineage, sample reconciliation to source, backfill replay, and access review. Further reading: [dbt data tests](https://docs.getdbt.com/docs/build/data-tests), [dbt incremental models](https://docs.getdbt.com/docs/build/incremental-models).
 

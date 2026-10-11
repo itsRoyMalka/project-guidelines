@@ -13,6 +13,8 @@ Examples demonstrate the owning guide's rules. They are excerpts, not a shipped 
 | UI | `CancelOrder`, `OrderRow`; PascalCase DS/feature components |
 | Tests | `cancel-order.test.ts` / `cancel.test.tsx`; descriptive scenario names |
 | Factories | `defineHandler`, `defineEndpoint`, `defineConsumer`: application conventions, not library exports |
+| Python action | `features/orders/cancel_order/{api,contract,handler,test_cancel_order}.py`; snake_case files/functions, PascalCase models, uppercase enum members |
+| Python sharing | `features/orders/shared/{constants,dal,errors,models}.py`; `define_handler` is app-owned only when it enforces transactions/audit |
 | desktop boundary | `DesktopChannel.SaveExport`, `DesktopIntent.OpenOrder`, `DesktopCommand.OpenOrder`: app-owned maps, not Electron exports |
 | desktop windows | `WindowKind.OrderDetails`: app-owned window identity, not a string repeated in routes or menus |
 | desktop sync | `SyncCommand.SaveOrderDraft`, `SyncStatus.Pending`: app-owned maps declared beside the local/remote contract |

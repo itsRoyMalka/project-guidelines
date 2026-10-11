@@ -1,6 +1,7 @@
 # Jobs and workflows
+**TypeScript implementation:** Apply the shared [backend rule](../shared/03-effects-and-operations.md); this guide supplies TypeScript-specific conventions and examples.
 
-**Scope:** durable background work. **Why:** jobs own business behavior; workers execute registered jobs; adapters own orchestration. These `define*` APIs are illustrative project conventions, not a shipped framework.
+**Scope:** TypeScript durable background work. **Why:** jobs own business behavior; workers execute registered jobs; adapters own orchestration. These `define*` APIs are illustrative project conventions, not a shipped framework.
 
 **JOB-01 MUST:** Put typed `contract.ts`, business `handler.ts` and binding `job.ts` in feature `background/<job>/`. Each feature exports one `defineBackground({ jobs, workflows })` manifest. `defineWorker({ features, adapter })` reuses the service feature list and rejects duplicate names.
 
