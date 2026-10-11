@@ -22,7 +22,7 @@ Stripe HTTP hook → verify signature → PaymentSucceeded(event_id, order_id)
 
 ```python
 # features/orders/cancel_order/handler.py — Python transaction excerpt
-await ctx.outbox.add(ctx.tx, OrderCancelled(order_id=row.id, event_id=ctx.event_ids.new()))
+await ctx.outbox.add(ctx.session, OrderCancelled(order_id=row.id, event_id=ctx.event_ids.new()))
 # Consumer receives OrderCancelled and calls an operation; adapter owns Kafka/SQS details.
 ```
 

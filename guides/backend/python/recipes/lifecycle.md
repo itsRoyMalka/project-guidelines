@@ -11,7 +11,7 @@ Applies to [PY-03](../01-backend.md), [PYDB-02](../04-persistence-and-migrations
 ```python
 # app/main.py — Python async profile; simplified lifespan ownership
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     engine = create_async_engine(settings.database_url.get_secret_value())
     app.state.sessions = async_sessionmaker(engine, expire_on_commit=False)
     app.state.actions = create_actions(app.state.sessions, providers, clock)
@@ -22,14 +22,16 @@ async def lifespan(app: FastAPI):
         await engine.dispose()
 ```
 
-`create_actions` is project-owned composition. It binds [transaction/audit behavior](action-lifecycle.md); feature handlers do not reach into `app.state`, create sessions or close engines. Real code initializes providers and readiness before yielding and drains workers before closing resources.
+`create_actions` is project-owned composition. It binds [transaction/audit behavior](action-lifecycle.md); feature handlers do not reach into `app.state`, create sessions or close engines. Real code initializes providers and readiness before yielding, configures [pool/TLS budgets](../12-database-sessions.md), and drains workers before closing resources.
 
 ```python
 # app/sync_operation.py — Python alternative for a synchronous-only service
 
-def cancel_sync(factory: sessionmaker[Session], input: CancelOrderInput, actor: Actor):
+def cancel_sync(
+    factory: sessionmaker[Session], input: CancelOrderInput, actor: Actor,
+) -> CancelOrderOutput:
     with factory() as session, session.begin():
-        return cancel_order_run_sync(HandlerContext(actor=actor, tx=session), input)
+        return cancel_order_run_sync(HandlerContext(actor=actor, session=session), input)
 ```
 
 The sync example is an alternative profile, not a helper called directly from the async route. Select one profile per operation; if bridging is necessary, offload the entire sync callable with bounded threads and test shutdown/cancellation behavior. Return detached public values, not lazy ORM rows that need the closed session.

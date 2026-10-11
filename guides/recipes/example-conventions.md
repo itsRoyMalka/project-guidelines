@@ -15,6 +15,7 @@ Examples demonstrate the owning guide's rules. They are excerpts, not a shipped 
 | Factories | `defineHandler`, `defineEndpoint`, `defineConsumer`: application conventions, not library exports |
 | Python action | `features/orders/cancel_order/{api,contract,handler,test_cancel_order}.py`; snake_case files/functions, PascalCase models, uppercase enum members |
 | Python sharing | `features/orders/shared/{constants,dal,errors,models}.py`; `define_handler` is app-owned only when it enforces transactions/audit |
+| Database execution | TS DAL parameter `db`; Python DAL parameter `session` / handler `ctx.session`; wrapper owns transaction lifetime, no global fallback |
 | desktop boundary | `DesktopChannel.SaveExport`, `DesktopIntent.OpenOrder`, `DesktopCommand.OpenOrder`: app-owned maps, not Electron exports |
 | desktop windows | `WindowKind.OrderDetails`: app-owned window identity, not a string repeated in routes or menus |
 | desktop sync | `SyncCommand.SaveOrderDraft`, `SyncStatus.Pending`: app-owned maps declared beside the local/remote contract |

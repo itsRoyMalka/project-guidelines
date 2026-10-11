@@ -9,7 +9,7 @@
 | Composition root | A service binds DB, ports, telemetry and feature registrations | `src/app/` binds once; feature files do not create process clients |
 | Transactional handler / unit of work | Several writes must succeed together | `defineHandler({ transaction: true })` joins one context; no nested independent commits |
 | Conditional state transition | A write must win exactly once | DAL update checks state/version and returns affected count; use constraints for cross-row invariants |
-| Transactional outbox | Committed state requires event or job-start intent | Handler writes intent through `tx`; relay sends after commit and may resend |
+| Transactional outbox | Committed state requires event or job-start intent | Handler writes intent through `db`; relay sends after commit and may resend |
 | Idempotent consumer | Broker can redeliver | Stable `(consumerId, source, eventId)` receipt with owned effect; ack after commit |
 | Port and adapter | External protocol or vendor may vary | Feature imports `ShippingRates`; `integrations/outbound/shipping/` owns provider SDK |
 | Anti-corruption adapter | Provider words/states differ from ours | Inbound adapter translates signed Stripe callback to our validated event; no provider type in handler |
@@ -30,12 +30,12 @@ export const cancelOrder = defineHandler({
     resourceType: AuditResource.Order,
     resourceId: ({ result }) => result.id,
   },
-  run: async ({ input, actor, tx, deps }) => {
-    const order = await orderDal.getOwned(tx, actor, input.orderId);
+  run: async ({ input, actor, db, deps }) => {
+    const order = await orderDal.getOwned(db, actor, input.orderId);
     assertCancellable(order);
-    const changed = await orderDal.cancelIfPending(tx, order.id);
+    const changed = await orderDal.cancelIfPending(db, order.id);
     if (changed !== 1) throw new OrderConflictError();
-    await deps.outbox.add(tx, OrderCancelled.create({ orderId: order.id }));
+    await deps.outbox.add(db, OrderCancelled.create({ orderId: order.id }));
     return { id: order.id, status: OrderStatus.Cancelled };
   },
 });

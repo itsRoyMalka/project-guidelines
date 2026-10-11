@@ -43,12 +43,12 @@ const listOrdersQuery = z.strictObject({
 **API-06 MUST:** Define safe repeated writes and concurrent transitions. For idempotency keys, specify trusted scope, payload fingerprint, atomic reservation, concurrent replay behavior, stored outcome and expiry. Reauthorize before returning a replayed result. Protect lost updates with a domain constraint, conditional version write or selected isolation/lock strategy. See [idempotency recipe](recipes/idempotency.md).
 
 ```ts
-// features/orders/cancel-order/handler.ts — project-owned DB operation
-const updated = await tx.order.updateMany({
-  where: { id: input.orderId, status: OrderStatus.Pending, version: loaded.version },
-  data: { status: OrderStatus.Cancelled, version: { increment: 1 } },
+// features/orders/cancel-order/handler.ts — authorized resource already loaded
+const changed = await orderDal.cancelIfVersionMatches(db, {
+  orderId: loaded.id, version: loaded.version,
 });
-if (updated.count !== 1) throw new OrderConflictError();
+if (!changed) throw new OrderConflictError();
+// DAL conditionally updates id + pending status + version and checks row count.
 // The endpoint adapter handles scoped idempotency reservation and replay.
 ```
 

@@ -40,3 +40,5 @@ return toOrderView(order);
 ```
 
 `getOwned` filters by the trusted actor's access, not a caller-supplied owner ID; it hides inaccessible records according to the selected disclosure policy. `toOrderView` allowlists public fields. The API already authenticated and checked the named read action; the resource check remains necessary.
+
+Server database identities, effective grants and time-bounded human/agent access are defined in [DBA rules](../backend/shared/database/01-identities-and-access.md).

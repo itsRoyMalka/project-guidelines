@@ -1,6 +1,6 @@
 # Backend data and time
 
-**Scope:** transactional data and time semantics in TypeScript or Python services. Runtime/database guides own implementation details. **Why:** correctness comes from declared authority, constraints and query behavior, not an ORM choice.
+**Scope:** transactional data and time semantics in TypeScript or Python services. Runtime/database guides own implementation details. For identities, grants and operational controls start with [database access](database/01-identities-and-access.md). **Why:** correctness comes from declared authority, constraints and query behavior, not an ORM choice.
 
 **BESD-01 MUST:** Give each table an owner and a key, classify retention/sensitivity and enforce important relationships/uniqueness in the database. Add tenant scope only in a multi-tenant product; when present, enforce it on reads, writes, joins and uniqueness, not just in API filters. Choose public IDs separately from internal keys; opaque IDs reduce guessability but never replace authorization.
 

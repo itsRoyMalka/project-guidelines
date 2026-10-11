@@ -11,7 +11,7 @@ Owners: [BE-05/07](../01-service-design.md), [DATA-01/06](../03-data-and-migrati
 
 Set the mode in the handler definition, not request data or caller options. A read requiring a consistent multi-query snapshot can use `true`. A single atomic write may use `false` only when it needs no coordinated audit, receipt, result record or publication intent.
 
-App composition binds dependencies once. Each invocation gets trusted actor, correlation/deadline and its own execution context. Transactional DALs and the outbox require that context's transaction client; do not fall back to a process-global DB connection. Do not retain the context after completion or pass it to another service/process.
+App composition binds dependencies once. Each invocation gets trusted actor, correlation/deadline and its own execution context. DALs accept `db` for either a regular or transaction-bound client using the [same feature interface](../15-database-access.md). For atomic actions the wrapper passes the transaction-bound client to every participant and the outbox; do not fall back to a process-global DB connection. Do not retain the context after completion or pass it to another service/process.
 
 ```ts
 // features/orders/confirm/handler.ts — both child handlers use transaction:true.
@@ -38,9 +38,9 @@ Use conditional writes or constraints for concurrency. A prior read does not res
 
 ```ts
 // features/orders/cancel-order/handler.ts — inside the handler-owned transaction
-const changed = await orderDal.cancelIfPending(tx, orderId);
+const changed = await orderDal.cancelIfPending(db, orderId);
 if (changed !== 1) throw new OrderConflictError();
-await deps.outbox.add(tx, OrderCancelled.create({ orderId }));
+await deps.outbox.add(db, OrderCancelled.create({ orderId }));
 ```
 
 Required [audit records](audit.md) are written before commit through the same transaction; rollback removes provisional success records. Failure-attempt recording belongs to the outer boundary after cleanup.

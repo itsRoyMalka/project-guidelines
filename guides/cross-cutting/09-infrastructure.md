@@ -33,3 +33,5 @@ module "orders_api" {
 ```
 
 `image_digest` names a verified immutable artifact, not a mutable tag. Provider/auth, protected remote state and required module inputs belong to this root's other files. This is a call-site excerpt; the module must implement and prove the selected rollout/health/rollback behavior before use.
+
+For database infrastructure, use [database administration](../backend/shared/database/03-administration-and-recovery.md) and [identity/access ownership](../backend/shared/database/01-identities-and-access.md); provider overlays implement those guarantees.

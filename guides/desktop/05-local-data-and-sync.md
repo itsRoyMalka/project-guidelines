@@ -52,9 +52,9 @@ CREATE INDEX order_drafts_account_updated ON order_drafts(account_id, updated_at
 
 ```ts
 // main/features/orders/save-draft/handler.ts — local transaction excerpt
-await localDb.transaction(async tx => {
-  await orderDraftDal.save(tx, { ...input, accountId: actor.accountId });
-  await syncOutbox.add(tx, {
+await localDb.transaction(async db => {
+  await orderDraftDal.save(db, { ...input, accountId: actor.accountId });
+  await syncOutbox.add(db, {
     id: commandId, type: SyncCommand.SaveOrderDraft,
     accountId: actor.accountId, payload: input, baseVersion: input.baseVersion,
   });
@@ -70,12 +70,12 @@ The local handler validates the authenticated local account; the remote handler 
 // main/sync/run-once.ts — project-owned sync port; bounded work
 for (const command of await syncOutbox.nextBatch({ limit: 50 })) {
   const result = await remote.apply(command, { idempotencyKey: command.id });
-  await localDb.transaction(tx => syncOutbox.ackAndApply(tx, command.id, result));
+  await localDb.transaction(db => syncOutbox.ackAndApply(db, command.id, result));
 }
 const batch = await remote.changes({ cursor: checkpoint.value, limit: 100 });
-await localDb.transaction(async tx => {
-  await localChanges.apply(tx, batch.changes); // deletes; preserves pending edits/conflicts
-  await checkpoint.save(tx, batch.nextCursor);
+await localDb.transaction(async db => {
+  await localChanges.apply(db, batch.changes); // deletes; preserves pending edits/conflicts
+  await checkpoint.save(db, batch.nextCursor);
 });
 ```
 

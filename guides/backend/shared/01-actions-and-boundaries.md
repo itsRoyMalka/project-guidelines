@@ -18,7 +18,7 @@ HTTP JSON → parsed CancelOrderInput + verified Actor → cancel_order action
          → safe CancelOrderOutput | mapped public error
 ```
 
-**BES-03 MUST:** Declare the transaction owner for every write action. It starts or joins one transaction, commits business state with required audit/outbox intent, and rolls back on failure. A participating child failure must not be silently committed; external network calls stay outside the database transaction. The runtime profile supplies the wrapper/session implementation.
+**BES-03 MUST:** Declare the transaction owner for every write action. It starts or joins one transaction, commits business state with required audit/outbox intent, and rolls back on failure. A participating child failure must not be silently committed; external network calls stay outside the database transaction. The runtime profile supplies the wrapper/session implementation and passes the [DAL execution context](database/02-connections-and-isolation.md) as `db` in TS or `session` in Python.
 
 ```text
 cancel_order(transaction=true): read + conditional update + audit + outbox → commit

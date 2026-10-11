@@ -38,6 +38,6 @@ export const requestRefund = defineConsumer({
 });
 ```
 
-`OrderCancelled.create` validates feature data; `deps.outbox.add(tx, event)` assigns the stable envelope ID/source/time/correlation from the trusted execution context and persists it with the business write. Provider SDKs live in `src/integrations/events/`; Kafka, EventBridge, SQS or another adapter must preserve the declared semantics. [Tests](07-testing.md) observe publication through an app-scoped recorder and exercise consumers through the dispatcher.
+`OrderCancelled.create` validates feature data; `deps.outbox.add(db, event)` assigns the stable envelope ID/source/time/correlation from the trusted execution context and persists it with the business write. Provider SDKs live in `src/integrations/events/`; Kafka, EventBridge, SQS or another adapter must preserve the declared semantics. [Tests](07-testing.md) observe publication through an app-scoped recorder and exercise consumers through the dispatcher.
 
 Consumer names are durable IDs, never inferred from function names. A receipt means the declared DB effect or durable work intent committed; it does not mean an external payment completed. The [recipe](recipes/outbox-and-consumers.md) defines inbox admission, relays, replay and adapter acknowledgements.

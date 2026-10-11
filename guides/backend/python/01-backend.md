@@ -60,7 +60,7 @@ class AuditAction(StrEnum):
     ORDER_CANCELLED = 'orders.cancelled'
 ```
 
-**PY-03 MUST:** Select synchronous or asynchronous I/O deliberately. A synchronous driver/client stays in a synchronous operation; an `async def` route uses async drivers through the call path. One mutable `Session` belongs to one thread, or one `AsyncSession` to one concurrent task. The app lifespan owns pools/clients and shutdown; see [lifecycle](recipes/lifecycle.md).
+**PY-03 MUST:** Select synchronous or asynchronous I/O deliberately. A synchronous driver/client stays in a synchronous operation; an `async def` route uses async drivers through the call path. One mutable `Session` belongs to one thread, or one `AsyncSession` to one concurrent task. The app lifespan owns pools/clients and shutdown; see [lifecycle](recipes/lifecycle.md) and [session/pool configuration](12-database-sessions.md).
 
 ```python
 # app/db.py — Python async profile; one factory at app startup

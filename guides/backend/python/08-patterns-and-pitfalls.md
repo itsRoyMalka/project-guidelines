@@ -15,11 +15,11 @@
 ```python
 # features/orders/cancel_order/handler.py — Python: direct action, no class hierarchy
 async def cancel_order_run(ctx: HandlerContext, input: CancelOrderInput) -> CancelOrderOutput:
-    row = await order_dal.get_owned(ctx.tx, ctx.actor.account_id, input.order_id)
+    row = await order_dal.get_owned(ctx.session, ctx.actor.account_id, input.order_id)
     require_action(ctx.actor, OrderAction.CANCEL, row)
-    if not await order_dal.cancel_if_pending(ctx.tx, row.id):
+    if not await order_dal.cancel_if_pending(ctx.session, row.id):
         raise OrderConflict()
-    await ctx.outbox.add(ctx.tx, OrderCancelled(order_id=row.id, event_id=ctx.event_ids.new()))
+    await ctx.outbox.add(ctx.session, OrderCancelled(order_id=row.id, event_id=ctx.event_ids.new()))
     return CancelOrderOutput(id=row.id, status=OrderStatus.CANCELLED)
 ```
 

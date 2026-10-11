@@ -19,7 +19,7 @@
 
 **Verification:** schema review, representative query plan for performance-sensitive paths, migration rehearsal on realistic data, and tenant isolation tests. Further reading: [PostgreSQL data definition](https://www.postgresql.org/docs/current/ddl.html), [current Prisma migration editing](https://www.prisma.io/docs/orm/migrations/editing-a-migration).
 
-For concrete scoped joins, tenant foreign keys and conflict strategy see [persistence](recipes/persistence.md).
+For concrete scoped joins, tenant foreign keys and conflict strategy see [persistence](recipes/persistence.md). For execution context, runtime/migration credentials and pools read [TypeScript database access](15-database-access.md).
 
 **DATA-08 MUST:** Features own table/enumeration definitions in `features/<feature>/db/`; shared infrastructure owns its tables beside its capability. The deployable owns one composed schema and one migration history under top-level `db/`. When Prisma is selected, explicitly select `db/prisma.config.ts`; prove discovery/generation for the installed Prisma major. Do not mix v7 schema-directory commands with v8 contract commands.
 
@@ -28,9 +28,10 @@ For concrete scoped joins, tenant foreign keys and conflict strategy see [persis
 **DATA-10 MUST:** Review a consequential DAL query with its filters, joins, order, bounds and supporting indexes. Check realistic plans for risky paths; avoid unbounded reads, N+1 calls and one-index-per-function rules.
 
 ```ts
-// features/orders/shared/dal.shared.ts — scoped, bounded read
+// features/orders/shared/dal.shared.ts — scoped, bounded Prisma ORM 7 read
+// DbOrderStatus is the generated enum; public mapping stays in this DAL.
 return db.order.findMany({
-  where: { accountId: actor.accountId, status: OrderStatus.Pending },
+  where: { accountId: actor.accountId, status: DbOrderStatus.Pending },
   orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
   take: 50,
 });

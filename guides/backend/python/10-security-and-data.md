@@ -14,9 +14,10 @@ actor = await identity.verify_request(request)  # signature, issuer, audience, e
 **PYSEC-02 MUST:** Classify sensitive fields before storing/logging them. Use the selected vault/encrypted-store port for data requiring app-level encryption, with key version, rotation, access audit and recovery. Keep provider secrets in a secret manager, not in database rows or logs. Retention and deletion propagate through DB, outbox, files, caches and analytics exports according to the product policy.
 
 ```python
-# features/customers/shared/dal.py — Python encrypted field boundary
+# features/customers/update_phone/handler.py — nontransactional orchestration
 ciphertext = await vault.encrypt(PiiField.CUSTOMER_PHONE, plaintext, key_version=active_key)
-await customer_dal.save_phone(tx, customer_id, ciphertext)
+await ctx.customer_actions.save_phone(actor, customer_id, ciphertext)
+# Transactional public action authorizes and passes session to the DAL.
 # Logs use customer_id only if classification allows; never plaintext/ciphertext.
 ```
 

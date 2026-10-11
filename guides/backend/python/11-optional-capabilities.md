@@ -9,7 +9,8 @@
 cached = await ctx.order_cache.get_summary(actor.account_id, query.key)
 if cached is not None:
     return cached
-result = await order_dal.list_summary(ctx.tx, actor.account_id, query)
+result = await ctx.order_queries.list_summary(actor, query)
+# Owned query operation calls the DAL with session and closes it before returning.
 await ctx.order_cache.put_summary(actor.account_id, query.key, result, ttl_seconds=60)
 return result
 ```

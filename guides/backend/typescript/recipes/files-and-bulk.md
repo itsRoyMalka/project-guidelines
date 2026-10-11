@@ -19,7 +19,7 @@ Bulk export: use stable snapshot/cursor semantics where consistency matters, cap
 ```ts
 // features/docstore/complete-verification/handler.ts — transactional body
 // scannerResult is authenticated/validated by the inbound adapter.
-const changed = await documentDal.markReadyIfVersionMatches(tx, {
+const changed = await documentDal.markReadyIfVersionMatches(db, {
   documentId: input.documentId,
   objectVersion: scannerResult.objectVersion,
   requiredChecksPassed: scannerResult.requiredChecksPassed,

@@ -45,3 +45,5 @@ logger.info({
 ```
 
 Emit after confirmed completion at the selected boundary, not from every layer. The logger is app-bound with redaction; metric labels use bounded action/outcome values and exclude requestId. This diagnostic is not the durable audit record.
+
+For database-specific restore, audit, drift and upgrade evidence see [DBO rules](../backend/shared/database/03-administration-and-recovery.md).

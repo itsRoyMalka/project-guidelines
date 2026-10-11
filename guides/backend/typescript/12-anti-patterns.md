@@ -23,9 +23,9 @@
 
 ```ts
 // features/orders/cancel-order/handler.ts — inside defineHandler(transaction:true)
-const changed = await orderDal.cancelIfPending(tx, order.id);
+const changed = await orderDal.cancelIfPending(db, order.id);
 if (changed !== 1) throw new OrderConflictError();
-await deps.outbox.add(tx, OrderCancelled.create({ orderId: order.id }));
+await deps.outbox.add(db, OrderCancelled.create({ orderId: order.id }));
 ```
 
 The conditional DAL write and outbox intent share the handler's transaction. `OrderConflictError` is the feature's typed failure; the API maps it to a safe public code. The factory rolls back on error. **Check:** a concurrent cancellation produces one state transition and one committed event intent.

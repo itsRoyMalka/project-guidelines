@@ -18,7 +18,7 @@ class OrderRow(Base):
 # app/db_models.py imports feature models so Alembic target_metadata sees them.
 ```
 
-**PYDB-02 MUST:** The app lifespan owns engine/pool and `async_sessionmaker` (or the chosen sync equivalent). One handler invocation owns one session/transaction through the project-owned `define_handler`; DAL functions receive that session and never create, commit or close one. The wrapper must roll back on any child failure and keep external I/O outside the transaction.
+**PYDB-02 MUST:** The app lifespan owns engine/pool and `async_sessionmaker` (or the chosen sync equivalent). The project-owned `define_handler` binds `ctx.session`; DAL functions accept `session` for ordinary or transactional calls and never create, commit or close one. See [session semantics and configuration](12-database-sessions.md). The wrapper must roll back on any child failure and keep external I/O outside the transaction.
 
 ```python
 # features/orders/cancel_order/handler.py — Python action definition
@@ -26,7 +26,7 @@ cancel_order = define_handler(
     name=OrderAction.CANCEL,
     transaction=True,
     audit=AuditAction.ORDER_CANCELLED,
-    run=cancel_order_run,  # receives HandlerContext(actor, tx, deps)
+    run=cancel_order_run,  # receives HandlerContext(actor, session, deps)
 )
 # app/handlers.py owns session factory, transaction, audit and telemetry; HTTP error mapping stays at the API boundary.
 ```
@@ -34,9 +34,9 @@ cancel_order = define_handler(
 **PYDB-03 MUST:** A DAL query declares its scope, ordering and expected cardinality. Use `select`/`update` with bound values, avoid implicit lazy I/O in async paths, and use a checked conditional update or lock when concurrent writes could violate state. Avoid N+1 by selecting/loading the data the action actually needs.
 
 ```python
-# features/orders/shared/dal.py — Python, tx is the action's AsyncSession
-async def cancel_if_pending(tx: AsyncSession, order_id: UUID) -> bool:
-    result = await tx.execute(
+# features/orders/shared/dal.py — Python, session is the action's AsyncSession
+async def cancel_if_pending(session: AsyncSession, order_id: UUID) -> bool:
+    result = await session.execute(
         update(OrderRow)
         .where(OrderRow.id == order_id, OrderRow.status == OrderStatus.PENDING)
         .values(status=OrderStatus.CANCELLED)

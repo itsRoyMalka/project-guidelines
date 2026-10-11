@@ -49,12 +49,12 @@ export const cancelOrder = defineHandler({
     resourceType: AuditResource.Order,
     resourceId: ({ result }) => result.id,
   },
-  run: async ({ input, actor, tx, deps }) => {
-    const order = await orderDal.getOwned(tx, actor, input.orderId);
+  run: async ({ input, actor, db, deps }) => {
+    const order = await orderDal.getOwned(db, actor, input.orderId);
     assertCancellable(order);
-    const changed = await orderDal.cancelIfPending(tx, order.id);
+    const changed = await orderDal.cancelIfPending(db, order.id);
     if (changed !== 1) throw new OrderConflictError();
-    await deps.outbox.add(tx, OrderCancelled.create({ orderId: order.id }));
+    await deps.outbox.add(db, OrderCancelled.create({ orderId: order.id }));
     return { id: order.id, status: OrderStatus.Cancelled };
   },
 });
@@ -65,3 +65,5 @@ export const cancelOrder = defineHandler({
 Chassis startup: telemetry → validated config → DB/provider capabilities → feature manifests → HTTP/RPC/consumers/workers → readiness. Shutdown stops new work, drains with a deadline, releases leases and closes resources. Features do not own process hooks.
 
 Audited actions use the [audit metadata contract](recipes/audit.md); the factory persists success evidence inside the same transaction.
+
+Database call sites use `db` for regular or transaction-bound execution; see [TSDB context and configuration](15-database-access.md). The factory owns which context is supplied.
