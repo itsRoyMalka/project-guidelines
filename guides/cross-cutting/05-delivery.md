@@ -16,7 +16,7 @@
 
 **DEL-07 SHOULD:** Produce build provenance tying a released artifact to source revision, build identity, inputs, and environment; verify the artifact before promotion. Choose an appropriate [SLSA build level](https://slsa.dev/spec/v1.2/build-track-basics) for product risk and available platform controls rather than claiming a level from a version string or CI badge.
 
-**DEL-08 MUST:** Protect CI/deployment edits and production credentials. Use minimal CI permissions, immutable third-party action references or equivalent provider controls, isolated untrusted PR execution and approved short-lived deploy identities where available. Review dependencies/lockfiles and trace security fixes to releases.
+**DEL-08 MUST:** Protect CI/deployment edits and production credentials. Use minimal CI permissions, pinned shared/internal CI templates and immutable third-party action references or equivalent provider controls, isolated untrusted PR execution and approved short-lived deploy identities where available. Review dependencies/lockfiles and trace security fixes to releases.
 
 **Verification:** CI matrix covers changed dependents, a release is traceable to source/artifact, build credentials are isolated, and rollback is rehearsed for a representative change. Further reading: [NIST SSDF](https://csrc.nist.gov/pubs/sp/800/218/final), [SLSA provenance](https://slsa.dev/spec/v1.2/provenance).
 
@@ -50,3 +50,47 @@ The deployment source pins an existing verified artifact; promotion changes the 
 **DEL-14 MUST:** PRs check affected apps/packages and dependents; global tooling changes broaden scope. Main builds/deploys affected artifacts to dev; deployed smoke/E2E gates promotion. Required-check aggregation must reject missing/skipped jobs for the actual candidate.
 
 **DEL-15 MUST:** Keep environment config outside promoted artifacts where supported. Browser settings are public; build-time environment values create separate artifacts that each need proof. Use environment-scoped short-lived deployment identity and keep production secrets out of untrusted PR jobs.
+
+
+**DEL-16 SHOULD:** Share reusable CI mechanics while each deployable owns its checks, artifact and deployment configuration. Parent pipelines reflect required child failures; root-only checks must still gate child deployment. Use DEL-14 for impact selection. Keep branch strategy under the [Git rules](08-git-collaboration.md), not dictated by a borrowed pipeline template.
+
+```text
+.github/workflows/ — example responsibility map; equivalent GitLab layout is valid
+ci.yml: impact selection + shared checks + required service results
+service-ci.yml: reusable workflow invoked with explicit service/build/test inputs
+deploy.yml: protected promotion path referencing successful checks and digest
+```
+
+**DEL-17 MUST:** Define one authoritative promotion contract across automated, manual and hotfix entrypoints. Required migration, deployment-health and smoke results must succeed; optional environment creation or reports are visibly separate. A missing required job fails promotion. Cancel obsolete validation jobs where safe; serialize deployments per target and do not automatically cancel an active migration/apply halfway through.
+
+```text
+docs/delivery.md — release gate example
+Required: selected checks → migration compatibility → rollout health → smoke
+Optional: developer private stack, coverage visualization
+Manual promotion/hotfix: same required-result checks or recorded scoped exception
+Completion: actual digest + config/schema revisions + passed gates; not job-started
+```
+
+### Example: immutable pipeline and test inputs
+
+```text
+CI source: service commit + shared template commit (reviewed immutable revision)
+Candidate: image digest + configuration revision + migration revision
+Verification: pinned test-suite revision + observed deployed manifest
+Promotion: same candidate digest; no checkout of a moving dev branch for proof
+```
+
+This implements DEL-08–10. A separately versioned test suite is valid when compatibility is explicit and its revision is recorded. Commit-shaped image tags improve traceability but the released digest proves the actual artifact. For GitLab, pin external `include:project` entries with `ref`; for GitHub reusable workflows/actions, use the reviewed commit reference.
+
+### Example: package credentials during builds
+
+```dockerfile
+# apps/api/Dockerfile — BuildKit excerpt; pinned compatible base chosen by project
+# Private pip config is mounted only for installation; it is not copied into layers.
+RUN --mount=type=secret,id=pip_config,target=/etc/pip.conf,required=true \
+    pip install --no-cache-dir -r requirements.txt
+```
+
+DEL-08 prohibits package credentials in Docker `ARG`/`ENV`, copied config or generated layer files. The selected builder must support ephemeral secret injection; keep dependency/build logs free of credentials and verify the final image/configuration. Use the equivalent secret mechanism for the chosen package manager.
+
+**Additional verification:** force a required child failure and missing migration job; promotion stops. Test manual entrypoints and concurrent releases; inspect deployed digest/test revision and image secret exposure. **Exception:** optional jobs and legacy platform controls remain valid when the distinction and equivalent gate evidence are explicit. Further reading: [Docker build secrets](https://docs.docker.com/build/building/secrets/), [GitLab CI includes](https://docs.gitlab.com/ci/yaml/#includeproject).

@@ -2,6 +2,8 @@
 
 Examples demonstrate the owning guide's rules. They are excerpts, not a shipped framework. Each technical example names its target file and runtime; application-owned helpers must be implemented and proven in the consuming project. Imports and surrounding setup may be omitted only when the required context is stated.
 
+The [project-owned API map](project-owned-apis.md) locates required lifecycle and failure semantics. Never direct a reader to an original private implementation. Use fictional data and original examples; remove identifying details, not attribution required for legitimately included third-party material.
+
 ## Names and placement
 
 | Concept | Convention/example |

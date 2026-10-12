@@ -2,6 +2,8 @@
 
 Start with [usage](../USAGE.md), [governance](00-governance.md) and the chosen [profile](profiles/README.md). Load only the task's boundaries; examples do not create extra rules. Read [example conventions](recipes/example-conventions.md) before copying a snippet into an app.
 
+Custom helpers are specified in local guides: use the [project-owned API map](recipes/project-owned-apis.md). No private source checkout is needed.
+
 | Area | Canonical guides and examples |
 | --- | --- |
 | New project | [PRD setup](08-project-setup.md), [worked setup](recipes/project-setup.md), [product brief](07-product-and-decisions.md) |

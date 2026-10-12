@@ -2,6 +2,8 @@
 
 **Supported delivery:** a complete checkout or directory snapshot at a recorded revision. Skills are workflows within this book; copying one skill folder alone is not supported. No global installation is required.
 
+This checkout contains the full convention set. No original source repository, research archive or private account is required. For custom names in examples, read [project-owned APIs](guides/recipes/project-owned-apis.md); implement those contracts in the target project. Public vendor documentation may be consulted for current library syntax and supported versions, but never substitutes for a missing local rule.
+
 1. Make the whole handbook available to the agent as a readable local directory. Record its path and commit in the consuming project's instructions/architecture note.
 2. Have the agent open the handbook README and governance, select a profile, then read the matching skill by its actual path. Relative links resolve from the containing document, never from the target app's working directory.
 3. Keep target-app edits in the target app. Handbook guidance neither creates deployment permission nor overrides applicable host/user/target-repo instructions.

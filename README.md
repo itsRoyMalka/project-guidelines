@@ -18,3 +18,5 @@ Read [usage](USAGE.md) and [governance](guides/00-governance.md), then select on
 Core profiles cover TypeScript web/backend, Python backend, React Native mobile, desktop (Windows, macOS and Linux), and analytics. Backend guidance separates shared rules from TypeScript and Python implementation guides. Load optional tenancy, RPC, events, background jobs, cache, vault and DocStore only when needed. AI evaluation, complex offline synchronization, embedded/ML systems and jurisdiction-specific compliance need a project extension.
 
 **Authority:** user/host/target instructions → canonical guides → selected profiles. Recipes illustrate; skills route work. Factory snippets describe project-owned patterns and do not claim an installed framework or tested implementation.
+
+**Standalone:** all handbook conventions are defined here. Public links are optional further reading. [Project-owned APIs](guides/recipes/project-owned-apis.md) maps custom helpers to their local contracts and failure cases. Read [contributing](CONTRIBUTING.md) and [publication](PUBLICATION.md) before distributing changes.

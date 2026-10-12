@@ -34,3 +34,17 @@ concurrency:
 ```
 
 Use the same protected environment concurrency group for every deployment path that can mutate it. The rest of the pipeline verifies the candidate digest, applies controlled migrations, deploys and captures the running manifest. This setting alone does not lock manual deployments or E2E's deployment lease; those entrypoints must share the platform's actual coordination mechanism.
+
+
+### Example: service release sequence
+
+```text
+docs/delivery.md — example selected pipeline
+PR: shared checks + affected service/dependent tests
+Merge: build candidate once; retain digest and provenance
+Dev: deploy candidate; verify manifest; run pinned integration/E2E suite
+Prod: verify gates; compatible migration; controlled rollout; health/smoke
+Failure: halt promotion; restore compatible artifact/config; verify recovery
+```
+
+Follow DEL-16/17 for parent/child completion and manual entrypoints. Shared platform templates are versioned inputs. An enabled Argo Rollouts flag alone is not rollout proof: inspect the rendered strategy, traffic mechanism, analysis thresholds and stop/recovery behavior under [INFRA rules](../09-infrastructure.md).
