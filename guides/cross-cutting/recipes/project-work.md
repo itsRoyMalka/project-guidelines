@@ -1,6 +1,6 @@
 # Project-work examples
 
-Apply [PROJ-01–08](../07-project-work.md). These are examples of the selected convention, not a second source of rules. Substitute a real project, repository and key mapping before an agent uses them.
+Apply [project-work rules](../07-project-work.md). These are examples of the selected convention, not a second source of rules. Substitute a real project, repository and key mapping before an agent uses them.
 
 ## Consuming repository agent entrypoint
 
@@ -82,3 +82,55 @@ The next agent reads this with the issue and PR timeline and checks the actual b
 ## Adoption and enforcement
 
 Follow the [Git/Project setup recipe](git-project-setup.md) for repository creation, Project fields and workflows, issue/PR templates, protection, gates and negative trials. A required check can prove metadata and links; a reviewer checks acceptance quality and handoff truth.
+
+
+## Documentation task: complete small example
+
+```md
+Title: DOC-123: Standardize agent handoffs
+Type: chore · Priority: High · Area: Agent workflow · Status: Ready
+Owner: accountable maintainer; active actor recorded when claimed
+
+Outcome: an agent resumes work from the issue and repository without the prior chat.
+Scope: owning guide, managing-work skill and one filled example.
+Acceptance:
+- Handoff includes branch/revision, completed work, checks, remaining work and next action.
+- Passed, failed and unrun checks are distinguishable.
+- Incoming agent verifies the actual checkout before editing.
+- No private paths or conversation links are required.
+Plan: inspect current rules → align guide/skill/example → check links and consistency.
+Done target: reviewed PR merged; acceptance and doc checks recorded on reviewed revision,
+with applicability confirmed against the merged result.
+```
+
+DOC-123 is illustrative. Create the real issue first, then use its actual number/key; this example is not a live task. Status/owner/type fields have one maintained location on the tracker, not duplicate manually synchronized copies.
+
+```text
+Starting comment
+Claim: agent-session-a · branch DOC-123/docs-agent-handoffs
+Scope: guide, skill, example · next: inspect existing handoff rules
+
+Handoff comment
+Revision: <actual commit>; uncommitted changes: <none or exact scope>
+Completed: guide and example updated
+Verified: <actual link-check command> passed on <revision>
+Remaining: skill alignment and consistency review
+Blocker: none
+Next: inspect current diff, update skill, run checks, request review
+```
+
+An actor identifier does not fabricate a GitHub account. Keep the accountable assignee and active executor distinct. Read back the claim; resolve overlap with any other claim before editing.
+
+For a typo correction, the ticket can be three lines: the wrong text, expected correction and verification. For separately deliverable outcomes, use linked child tickets. Do not create a ticket per file or copy the plan into the PR.
+
+## Interrupted and blocked work
+
+```text
+Blocker: required acceptance behavior is undecided
+Unblock owner: product owner
+Needed decision: whether a cancelled order can be reopened
+Preserved work: <branch/revision>; no overlapping actor edits authorized
+Next: resume after decision; other Ready work may be claimed meanwhile
+```
+
+Use the blocker field/reason without inventing a second status workflow. Never silently change acceptance to bypass the blocker. Retrospective work follows the separate [backfill protocol](project-backfill.md).

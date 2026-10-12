@@ -12,7 +12,7 @@
 
 **PROJ-03 MUST:** Use `<KEY>: <outcome/problem>` titles. The ticket holds outcome, acceptance including meaningful failures, dependencies, owner and target Done proof. Bugs include reproduction and actual/expected behavior.
 
-**PROJ-04 MUST:** Use Backlog → Ready → In Progress → In Review → Ready to Release → Done; blockers have a separate reason/owner. Ready needs clear outcome/acceptance/dependencies. Done needs target proof, not merge. Disable GitHub linked-PR auto-close and premature closed→Done automation; verify with a partial PR.
+**PROJ-04 MUST:** Use Backlog → Ready → In Progress → In Review → Ready to Release → Done; blockers have a separate reason/owner. Ready needs clear outcome/acceptance/dependencies. Done needs the stated target proof. Documentation-only work may be complete at the reviewed merged revision after its acceptance checks; deployed behavior needs its selected deployment target. Use Ready to Release only when a separate release/target step remains. Disable GitHub linked-PR auto-close and premature closed→Done automation; verify with a partial PR.
 
 ## Plan and run the sprint
 
@@ -25,6 +25,29 @@
 **PROJ-07 MUST:** Handoff in the issue: next actor, branch/PR/revision, completed behavior, actual checks, remaining work, blockers and next action. The next agent verifies checkout/status before taking over; preserve one accountable owner.
 
 **PROJ-08 MUST:** Record acceptance proof, target release/document revision, results and remaining limitations before Done. The reviewer/owner confirms the agreed outcome; inaccessible or skipped checks are not passes.
+
+## Efficient agent execution
+
+**PROJ-09 MUST:** Size a ticket around one independently verifiable outcome. Use child issues when outcomes can ship or be assigned separately; use an in-issue checklist for steps of the same outcome. Link actual dependencies. A small correction can use outcome, acceptance and verification in a few lines; do not create an epic or separate plan file for ceremony.
+
+**PROJ-10 MUST:** Before editing, read the current issue, latest handoff and linked PR, then record the active actor/session and branch or worktree. Keep one accountable owner; the active actor may be an agent identifier rather than a GitHub assignee. Read back the recorded claim and check for concurrent claims before editing. A comment is not an atomic lock: conflicting claims stop overlapping edits until ownership is resolved. Never assume a silent or stale claim grants takeover.
+
+**PROJ-11 SHOULD:** Keep one active implementation ticket per agent. Parallel actors use explicitly scoped tasks and isolated branches/worktrees; agree on ownership before changing shared files. A blocked task records the reason, unblock owner and next action before the agent switches work. Delegation still follows actual user/host authorization.
+
+**PROJ-12 MUST:** Update the tracker at claim, material scope/decision change, blocker, review, handoff and completion. Keep current scope/acceptance in the issue body, structured fields on the board and diff feedback on the PR. Link verification output rather than copying it into several places. Do not post per-command progress or repeatedly read an unchanged board; refresh at these transitions and before resuming another actor's work.
+
+**PROJ-13 MUST:** Recover a task from the latest durable issue/PR state and actual checkout, not chat memory. Verify branch, revision and uncommitted changes before continuing; preserve another actor's work. Handoff records completed work, exact checks/results, remaining work, blockers and next action. A fresh agent must be able to resume without a conversation transcript.
+
+```text
+Claim: agent-session-a · branch DOC-123/docs-agent-handoffs
+Scope: handoff rule, managing-work skill and example
+Handoff: revision <actual SHA>; guide updated; links passed; skill alignment remains
+Next: inspect current diff, align skill, run checks, request review
+```
+
+**PROJ-14 MUST:** Retrospective tracking is explicitly labeled as backfill. Group existing work by outcome, link exact published commits/PRs and record when reconstruction happened. Keep original chronology; never claim an issue existed before the work, fabricate review/test evidence, or rewrite published commits solely to insert ticket keys. Unverified acceptance becomes a current follow-up, not a historical pass. Use the [backfill protocol](recipes/project-backfill.md) only when that work is requested.
+
+**Execution checks:** two competing claims resolve before edits; a blocked agent leaves an actionable unblock request; a fresh agent resumes from the issue; a small correction stays small; a backfilled ticket separates observed artifacts from unknown historical proof. These are coordination rules, not guarantees provided automatically by the tracker.
 
 ## Small working example
 

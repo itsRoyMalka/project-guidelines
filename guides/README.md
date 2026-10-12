@@ -21,7 +21,7 @@ Custom helpers are specified in local guides: use the [project-owned API map](re
 | Security/config | [Security/threats](cross-cutting/01-security.md), [identity profiles](cross-cutting/recipes/identity.md), [configuration](cross-cutting/02-configuration.md) |
 | Quality/operations | [Testing philosophy](cross-cutting/03-testing.md), [local setup](cross-cutting/recipes/local-and-test.md), [operations](cross-cutting/04-operations.md) |
 | CI/CD | [Delivery/versions/rollback/hotfix](cross-cutting/05-delivery.md), [infra/rollout](cross-cutting/09-infrastructure.md), [delivery example](cross-cutting/recipes/delivery.md) |
-| Work | [Agent pipeline](cross-cutting/06-workflow-and-docs.md), [project/sprints](cross-cutting/07-project-work.md), [Git](cross-cutting/08-git-collaboration.md), [Git/Project setup](cross-cutting/recipes/git-project-setup.md), [ticket examples](cross-cutting/recipes/project-work.md) |
+| Work | [Agent pipeline](cross-cutting/06-workflow-and-docs.md), [project/sprints](cross-cutting/07-project-work.md), [Git](cross-cutting/08-git-collaboration.md), [Git/Project setup](cross-cutting/recipes/git-project-setup.md), [ticket examples](cross-cutting/recipes/project-work.md), [historical backfill](cross-cutting/recipes/project-backfill.md) |
 | Data analytics | [Analytics](data/01-analytics.md), [warehouse profile](profiles/analytics.md) |
 | Adoption/docs | [Adoption](05-adoption.md), [templates](templates/decisions.md), [pattern selection](recipes/pattern-selection.md), [domain values](recipes/domain-values.md) |
 

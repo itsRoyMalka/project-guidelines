@@ -22,7 +22,7 @@
 
 ## Merge, release and repair
 
-**GIT-08 MUST:** Merge the reviewed head after required checks. Delete the branch; keep the issue Ready to Release until target proof. Release records bind source and immutable digest; merge alone is not deployment.
+**GIT-08 MUST:** Merge the reviewed head after required checks. Delete the branch after merge when no longer needed; keep the issue Ready to Release when a separate target-verification step remains. Documentation may move to Done after merged-revision acceptance checks under PROJ-04/08. Release records bind source and immutable digest; merge alone is not deployment.
 
 **GIT-09 MUST:** Reverts, rollbacks and hotfixes retain incident/ticket evidence. Hotfix from deployed source, run the explicit expedited gates and reconcile into main. Emergency bypass needs a named authorized role, reason, audit and follow-up; a bypass is never a passing check.
 
@@ -54,3 +54,6 @@ Remaining: production verification after promotion.
 **Exception criteria:** A separate repository, merge method or supported release branch needs a concrete ownership, compliance or history reason and a project decision under [GOV-05](../00-governance.md). Generated bot/merge commits may vary when the controlling PR and release remain traceable. Emergency bypass does not make a skipped check pass; record the risk, compensating verification and expiry in the incident. Existing repositories can adopt branch/title/key rules incrementally while preserving their current protected branch until migration is deliberate.
 
 Sources: [GitHub rulesets and required checks](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets), [GitHub protected branches](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches), [GitHub issue/PR links](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue), [GitHub CODEOWNERS](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners), [Conventional Commits grammar](https://www.conventionalcommits.org/en/v1.0.0/).
+
+
+**GIT-10 MUST:** During an explicitly requested historical backfill, preserve published commit identities and real PR history. New retrospective issues link existing full commit SHAs; do not manufacture PRs or change commit messages to make old work appear issue-first. Prospective work follows GIT-02/04 from the recorded adoption boundary. See [backfill protocol](recipes/project-backfill.md).

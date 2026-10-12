@@ -10,7 +10,7 @@
 
 **WORK-04 MUST:** Keep documentation by role: README for orientation and running; architecture brief/ADRs for durable decisions; API/schema for machine contracts; runbook for operations; tests for executable behavior. Update the owning document when a change makes it false.
 
-**WORK-05 SHOULD:** Make examples small and realistic. Link to maintained source rather than copying a large implementation into a guide. Give docs an owner and review trigger; remove obsolete guidance instead of stacking contradictory notes.
+**WORK-05 SHOULD:** Make examples small and realistic. Use small local examples and links to their owning handbook rules; target-app documentation may link its maintained implementation. Never replace a handbook convention with a private source dependency. Give docs an owner and review trigger; remove obsolete guidance instead of stacking contradictory notes.
 
 **WORK-06 retired:** exception policy is owned by [GOV-05](../00-governance.md). Existing references resolve here; use GOV-05 for new decisions.
 
@@ -30,3 +30,16 @@ ODR-123: outcome + acceptance → short plan → action/feature tests
 ```
 
 Proof ledger entries are passed/failed/not run with actual evidence and reasons. No mandatory multi-agent review or separate per-action test-plan file is implied. Further reading: [project work](07-project-work.md).
+
+
+**WORK-11 MUST:** Use proportionate planning: for a small correction, keep outcome, acceptance and verification in the issue; for meaningful work add a short plan there. Create a separate spec/ADR only for ambiguity or a durable decision. Batch independent reads, load relevant guides and reuse established helpers; do not omit required context or acceptance to save time.
+
+**WORK-12 MUST:** Run the smallest meaningful affected checks first. Broaden for changed shared contracts, dependencies, global configuration or an unresolved risk, and satisfy required merge gates. Record command, revision (and dirty diff if applicable), environment and passed/failed/not-run result. Reuse previous results only when their inputs remain applicable; stale proof does not cover changed code.
+
+```text
+Small doc correction: outcome + acceptance → edit → local links/diff check → review
+Shared contract change: plan → producer/consumer checks → required integration gates
+Proof: <actual command> · <actual revision/diff> · local · passed/failed/not run
+```
+
+**Check:** the selected checks explain which failure they detect; the issue has one current plan, not copies in chat, PR and another file. Re-run only what changed or is required; stop optional verification once the concrete risks are resolved.

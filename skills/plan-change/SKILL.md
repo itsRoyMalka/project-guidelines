@@ -8,3 +8,6 @@ description: Plan a meaningful feature, bug fix, or architecture change with its
 Read [usage](../../USAGE.md), [governance](../../guides/00-governance.md) and the issue under [project work](../../guides/cross-cutting/07-project-work.md). Apply [WORK](../../guides/cross-cutting/06-workflow-and-docs.md) and load affected guides from [the map](../../guides/README.md).
 
 The issue is the brief. Add a spec only for consequential ambiguity; a short plan names behavior, affected boundaries, slices, risks, verification and release/recovery. Record relevant success/failure/forbidden outcomes; choose BE/FE/E2E proof without duplicating all layers. Ask only decisions that block correct scope. Leave a clear next action and owner.
+
+
+Use PROJ-09 and WORK-11 to size independently verifiable outcomes. A small correction needs outcome, acceptance and verification in the issue; larger work gets a short plan there. Split independently assignable deliverables into dependent tickets, not a ticket per file. Define the actual Done target, including reviewed/merged documentation when no deployment exists.

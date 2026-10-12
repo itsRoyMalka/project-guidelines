@@ -34,7 +34,7 @@ Use issue forms to ask for outcome, acceptance, important failure and Done targe
 
 ## 3. Configure one product Project
 
-Create the Project and add the issue repository. Set Status to **Backlog → Ready → In Progress → In Review → Ready to Release → Done**; add Type (feature/bug/chore/spike/incident), Priority and Area. Use an accountable assignee/owner and a **two-week Iteration** field. Create backlog, current sprint and review views as useful. Auto-add **issues** from the selected repository; PRs remain linked implementation, not duplicate sprint cards. Add the first PRD and starter issues only after the key mapping is set.
+Create the Project and add the issue repository. Set Status to **Backlog → Ready → In Progress → In Review → Ready to Release → Done**; add Type (feature/bug/chore/spike/incident), Priority and Area. Use an accountable assignee/owner and a **two-week Iteration** field. Create backlog, current sprint and review views as useful. Auto-add **issues** from the selected repository; PRs remain linked implementation, not duplicate sprint cards. Add the first PRD and starter issues only after the key mapping is set. Document actor claims, one active implementation task per agent, blocker ownership and transition updates under PROJ-09–13. Existing-work reconstruction uses the separate [backfill protocol](project-backfill.md); do not label it as a current sprint delivery.
 
 ## 4. Set the repository and Project controls
 
