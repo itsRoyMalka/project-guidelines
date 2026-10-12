@@ -1,0 +1,37 @@
+name: Ticket metadata
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize, edited, ready_for_review, labeled, unlabeled]
+  workflow_dispatch:
+    inputs:
+      pull_request:
+        description: PR number to recheck after linking its issue or changing Project membership
+        required: true
+        type: number
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+  statuses: write
+concurrency:
+  group: metadata-${{ github.event.pull_request.number || inputs.pull_request }}
+  cancel-in-progress: false
+jobs:
+  metadata:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      # Privileged job: ONLY protected main code. Never checkout/evaluate PR code.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
+        env:
+          PROJECT_READ_TOKEN: ${{ secrets.PROJECT_READ_TOKEN }}
+        with:
+          script: |
+            const { run } = require('./.github/checks/metadata.cjs');
+            const projectGithub = process.env.PROJECT_READ_TOKEN
+              ? new github.constructor({auth: process.env.PROJECT_READ_TOKEN}) : null;
+            await run({github, context, core, projectGithub});

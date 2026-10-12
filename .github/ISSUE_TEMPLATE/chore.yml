@@ -1,0 +1,36 @@
+name: Chore
+description: Maintenance outcome and affected guides
+title: "[triage] "
+labels: ["type:chore"]
+body:
+  - type: markdown
+    attributes:
+      value: "After creation, rename to GL-<issue number>: <outcome>; add to Project #2 and set owner, priority, area and status. Do not publish confidential details."
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Outcome
+      description: Maintenance outcome and affected guides
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance
+      description: Include a meaningful failure or edge case.
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies
+      description: Linked issue numbers, or None.
+    validations:
+      required: true
+  - type: textarea
+    id: proof
+    attributes:
+      label: Done target
+      description: What observable proof makes this complete?
+    validations:
+      required: true
