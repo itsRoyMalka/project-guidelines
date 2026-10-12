@@ -1,6 +1,7 @@
 name: Ticket metadata
 on:
   pull_request_target:
+    branches: [main]
     types: [opened, reopened, synchronize, edited, ready_for_review, labeled, unlabeled]
   workflow_dispatch:
     inputs:
@@ -31,7 +32,7 @@ jobs:
           PROJECT_READ_TOKEN: ${{ secrets.PROJECT_READ_TOKEN }}
         with:
           script: |
-            const { run } = require('./.github/checks/metadata.cjs');
+            const { runMetadataCheck } = require('./.github/checks/metadata.cjs');
             const projectGithub = process.env.PROJECT_READ_TOKEN
               ? new github.constructor({auth: process.env.PROJECT_READ_TOKEN}) : null;
-            await run({github, context, core, projectGithub});
+            await runMetadataCheck({github, context, core, projectGithub});

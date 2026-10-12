@@ -25,6 +25,7 @@ jobs:
         with:
           node-version: '22.22.0'
       - run: python3 --version && node --version
+      - run: python3 -m pip install --require-hashes -r .github/checks/requirements.txt
       - run: python3 .github/checks/handbook.py
       - run: python3 -m unittest discover -s .github/checks -p 'test_*.py'
       - run: node --test .github/checks/metadata.test.cjs

@@ -38,18 +38,21 @@ Small fixes use this same short flow; no separate spec or plan document is requi
 From the repository root (Python 3.12.12 and Node 22.22.0 on CI):
 
 ```sh
+python3 -m venv .venv
+. .venv/bin/activate
+python3 -m pip install --require-hashes -r .github/checks/requirements.txt
 python3 .github/checks/handbook.py
 python3 -m unittest discover -s .github/checks -p 'test_*.py'
 node --test .github/checks/metadata.test.cjs
 git diff --check
 ```
 
-The Markdown check covers tracked Markdown, inline local links/anchors outside fenced examples, balanced fences and unique normative IDs. Stage new documents before running it. It does not compile illustrative application snippets, validate every Markdown extension, prove guideline quality or replace a privacy/secret review. Check CI logs for the exact runtime versions; runtime versions and action revisions are pinned; review updates deliberately.
+The Markdown check covers tracked Markdown, CommonMark local links/images and resolved reference links, heading anchors outside code examples, balanced fences and unique normative IDs. Stage new documents before running it. It does not compile illustrative application snippets, validate unresolved reference labels (CommonMark treats these as text), raw HTML links or every Markdown extension, prove guideline quality or replace a privacy/secret review. Check CI logs for the exact runtime versions; runtime versions and action revisions are pinned; review updates deliberately.
 
 ## Automation and trust boundary
 
 - `documentation`: read-only PR CI, no repository secrets. Runs the maintenance checks.
-- `ticket-metadata`: trusted `pull_request_target` workflow, checks out **main only**, reads PR data as data, and publishes a status on the exact checked head. It verifies keyed branch/commits/title, real open issue, Development relationship, private Project membership and populated PR sections.
+- `ticket-metadata`: trusted `pull_request_target` workflow, checks out **main only**, reads PR data as data, and publishes a status on the exact checked head. It verifies keyed branch/commits/title, real open issue, Development relationship, private Project membership and populated PR sections (HTML template comments do not count).
 - `PROJECT_READ_TOKEN`: dedicated credential with read access to Project #2; no write/admin scopes. Configure through repository Actions secrets; never use an agent's CLI credential as the CI credential. Missing access fails the gate. Rotate/revoke through the maintainer.
 - Development links and external Project membership edits do not reliably trigger PR workflows. Dispatch **Ticket metadata** with the PR number after changing them and immediately before merge. Human review validates proof and current tracker state.
 - Required checks and review apply to admins too. No ordinary direct push, force push or deletion. A PR author cannot approve their own work; if the sole CODEOWNER authored the PR, a second designated CODEOWNER is needed before normal merge.
@@ -69,3 +72,11 @@ GL-19 stays open until hosted positive/negative trials and the partial-PR no-aut
 - No independent CODEOWNER has been selected for owner-authored changes. This is a review blocker, not permission to self-approve.
 
 Project workflow readback confirms auto-close, item-closed, linked-PR and merged-PR transitions are disabled. Issue intake is maintainer-managed: create → key → add to Project → set fields. No automatic sprint assignment or Done transition is claimed.
+
+### CI security boundary
+
+Owner: handbook maintainer. The asset is the Project credential and the authority to publish required statuses. Untrusted contributions must not execute with either. Documentation CI has no secrets; the metadata job executes only protected-main code, consumes PR text as data and uses minimal permissions. SHA-pinned actions and hash-pinned parser dependencies make verification inputs explicit.
+
+Proof: review workflow checkout/token permissions; test missing credentials, API failure, candidate changes and Project removal during verification. Hosted verification remains required after bootstrap. A status is a snapshot: later issue/Project changes require a rerun and final maintainer inspection, not a claim of continuous authorization.
+
+These are small maintenance programs using Node CommonJS and Python, not backend services. Product backend layering and application package requirements do not apply; the local commands, pinned dependencies, meaningful tests and review requirements above do.
