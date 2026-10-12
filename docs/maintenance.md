@@ -67,3 +67,5 @@ GL-19 stays open until hosted positive/negative trials and the partial-PR no-aut
 - Squash-only merging uses PR title and deletes merged branches. Auto-close linked issues is disabled.
 - This host rejected a commit-message-pattern ruleset (HTTP 422). The maintainer must use the exact validated PR title for the squash subject; this is a manual control, not a host-enforced message restriction.
 - No independent CODEOWNER has been selected for owner-authored changes. This is a review blocker, not permission to self-approve.
+
+Project workflow readback confirms auto-close, item-closed, linked-PR and merged-PR transitions are disabled. Issue intake is maintainer-managed: create → key → add to Project → set fields. No automatic sprint assignment or Done transition is claimed.
