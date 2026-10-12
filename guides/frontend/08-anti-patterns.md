@@ -15,6 +15,9 @@
 | Hide an action only in the UI and treat that as authorization | Direct requests can still reach the backend | Backend enforces permission; FE gate improves the experience |
 | Hard-code `left`/`right`, English text or array-position test IDs | RTL, localization and stable automation fail | Logical CSS, feature messages, shared semantic IDs forwarded to controls |
 | Snapshot every child component and mock away the feature's behavior | Large maintenance cost with little flow proof | A focused feature interaction test plus selected E2E journeys |
+| Invent padding, type sizes or motion timings in each feature | Screens drift and global changes become expensive | Semantic DS roles and the [visual defaults](11-visual-composition.md) |
+| Design only with short demo text and a successful response | Real content hides actions or breaks layout | Typed difficult-content fixtures and rendered state review under VIS-06 |
+| Animate every update or delay completion for an effect | Repeated tasks feel slow and state becomes misleading | Purposeful, interruptible motion under [MOT-01–04](12-interaction-and-motion.md) |
 
 ### Small correction
 

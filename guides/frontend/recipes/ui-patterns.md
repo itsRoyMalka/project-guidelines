@@ -2,6 +2,8 @@
 
 Owners: [UI](../03-ui-and-accessibility.md), [DS](../04-design-system.md).
 
+For numeric spacing/type/layout defaults and semantic DS props, read [visual composition](../11-visual-composition.md). For feedback, transitions and reduced-motion examples, read [interaction and motion](../12-interaction-and-motion.md). Reuse those token roles in this view.
+
 ```text
 features/orders/browse/ui/order-list/
   order-list.tsx

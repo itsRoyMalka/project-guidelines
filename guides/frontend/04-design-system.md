@@ -10,6 +10,8 @@
 
 **DS-04 MUST:** Own typography, spacing, layout, focus and motion tokens. Use readable scalable text, logical CSS, container adaptation and reduced-motion alternatives; motion never carries meaning alone.
 
+Concrete values and code live in [visual composition](11-visual-composition.md): spacing scale, panel padding, type sizes, control dimensions and layout proportions. [Interaction and motion](12-interaction-and-motion.md) owns timing presets, property selection and interruption behavior. These refine DS-04; do not create parallel feature token systems.
+
 **DS-05 SHOULD:** Use React Aria Components behind the product API for complex new controls; existing Radix systems remain valid. Simple native elements stay inside DS implementation. Preserve label/error semantics, refs and form integration.
 
 **DS-06 MUST:** Show meaningful component states in Storybook; test interaction/accessibility and representative keyboard/screen-reader behavior. Review visual changes, version breaking APIs and use Changesets when packages release independently.
