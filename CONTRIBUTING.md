@@ -24,3 +24,7 @@ Contribute original explanations and minimal examples you have the right to shar
 4. State which checks ran. Documentation excerpts do not become tested application code merely by being committed.
 
 Publication/history checks belong in [publication guidance](PUBLICATION.md). Do not post sensitive findings in public issues; use a privately agreed maintainer contact.
+
+## Work on this repository
+
+Use the [maintainer sequence and local commands](docs/maintenance.md#daily-work). Every ordinary change has a GL issue, a matching branch/commit/PR key, current evidence and a reviewed PR. Issue forms collect the brief; the issue remains the plan/handoff record. New issues start in triage until a maintainer assigns the key and Project fields.

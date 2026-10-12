@@ -4,8 +4,14 @@ Read [README.md](README.md) for task scope and [USAGE.md](USAGE.md) for consumpt
 
 The user/task and applicable host/target-repository instructions define authority. Current guides own rules; profiles select conventions; recipes illustrate them; skills route work. Examples illustrate the local rules; external links are optional further reading.
 
-Keep this repository documentation-only. A rule change includes scope, rationale, verification and exception criteria; retain stable IDs and update affected examples/skills together. Record affected guides and adoption impact in the change description. Do not claim tests, approvals, versions or application compliance without evidence.
+Keep the distributed handbook documentation-focused; `.github/` may contain checks and workflows maintaining this repository, not product implementations. A rule change includes scope, rationale, verification and exception criteria; retain stable IDs and update affected examples/skills together. Record affected guides and adoption impact in the change description. Do not claim tests, approvals, versions or application compliance without evidence.
 
 Apply [contribution hygiene](CONTRIBUTING.md): guidance must be self-contained and publishable. Never add private research, identifying source-project details or internal links. Optional public references do not replace local rules. See [project-owned APIs](guides/recipes/project-owned-apis.md) when a snippet uses a custom helper.
 
 For work on this handbook itself, use the real tracker coordinates and adoption boundary in [maintenance configuration](docs/maintenance.md). Shared guides remain generic.
+
+## Required workflow for this repository
+
+Before editing, read `docs/maintenance.md` and `skills/manage-project-work/SKILL.md`. Find/create the real GL issue, record/read back a claim and current branch, and set In Progress. Work on `GL-<number>/<type>-<summary>`, never directly on `main`. Keep the plan, proof and handoff in that issue. Follow the concrete [maintainer sequence](docs/maintenance.md#daily-work).
+
+Run the repository checks listed there, inspect the publishable diff and open a ticket-linked PR. Stop at review when approval or a configured gate is missing; never bypass it or claim Done. `.github/` contains this repository's maintenance automation only; it is not a product scaffolding package.
